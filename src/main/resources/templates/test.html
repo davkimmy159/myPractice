@@ -6,13 +6,11 @@
 	overflow: auto;
 }
 
-
 #chatArea {
 	background: white;
 	resize: none;
 	cursor: text;
 }
-
 
 #memoContent2 {
 	margin-bottom: 0px;
@@ -99,7 +97,9 @@
 										<!-- /.panel-heading -->
 										<!-- panel-body -->
 										<div class="panel-body">
-											<div id="calendar"></div>
+											<div id="calendarDiv" class="container-fluid">
+												<div id="calendar"></div>
+											</div>
 										</div>
 										<!-- /.panel-body -->
 										<div class="panel-footer">Panel footer</div>
@@ -187,31 +187,35 @@
 															<div id="memoListContent2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="memoListHeading2">
 																<div class="panel-body">
 																	<p>Accordion test 2</p>
-																	<table class="table table-hover table-striped table-bordered">
-																		<thead>
-																			<tr>
-																				<td>head 1</td>
-																				<td>head 2</td>
-																				<td>head 3</td>
-																				<td>head 4</td>
-																				<td>head 5</td>
-																				<td>head 6</td>
-																			</tr>
-																		</thead>
-																		<tbody>
-																			<tr>
-																				<td>content 1</td>
-																				<td>content 2</td>
-																				<td>content 3</td>
-																				<td>content 4</td>
-																				<td>content 5</td>
-																				<td>
-																					<button type="button" class="btn btn-danger btn-xs">버튼 1</button>
-																				</td>
-																			</tr>
-																		</tbody>
-																	</table>
+																	<div class="table-responsive">
+																		<table class="table table-hover table-striped table-bordered">
+																			<thead>
+																				<tr>
+																					<td>head 1</td>
+																					<td>head 2</td>
+																					<td>head 3</td>
+																					<td>head 4</td>
+																					<td>head 5</td>
+																					<td>head 6</td>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<tr>
+																					<td>content 1</td>
+																					<td>content 2</td>
+																					<td>content 3</td>
+																					<td>content 4</td>
+																					<td>content 5</td>
+																					<td>
+																						<button type="button" class="btn btn-danger btn-xs">버튼 1</button>
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																	</div>
+																	<!-- /.table-responsive -->
 																</div>
+																<!-- /.panel-body -->
 															</div>
 															<!-- /.panel-collapse -->
 														</div>
@@ -314,6 +318,7 @@
 											<h4><span class="label label-primary"><span class="glyphicon glyphicon-user"></span></span>&nbsp;<strong>참여자 목록</strong></h4>
 										</div>
 										<div class="panel-body">
+										<div class="container-fluid">
 											<div class="table-responsive">
 												<table class="table table-hover table-striped">
 													<thead>
@@ -394,7 +399,7 @@
 														</tr>
 													</tbody>
 												</table>
-											</div>
+											</div></div>
 										</div>
 										<!-- /.panel-body -->
 										<div class="panel-footer">

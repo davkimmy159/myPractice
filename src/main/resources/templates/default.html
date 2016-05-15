@@ -20,11 +20,10 @@
 
 <!-- fullcalendar.css & fullcalendar.print.css -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/fullcalendar.min.css" rel="stylesheet" type="text/css" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/fullcalendar.print.css" rel="stylesheet" type="text/css" />
 
 <!--  pnotify.css (with js!) -->
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.0.0/pnotify.min.css" rel="stylesheet" type="text/css" /> -->
-<link href="../etc/pnotify.custom.min.css" rel="stylesheet" type="text/css" />
+<link href="../etc/pnotify3/pnotify.custom.min.css" th:href="@{/etc/pnotify3/pnotify.custom.min.css}" rel="stylesheet" type="text/css" />
 
 <!-- CKEditor & SockJS is loaded here by under layer -->
 
@@ -36,19 +35,19 @@
 	<div layout:fragment="body"></div>
 
 	<!-- jquery.js & bootstrap.js -->
-	<script src="https://code.jquery.com/jquery-1.11.3.js" integrity="sha256-IGWuzKD7mwVnNY01LtXxq3L84Tm/RJtNCYBfXZw3Je0=" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
 	<!-- moment.js & its lang.js & fullcalendar.js (with css) & its lang.js -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/locale/ko.js"></script>  -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/locale/ko.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/fullcalendar.min.js"></script>
-	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/lang/ko.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/lang/ko.js"></script>
 
 	<!-- pnotify.js (with css!) -->
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.0.0/pnotify.min.js"></script> -->
-	<script src="../etc/pnotify.custom.min.js"></script>
-	
+	<script src="../etc/pnotify3/pnotify.custom.min.js" th:src="@{/etc/pnotify3/pnotify.custom.min.js}"></script>
+
 	<!-- replaced here by under layer -->
 	<script layout:fragment="customScript"></script>
 </body>
