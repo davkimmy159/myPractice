@@ -20,6 +20,10 @@
 	margin-top: -10px;
 	margin-bottom: -10px;
 }
+
+#yearlyCalendar {
+	overflow: auto;
+}
 </style>
 <title>test</title>
 </head>
@@ -101,16 +105,29 @@
 									<div class="panel panel-info">
 										<!-- panel-heading -->
 										<div class="panel-heading">
-											<h4><span class="fa fa-refresh fa-spin fa-1x fa-fw"></span>&nbsp;<strong>Schedule</strong></h4>
-											<!-- <span class="label label-primary fa fa-spin"><span class="glyphicon glyphicon-equalizer"></span></span> -->
+											<ul class="nav nav-pills" role="tablist">
+												<li role="presentation" class="active"><a href="#calendar1" data-toggle="tab">Basic&nbsp;<span class="fa fa-refresh fa-spin fa-1x fa-fw"></span></a></li>
+												<li role="presentation"><a href="#calendar2" data-toggle="tab">Year&nbsp;<span class="fa fa-refresh fa-spin fa-1x fa-fw"></span></a></li>
+											</ul>
+										</div>
+										<div class="panel-body">
+											<!-- Tab-content -->
+											<div class="tab-content">
+												<div id="calendar1" class="tab-pane fade in active" role="tabpanel">
+													<div id="basicCalendarDiv" class="container-fluid">
+														<div id="basicCalendar"></div>
+													</div>
+												</div>
+												<div id="calendar2" class="tab-pane fade" role="tabpanel">
+													<div id="yearlyCalendarDiv" class="container-fluid">
+														<div id="yearlyCalendar"></div>
+													</div>
+												</div>
+											</div>
 										</div>
 										<!-- /.panel-heading -->
 										<!-- panel-body -->
-										<div class="panel-body">
-											<div id="calendarDiv" class="container-fluid">
-												<div id="calendar"></div>
-											</div>
-										</div>
+										<div class="panel-body"></div>
 										<!-- /.panel-body -->
 										<div class="panel-footer">Panel footer</div>
 									</div>
@@ -124,7 +141,9 @@
 								<div class="container-fluid">
 									<div class="panel panel-primary">
 										<div class="panel-heading">Panel content</div>
-										<div class="panel-body">Panel content</div>
+										<div class="panel-body">
+											<a href="#" id="username">superuser</a>
+										</div>
 										<div class="panel-footer">
 											<div class="btn-group" role="group">
 												<span class="glyphicon glyphicon-floppy-disk"></span>
@@ -260,7 +279,7 @@
 															<div id="memoListContent3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="memoListHeading3">
 																<div class="panel-body">
 																	<p>Accordion test 3</p>
-																	<p>좋은 내용들 많이 있으니 참고하세요.</p>
+																	<p>자바 유튜브 강의입니다.</p>
 																	<div class="embed-responsive embed-responsive-16by9">
 																		<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/WPvGqX-TXP0"></iframe>
 																	</div>
@@ -476,7 +495,94 @@
 						<button type="button" class="btn btn-primary">Save changes</button>
 					</div>
 				</div>
+				<!-- /.modal-content -->
 			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal (sub modal) -->
+
+		<!-- sub modal of yearly calendar -->
+		<div id="event-modal" class="modal fade" style="padding-right: 17px;">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">Event</h4>
+					</div>
+					<div class="modal-body">
+						<input value="" name="event-index" type="hidden" />
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label for="min-date" class="col-sm-4 control-label">Name</label>
+								<div class="col-sm-7">
+									<input name="event-name" class="form-control" type="text" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="min-date" class="col-sm-4 control-label">Location</label>
+								<div class="col-sm-7">
+									<input name="event-location" class="form-control" type="text" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="min-date" class="col-sm-4 control-label">Dates</label>
+								<div class="col-sm-7">
+									<div class="input-group input-daterange" data-provide="datepicker">
+										<input name="event-start-date" class="form-control" value="2012-04-05" type="text" />
+										<span class="input-group-addon">to</span>
+										<input name="event-end-date" class="form-control" value="2012-04-19" type="text" />
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!-- /.modal-body -->
+					<div class="modal-footer">
+						<button id="save-event" type="button" class="btn btn-primary">Save</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					</div>
+					<!-- /.modal-footer -->
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal (event sub modal) -->
+		<div id="form_notice" class="container-fluid" style="display: none;">
+			<h3 style="margin-top: 0;">PNotify test</h3>
+			<p>Just an example.</p>
+			<hr />
+			<input value="" name="event-index" type="hidden" />
+			<form class="form-horizontal pf-form pform_custom">
+				<div class="form-group">
+					<label for="min-date" class="col-sm-4 control-label">Name</label>
+					<div class="col-sm-7">
+						<input name="event-name" class="form-control" type="text" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="min-date" class="col-sm-4 control-label">Location</label>
+					<div class="col-sm-7">
+						<input name="event-location" class="form-control" type="text" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="min-date" class="col-sm-4 control-label">Dates</label>
+					<div class="col-sm-7">
+						<div class="input-group input-daterange" data-provide="datepicker">
+							<input name="event-start-date" class="form-control" value="2012-04-05" type="text" />
+							<span class="input-group-addon">to</span>
+							<input name="event-end-date" class="form-control" value="2012-04-19" type="text" />
+						</div>
+					</div>
+				</div>
+				<div class="pf-element pf-buttons pf-centered">
+					<input class="pf-button btn btn-primary" type="submit" name="submit" value="Submit" />
+					<input class="pf-button btn btn-default" type="button" name="cancel" value="Cancel" />
+				</div>
+			</form>
 		</div>
 	</div>
 </body>

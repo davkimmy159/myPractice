@@ -119,16 +119,78 @@ body {
 		// PNotify initial setting
 		PNotify.prototype.options.styling = "bootstrap3";
 		
+		var notice = new PNotify({
+		    text: $('#form_notice').html(),
+		    icon: true,
+		    width: 'auto',
+		    hide: false,
+		    buttons: {
+		        closer: true,
+		        sticker: true
+		    },
+		    insert_brs: false
+		});
+		notice.get().find('form.pf-form').on('click', '[name=cancel]', function() {
+		    notice.remove();
+		}).submit(function() {
+		    var username = $(this).find('input[name=username]').val();
+		    if (!username) {
+		        alert('Please provide a username.');
+		        return false;
+		    }
+		    notice.update({
+		        title: 'Welcome',
+		        text: 'Successfully logged in as ' + username,
+		        icon: true,
+		        width: PNotify.prototype.options.width,
+		        hide: true,
+		        buttons: {
+		            closer: true,
+		            sticker: true
+		        },
+		        type: 'success'
+		    });
+		    return false;
+		});
+		
+		// X-editable initial setting
+		 $('#username').editable();
+		
 		// FullCalendar in modal
-		var calendar = $("#calendar").fullCalendar({
+		var basicCalendar = $("#basicCalendar").fullCalendar({
 			header: {
 				left: 'prev,next today',
 				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
 			},
+			selectable: true,
+			selectHelper: true,
 			editable: true,
-			// for resizing (removing vertical scroll bar)
-			contentHeight: 'auto',
+			// initial height for resizing later(removing vertical scroll bar)
+			contentHeight: 100,
+			select: function(start, end, allDay)
+			{
+				/*
+					after selection user will be promted for enter title for event.
+				*/
+				var title = prompt('Event Title:');
+				/*
+					if title is enterd calendar will add title and event into fullCalendar.
+				*/
+				if (title)
+				{
+					calendar.fullCalendar('renderEvent',
+						{
+							title: title,
+							start: start,
+							end: end,
+							allDay: allDay
+						},
+						true // make the event "stick"
+					);
+				}
+				calendar.fullCalendar('unselect');
+			},
 			events: [
 				{
 					title: 'All Day Event',
@@ -166,12 +228,204 @@ body {
 		});
 		
 		$('#mainModal').on('shown.bs.modal', function () {
-			calendar.fullCalendar('render');
+			basicCalendar.fullCalendar('render');
 		});
+		
+		// bootstrap-year-calendar in modal
+		// var yearCalendar = $('#yearlyCalendar').calendar();
+		
+		function editEvent(event) {
+		    $('#event-modal input[name="event-index"]').val(event ? event.id : '');
+		    $('#event-modal input[name="event-name"]').val(event ? event.name : '');
+		    $('#event-modal input[name="event-location"]').val(event ? event.location : '');
+		    $('#event-modal input[name="event-start-date"]').datepicker('update', event ? event.startDate : '');
+		    $('#event-modal input[name="event-end-date"]').datepicker('update', event ? event.endDate : '');
+		    $('#event-modal').modal();
+		};
+
+		function deleteEvent(event) {
+		    var dataSource = $('#yearCalendar').data('calendar').getDataSource();
+
+		    for(var i in dataSource) {
+		        if(dataSource[i].id == event.id) {
+		            dataSource.splice(i, 1);
+		            break;
+		        }
+		    }
+		    
+		    $('#yearCalendar').data('calendar').setDataSource(dataSource);
+		};
+
+		function saveEvent() {
+		    var event = {
+		        id: $('#event-modal input[name="event-index"]').val(),
+		        name: $('#event-modal input[name="event-name"]').val(),
+		        location: $('#event-modal input[name="event-location"]').val(),
+		        startDate: $('#event-modal input[name="event-start-date"]').datepicker('getDate'),
+		        endDate: $('#event-modal input[name="event-end-date"]').datepicker('getDate')
+		    }
+		    
+		    var dataSource = $('#yearCalendar').data('calendar').getDataSource();
+
+		    if(event.id) {
+		        for(var i in dataSource) {
+		            if(dataSource[i].id == event.id) {
+		                dataSource[i].name = event.name;
+		                dataSource[i].location = event.location;
+		                dataSource[i].startDate = event.startDate;
+		                dataSource[i].endDate = event.endDate;
+		            }
+		        }
+		    }
+		    else
+		    {
+		        var newId = 0;
+		        for(var i in dataSource) {
+		            if(dataSource[i].id > newId) {
+		                newId = dataSource[i].id;
+		            }
+		        }
+		        
+		        newId++;
+		        event.id = newId;
+		    
+		        dataSource.push(event);
+		    }
+		    
+		    $('#yearCalendar').data('calendar').setDataSource(dataSource);
+		    $('#event-modal').modal('hide');
+		};
+		
+		var currentYear = new Date().getFullYear();
+
+	    $('#yearlyCalendar').calendar({
+	        enableContextMenu: true,
+	        enableRangeSelection: true,
+	        contextMenuItems:[
+	            {
+	                text: 'Update',
+	                click: editEvent
+	            },
+	            {
+	                text: 'Delete',
+	                click: deleteEvent
+	            }
+	        ],
+	        selectRange: function(e) {
+	            editEvent({ startDate: e.startDate, endDate: e.endDate });
+	        },
+	        mouseOnDay: function(e) {
+	            if(e.events.length > 0) {
+	                var content = '';
+	                
+	                for(var i in e.events) {
+	                    content += '<div class="event-tooltip-content">'
+	                             + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+	                             + '<div class="event-location">' + e.events[i].location + '</div>'
+	                             + '</div>';
+	                }
+	            
+	                $(e.element).popover({
+	                    trigger: 'manual',
+	                    container: 'body',
+	                    html:true,
+	                    content: content
+	                });
+	                
+	                $(e.element).popover('show');
+	            }
+	        },
+	        mouseOutDay: function(e) {
+	            if(e.events.length > 0) {
+	                $(e.element).popover('hide');
+	            }
+	        },
+	        dayContextMenu: function(e) {
+	            $(e.element).popover('hide');
+	        },
+	        dataSource: [
+	            {
+	                id: 0,
+	                name: 'Google I/O',
+	                location: 'San Francisco, CA',
+	                startDate: new Date(currentYear, 4, 28),
+	                endDate: new Date(currentYear, 4, 29)
+	            },
+	            {
+	                id: 1,
+	                name: 'Microsoft Convergence',
+	                location: 'New Orleans, LA',
+	                startDate: new Date(currentYear, 2, 16),
+	                endDate: new Date(currentYear, 2, 19)
+	            },
+	            {
+	                id: 2,
+	                name: 'Microsoft Build Developer Conference',
+	                location: 'San Francisco, CA',
+	                startDate: new Date(currentYear, 3, 29),
+	                endDate: new Date(currentYear, 4, 1)
+	            },
+	            {
+	                id: 3,
+	                name: 'Apple Special Event',
+	                location: 'San Francisco, CA',
+	                startDate: new Date(currentYear, 8, 1),
+	                endDate: new Date(currentYear, 8, 1)
+	            },
+	            {
+	                id: 4,
+	                name: 'Apple Keynote',
+	                location: 'San Francisco, CA',
+	                startDate: new Date(currentYear, 8, 9),
+	                endDate: new Date(currentYear, 8, 9)
+	            },
+	            {
+	                id: 5,
+	                name: 'Chrome Developer Summit',
+	                location: 'Mountain View, CA',
+	                startDate: new Date(currentYear, 10, 17),
+	                endDate: new Date(currentYear, 10, 18)
+	            },
+	            {
+	                id: 6,
+	                name: 'F8 2015',
+	                location: 'San Francisco, CA',
+	                startDate: new Date(currentYear, 2, 25),
+	                endDate: new Date(currentYear, 2, 26)
+	            },
+	            {
+	                id: 7,
+	                name: 'Yahoo Mobile Developer Conference',
+	                location: 'New York',
+	                startDate: new Date(currentYear, 7, 25),
+	                endDate: new Date(currentYear, 7, 26)
+	            },
+	            {
+	                id: 8,
+	                name: 'Android Developer Conference',
+	                location: 'Santa Clara, CA',
+	                startDate: new Date(currentYear, 11, 1),
+	                endDate: new Date(currentYear, 11, 4)
+	            },
+	            {
+	                id: 9,
+	                name: 'LA Tech Summit',
+	                location: 'Los Angeles, CA',
+	                startDate: new Date(currentYear, 10, 17),
+	                endDate: new Date(currentYear, 10, 17)
+	            }
+	        ]
+	    });
+	    
+	    $('#save-event').click(function() {
+	        saveEvent();
+	    });
 		
 		
 // ===================================================================================================
 		
+		
+	
 		var jqObj = {
 				
 				chatArea : $('#chatArea'),
@@ -198,7 +452,7 @@ body {
 				mobileStatusBadge : $('#mobileStatusBadge'),
 				IMColla : $('#IMColla'),
 				editorBtnGroupDiv : $('#editorBtnGroupDiv'),
-				
+				yearlyCalendar : $('#yearlyCalendar')
 			};
 			
 		// socket(SockJS)
@@ -596,13 +850,19 @@ body {
 				utils.addClassFunc(btnGroupArray, 'btn-group-justified');
 				resizeFuncs.setMobileHeight();
 			}
-			// initial size setting of calendar in modal
-			calendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.5);
+			// initial size setting of basicCalendar in modal
+			basicCalendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.48);
+			
+			// initial size setting of yearlyCalendar in modal
+			jqObj.yearlyCalendar.height($(window).height() * 0.48);
 			
 			$(window).resize(function() {
 				
-				// resize calendar in modal
-				calendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.5);
+				// resize basicCalendar in modal
+				basicCalendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.48);
+				
+				// resize yearlyCalendar in modal
+				jqObj.yearlyCalendar.height($(window).height() * 0.48);
 				
 				// To basic from mobile
 				if (matchMedia("screen and (min-width: 768px)").matches) {
