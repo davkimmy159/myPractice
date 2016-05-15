@@ -1,0 +1,55 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<!--  basic settings for bootstrap -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
+<!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+ <![endif]-->
+
+<!-- bootstrap.css & bootstrap theme.css -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+
+<!-- normalize.css -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css" rel="stylesheet" type="text/css" />
+
+<!-- fullcalendar.css & fullcalendar.print.css -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/fullcalendar.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/fullcalendar.print.css" rel="stylesheet" type="text/css" />
+
+<!--  pnotify.css (with js!) -->
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.0.0/pnotify.min.css" rel="stylesheet" type="text/css" /> -->
+<link href="../etc/pnotify.custom.min.css" rel="stylesheet" type="text/css" />
+
+<!-- CKEditor & SockJS is loaded here by under layer -->
+
+<title>default</title>
+</head>
+<body>
+
+	<!-- replaced here by under layer -->
+	<div layout:fragment="body"></div>
+
+	<!-- jquery.js & bootstrap.js -->
+	<script src="https://code.jquery.com/jquery-1.11.3.js" integrity="sha256-IGWuzKD7mwVnNY01LtXxq3L84Tm/RJtNCYBfXZw3Je0=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+	<!-- moment.js & its lang.js & fullcalendar.js (with css) & its lang.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/locale/ko.js"></script>  -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/fullcalendar.min.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/lang/ko.js"></script> -->
+
+	<!-- pnotify.js (with css!) -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.0.0/pnotify.min.js"></script> -->
+	<script src="../etc/pnotify.custom.min.js"></script>
+	
+	<!-- replaced here by under layer -->
+	<script layout:fragment="customScript"></script>
+</body>
+</html>

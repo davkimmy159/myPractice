@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css" />
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form-horizontal" role="form" method="post" action="index.php">
+					<div class="form-group">
+						<label for="title" class="col-sm-2 control-label">title</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="title" name="title" placeholder="contents here" value="">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="message" class="col-sm-2 control-label">Message</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" rows="18" name="message"></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-10 col-sm-offset-2">
+							<input id="submit" name="submit" type="submit" value="register" class="btn btn-primary">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-10 col-sm-offset-2">
+							<! Will be used to display an alert to the user>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<form>
+				<div class="form-group">
+					<label for="exampleInputEmail1">이메일 주소</label> <input type="email" class="form-control" id="exampleInputEmail1" placeholder="이메일을 입력하세요">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">암호</label> <input type="password" class="form-control" id="exampleInputPassword1" placeholder="암호">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputFile">파일 업로드</label> <input type="file" id="exampleInputFile">
+					<p class="help-block">여기에 블록레벨 도움말 예제</p>
+				</div>
+				<div class="checkbox">
+					<label> <input type="checkbox"> 입력을 기억합니다
+					</label>
+				</div>
+				<button type="submit" class="btn btn-default">제출</button>
+			</form>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>

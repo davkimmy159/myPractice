@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css" />
+<link rel="stylesheet" type="text/css" href="../static/css/style.css" th:href="@{/css/style.css}" />
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover table-condensed">
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Name</th>
+								<th>Age</th>
+								<th colspan="2">Modify</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="user : ${list}">
+								<td th:text="${user.id}">1</td>
+								<td th:text="${user.name}">Kim</td>
+								<td th:text="${user.age}">23</td>
+								<td>
+									<form th:action="@{control}" method="post">
+										<input type="submit" name="update" value="update" />
+										<input type="hidden" name="modId" th:value="${user.id}" />
+									</form>
+								</td>
+								<td>
+									<form th:action="@{control}" method="post">
+										<input type="submit" name="delete" value="delete" />
+										<input type="hidden" name="modId" th:value="${user.id}" />
+									</form>
+
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr class="success">
+								<form th:action="@{control}" method="post">
+								<td></td>
+								<td>
+									<label for="name">name&nbsp;</label>
+									<input type="text" id="name" name="name" size="20" th:if="${memberUserForm}" th:value="${memberUserForm.name}" th:errorclass="error-input" class="form-control" placeholder="이름을 입력하세요" value="kim" />
+									<span th:if="${memberUserForm} and ${#fields.hasErrors('name')}" th:errors="${memberUserForm.name}" class="error-messages">error!</span>
+								</td>
+								<td>
+									<label for="age">age&nbsp;</label>
+									<input type="text" id="age" name="age" size="3" th:if="${memberUserForm}" th:value="${memberUserForm.age}" th:errorclass="error-input" placeholder="나이를 입력하세요" value="23" />
+									<span th:if="${memberUserForm} and ${#fields.hasErrors('age')}" th:errors="${memberUserForm.age}" class="error-messages">error!</span>
+								</td>
+								<td>
+									<input type="submit" name="insert" value="insert" />
+								</td>
+								</form>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>

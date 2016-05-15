@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # file:~/tmp/testdb
+    username: sa
+    password:
+    initialize: true
+    schema: classpath:/testData/schema.sql
+    data: classpath:/testData/data.sql
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  thymeleaf: 
+    cache: false
+server.context-path: /myPractice

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="default_chat">
+<head>
+<style type="text/css">
+#mobileEditor, #memoEditor {
+	overflow: auto;
+}
+
+
+
+
+#chatArea {
+	background: white;
+	resize: none;
+	cursor: text;
+}
+
+
+#memoContent2 {
+	margin-bottom: 0px;
+}
+
+#memoPagination {
+	margin-top: -10px;
+	margin-bottom: -10px;
+}
+</style>
+<title>test</title>
+</head>
+<body>
+	<!-- Substitution of 'main' on upper layer -->
+	<div layout:fragment="main">
+		<div id="mainRow" class="row">
+			<div id="editorContainer" class="col-sm-9 container-fluid">
+				<div id="formGroup1" class="form-group">
+					<div id="basicEditorDiv" class="hidden-xs">
+						<div id="basicEditor" class="form-control">basicEditor</div>
+					</div>
+					<div id="mobileEditorDiv" class="visible-xs-block">
+						<div id="mobileEditor" class="form-control" contenteditable="true">mobileEditor</div>
+					</div>
+				</div>
+				<div class="pull-right">
+					<div id="btnGroup2" class="btn-group" role="group" aria-label="">
+						<div class="btn-group" role="group">
+							<button id="editorInputBtn" type="button" class="btn btn-primary">
+								Save&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
+							</button>
+						</div>
+						<div class="btn-group" role="group">
+							<button id="toolbarToggleBtn" type="button" class="btn btn-primary">
+								<span id="toolbarToggle" class="glyphicon glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="chatContainer" class="col-sm-3 container-fluid">
+				<div id="formGroup2" class="form-group">
+					<textarea id="chatArea" class="form-control" readonly="readonly"></textarea>
+				</div>
+				<div id="formGroup3" class="form-group">
+					<input id="chatInput" name="chatInput" type="text" class="form-control" placeholder="대화 내용을 입력해주세요" />
+					<!-- "javascript:if(event.keyCode==13){send();}" onkeypress="send2(event)" -->
+				</div>
+				<div>
+					<input id="chatInputBtn" type="button" class="btn btn-primary " value="Send" />
+				</div>
+			</div>
+		</div>
+
+		<!-- Main modal -->
+		<div id="mainModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+						</button>
+						<!-- Nav tabs -->
+						<ul class="nav nav-pills" role="tablist">
+							<li role="presentation" class="active"><a href="#tabContent1" data-toggle="tab" aria-controls="tabContent1" role="tab">일정</a></li>
+							<li role="presentation"><a href="#tabContent2" data-toggle="tab" aria-controls="tabContent2" role="tab">test</a></li>
+							<li role="presentation"><a href="#tabContent3" data-toggle="tab" aria-controls="tabContent3" role="tab">메모</a></li>
+							<li role="presentation"><a href="#tabContent4" data-toggle="tab" aria-controls="tabContent4" role="tab">인원</a></li>
+						</ul>
+						<!-- /.Nav tabs -->
+					</div>
+					<!-- /.modal-header -->
+					<div class="modal-body">
+						<!-- Tab-content -->
+						<div class="tab-content">
+							<!-- tabContent1 -->
+							<div id="tabContent1" class="tab-pane fade in active" role="tabpanel">
+								<div class="container-fluid">
+									<div class="panel panel-info">
+										<!-- panel-heading -->
+										<div class="panel-heading">
+											<h4><span class="label label-primary"><span class=" glyphicon glyphicon-comment"></span></span>&nbsp;<strong>Schedule</strong></h4>
+										</div>
+										<!-- /.panel-heading -->
+										<!-- panel-body -->
+										<div class="panel-body">
+											<div id="calendar"></div>
+										</div>
+										<!-- /.panel-body -->
+										<div class="panel-footer">Panel footer</div>
+									</div>
+									<!-- /.panel -->
+								</div>
+								<!-- /.container-fluid -->
+							</div>
+							<!-- /.tabContent1 -->
+							<!-- tabContent2 -->
+							<div id="tabContent2" class="tab-pane fade" role="tabpanel">
+								<div class="container-fluid">
+									<div class="panel panel-primary">
+										<div class="panel-heading">Panel content</div>
+										<div class="panel-body">Panel content</div>
+										<div class="panel-footer">Panel footer</div>
+									</div>
+									<!-- /.panel -->
+								</div>
+								<!-- /.container-fluid -->
+							</div>
+							<!-- /.tabContent2 -->
+							<!-- tabContent3 -->
+							<div id="tabContent3" class="tab-pane fade" role="tabpanel">
+								<div class="container-fluid">
+									<div class="panel panel-info">
+										<div class="panel-heading">
+											<ul class="nav nav-pills" role="tablist">
+												<li role="presentation" class="active"><a href="#memoContent1" data-toggle="tab" aria-controls="memo writing" role="tab">메모 작성&nbsp;<span class="glyphicon glyphicon-edit"></span></a></li>
+												<li role="presentation"><a href="#memoContent2" data-toggle="tab" aria-controls="memo list" role="tab">메모 목록&nbsp;<span class="glyphicon glyphicon-th-list"></span></a></li>
+											</ul>
+										</div>
+										<div class="panel-body">
+											<!-- Tab-content -->
+											<div class="tab-content">
+												<div id="memoContent1" class="tab-pane fade in active" role="tabpanel">
+													<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
+													<div id="memoEditorDiv">
+														<div id="memoEditor" class="form-control form-group" contenteditable="true">memoEditor</div>
+													</div>
+													<div class="pull-right">
+														<button id="memoSaveBtn" type="button" class="btn btn-primary">
+															Save&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
+														</button>
+													</div>
+												</div>
+												<div id="memoContent2" class="tab-pane fade form-group" role="tabpanel">
+													<!-- Memo arcodian list -->
+													<!-- panel-group -->
+													<div id="memoListAccordion" class="panel-group" role="tablist" aria-multiselectable="true">
+														<!-- panel -->
+														<div class="panel panel-default">
+															<!-- panel-heading -->
+															<div id="memoListHeading1" class="panel-heading" role="tab">
+																<h4 class="panel-title"><a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent1" aria-expanded="true" aria-controls="collapseOne">Memo title 1</a>
+																	<button type="button" class="close" aria-label="Close">
+																		<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+																	</button> <span class="close">&nbsp;</span>
+																	<button type="button" class="close" aria-label="Close">
+																		<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+																	</button></h4>
+															</div>
+															<!-- /.panel-heading -->
+															<!-- panel-collapse -->
+															<div id="memoListContent1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="memoListHeading1">
+																<div class="panel-body">Accordion test 1</div>
+															</div>
+															<!-- /.panel-collapse -->
+														</div>
+														<!-- /.panel -->
+														<!-- panel -->
+														<div class="panel panel-default">
+															<!-- panel-heading -->
+															<div id="memoListHeading2" class="panel-heading" role="tab">
+																<h4 class="panel-title"><a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent2" aria-expanded="false" aria-controls="collapseTwo">Memo title 2 (table)</a>
+																	<button type="button" class="close" aria-label="Close">
+																		<span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span>
+																	</button> <span class="close">&nbsp;</span>
+																	<button type="button" class="close" aria-label="Close">
+																		<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+																	</button></h4>
+															</div>
+															<!-- /.panel-heading -->
+															<!-- panel-collapse -->
+															<div id="memoListContent2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="memoListHeading2">
+																<div class="panel-body">
+																	<p>Accordion test 2</p>
+																	<table class="table table-hover table-striped table-bordered">
+																		<thead>
+																			<tr>
+																				<td>head 1</td>
+																				<td>head 2</td>
+																				<td>head 3</td>
+																				<td>head 4</td>
+																				<td>head 5</td>
+																				<td>head 6</td>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			<tr>
+																				<td>content 1</td>
+																				<td>content 2</td>
+																				<td>content 3</td>
+																				<td>content 4</td>
+																				<td>content 5</td>
+																				<td>
+																					<button type="button" class="btn btn-danger btn-xs">버튼 1</button>
+																				</td>
+																			</tr>
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+															<!-- /.panel-collapse -->
+														</div>
+														<!-- /.panel -->
+														<!-- panel -->
+														<div class="panel panel-default">
+															<!-- panel-heading -->
+															<div id="memoListHeading3" class="panel-heading" role="tab">
+																<h4 class="panel-title"><a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent3" aria-expanded="false" aria-controls="collapseThree">Memo title 3 (URL)</a>
+																	<button type="button" class="close" aria-label="Close">
+																		<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+																	</button> <span class="close">&nbsp;</span>
+																	<button type="button" class="close" aria-label="Close">
+																		<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+																	</button></h4>
+															</div>
+															<!-- /.panel-heading -->
+															<!-- panel-collapse -->
+															<div id="memoListContent3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="memoListHeading3">
+																<div class="panel-body">
+																	<p>Accordion test 3</p>
+																	<p>좋은 내용들 많이 있으니 참고하세요.</p>
+																	<div class="embed-responsive embed-responsive-16by9">
+																		<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/WPvGqX-TXP0"></iframe>
+																	</div>
+																	<p>
+																		출처 : <a href="https://www.youtube.com/watch?v=WPvGqX-TXP0">https://www.youtube.com/watch?v=WPvGqX-TXP0</a>
+																	</p>
+																</div>
+															</div>
+															<!-- /.panel-collapse -->
+														</div>
+														<!-- /.panel -->
+														<!-- panel -->
+														<div class="panel panel-default">
+															<!-- panel-heading -->
+															<div id="memoListHeading4" class="panel-heading" role="tab">
+																<h4 class="panel-title"><a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent4" aria-expanded="false" aria-controls="collapseFoure">Memo title 4 (URL)</a>
+																	<button type="button" class="close" aria-label="Close">
+																		<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+																	</button> <span class="close">&nbsp;</span>
+																	<button type="button" class="close" aria-label="Close">
+																		<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+																	</button></h4>
+															</div>
+															<!-- /.panel-heading -->
+															<!-- panel-collapse -->
+															<div id="memoListContent4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="memoListHeading4">
+																<div class="panel-body">
+																	<p>Accordion test 4</p>
+																	<p>JQuery 내용입니다.</p>
+																	<div class="embed-responsive embed-responsive-16by9">
+																		<iframe class="embed-responsive-item" src="http://gangzzang.tistory.com/entry/%EC%A0%9C%EC%9D%B4%EC%BF%BC%EB%A6%ACjQuery-%EC%84%A0%ED%83%9D%EC%9E%90"></iframe>
+																	</div>
+																	<p>
+																		출처 : <a href="http://gangzzang.tistory.com/entry/%EC%A0%9C%EC%9D%B4%EC%BF%BC%EB%A6%ACjQuery-%EC%84%A0%ED%83%9D%EC%9E%90">http://gangzzang.tistory.com/entry/제이쿼리jQuery-선택자</a>
+																	</p>
+																</div>
+															</div>
+															<!-- /.panel-collapse -->
+														</div>
+														<!-- /.panel -->
+													</div>
+													<!-- /.panel-group -->
+													<!-- pagination -->
+													<div class="text-center">
+														<nav class="center-block">
+															<ul id="memoPagination" class="pagination pagination-sm">
+																<li><a href="#" aria-label="Previous"> <span class="glyphicon glyphicon-backward" aria-hidden="true"></span></a></li>
+																<li><a href="#">1</a></li>
+																<li><a href="#">2</a></li>
+																<li><a href="#">3</a></li>
+																<li><a href="#">4</a></li>
+																<li><a href="#" aria-label="Next"> <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span></a></li>
+															</ul>
+														</nav>
+													</div>
+													<!-- /.pagination -->
+												</div>
+												<!-- /.memoContent2 -->
+											</div>
+											<!-- /.tab-content -->
+										</div>
+										<!-- /.panel-body -->
+										<div class="panel-footer">
+											<button id="memoFooterModalBtn" class="btn btn-primary" data-toggle="modal" data-target="#subModalMemoFooter">memo modal</button>
+										</div>
+										<!-- /.panel-footer -->
+									</div>
+									<!-- /.panel -->
+								</div>
+								<!-- /.container-fluid -->
+							</div>
+							<!-- /.tabContent3 -->
+							<!-- tabContent4 -->
+							<div id="tabContent4" class="tab-pane fade" role="tabpanel">
+								<div class="container-fluid">
+									<div class="panel panel-info">
+										<div class="panel-heading">
+											<h4><span class="label label-primary"><span class="glyphicon glyphicon-user"></span></span>&nbsp;<strong>참여자 목록</strong></h4>
+										</div>
+										<div class="panel-body">
+											<div class="table-responsive">
+												<table class="table table-hover table-striped">
+													<thead>
+														<tr>
+															<td><strong>#</strong></td>
+															<td><strong>ID</strong></td>
+															<td><strong>Name</strong></td>
+															<td><strong>Authority</strong></td>
+															<td><strong>Part</strong></td>
+															<td><strong>기능1</strong></td>
+															<td><strong>기능2</strong></td>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>1</td>
+															<td>Aluminum</td>
+															<td>Yu</td>
+															<td>Host</td>
+															<td>Refactoring</td>
+															<td>
+																<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="기능 1 입니다.">기능1</button>
+															</td>
+															<td>
+																<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="기능 1 입니다.">기능2</button>
+															</td>
+														</tr>
+														<tr>
+															<td>2</td>
+															<td>Chrome</td>
+															<td>Lee</td>
+															<td>Participant</td>
+															<td>Grammar check</td>
+															<td>
+																<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="기능 1 입니다.">
+																	<span class="glyphicon glyphicon-tag"></span>
+																</button>
+															</td>
+															<td>
+																<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="기능 1 입니다.">
+																	<span class="glyphicon glyphicon-minus-sign"></span>
+																</button>
+															</td>
+														</tr>
+														<tr>
+															<td>3</td>
+															<td>Titanium</td>
+															<td>Park</td>
+															<td>Guest</td>
+															<td>none</td>
+															<td>
+																<button type="button" class="btn btn-primary btn-sm">
+																	기능1&nbsp;<span class="glyphicon glyphicon-bullhorn"></span>
+																</button>
+															</td>
+															<td>
+																<button type="button" class="btn btn-danger btn-sm">
+																	기능2&nbsp;<span class="glyphicon glyphicon-minus-sign"></span>
+																</button>
+															</td>
+														</tr>
+														<tr>
+															<td>4</td>
+															<td>Tungsten</td>
+															<td>David</td>
+															<td>Visitor</td>
+															<td>None</td>
+															<td>
+																<button type="button" class="btn btn-primary btn-sm">
+																	기능1&nbsp;<span class="glyphicon glyphicon-send"></span>
+																</button>
+															</td>
+															<td>
+																<button type="button" class="btn btn-danger btn-sm">
+																	기능2&nbsp;<span class="glyphicon glyphicon-ban-circle"></span>
+																</button>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<!-- /.panel-body -->
+										<div class="panel-footer">
+											<div class="form-group">
+												<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapse2">기능 1 설명</button>
+												<button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapse2">기능 2 설명</button>
+											</div>
+											<div id="collapse1" class="collapse">
+												<div class="well">기능 1 설명 예시입니다.</div>
+											</div>
+											<div id="collapse2" class="collapse">
+												<div class="well">기능 2 설명 예시입니다.</div>
+											</div>
+										</div>
+										<!-- /.panel-footer -->
+									</div>
+									<!-- /.panel -->
+								</div>
+								<!-- /.container-fluid -->
+							</div>
+							<!-- /.tabContent4 -->
+						</div>
+						<!-- /.tab-content -->
+					</div>
+					<!-- /.modal-body -->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+					<!-- /.modal-footer -->
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<!-- sub modal in memo panel -->
+		<div class="modal fade" id="subModalMemoFooter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Memo modal</h4>
+					</div>
+					<div class="modal-body">...</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Save changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

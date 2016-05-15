@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="default_chat">
+<head>
+<style type="text/css">
+#mobileEditor {
+	overflow: auto;
+}
+
+#chatArea {
+	background: white;
+	resize: none;
+	cursor: text;
+}
+</style>
+<title>test</title>
+</head>
+<body>
+	<!-- Substitution of 'main' on upper layer -->
+	<div layout:fragment="main">
+		<div id="mainRow" class="row">
+			<div id="editorContainer" class="col-sm-9 container-fluid">
+				<div id="formGroup1" class="form-group">
+					<div id="basicEditorDiv" class="hidden-xs">
+						<div id="basicEditor" name="basicEditor" class="form-control">basicEditor</div>
+					</div>
+					<div id="mobileEditorDiv" class="visible-xs-block">
+						<div id="mobileEditor" name="mobileEditor" contenteditable="true" class="form-control">mobileEditor</div>
+					</div>
+				</div>
+				<div>
+					<input id="editorInputBtn" type="button" class="col-sm-2 col-sm-offset-10 btn btn-primary" value="save" />
+				</div>
+			</div>
+			<div id="chatContainer" class="col-sm-3 container-fluid">
+				<div id="formGroup2" class="form-group">
+					<textarea id="chatArea" class="form-control" readonly="readonly"></textarea>
+				</div>
+				<div id="formGroup3" class="form-group">
+					<input id="chatInput" name="chatInput" type="text" class="form-control" placeholder="대화 내용을 입력해주세요" />
+					<!-- "javascript:if(event.keyCode==13){send();}" onkeypress="send2(event)" -->
+				</div>
+				<div>
+					<input id="chatInputBtn" type="button" class="btn btn-primary " value="send" />
+				</div>
+			</div>
+		</div>
+
+		<!-- modal -->
+		<div id="modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					</div>
+					<!-- /.modal-header-->
+					<div class="modal-body">...</div>
+					<!-- /.modal-body-->
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Save changes</button>
+					</div>
+					<!-- /.modal-footer -->
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+	</div>
+</body>
+</html>
