@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="default">
 <head>
 
-<!-- bootstrap & its theme css is loaded here by upper layer -->
+<!-- common js and css are loaded here by upper layer -->
 
 <!-- custom elements in <head> tag -->
 <!-- ckeditor.js -->
@@ -48,7 +48,7 @@ body {
 						<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 					</button>
 					<div class="btn-group visible-xs-block pull-right">
-						<button id="mobileStatus" name="status" type="button" class="btn btn-primary navbar-btn">
+						<button id="mobileStatus" name="status" type="button" class="btn btn-primary navbar-btn" data-toggle="tooltip" data-placement="bottom" title="Hide toolbar!">
 							Mobile<span id="mobileStatusBadge" class="badge">0</span>
 						</button>
 					</div>
@@ -73,21 +73,21 @@ body {
 					<!-- navbar left -->
 					<ul class="nav navbar-nav">
 						<!-- dropdown -->
-						<li class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Dropdown <span class="caret"></span>
-						</a>
+						<li class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Dropdown <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a id="showHeights">show heights</a></li>
-								<li><a href="">test2</a></li>
-								<li><a href="">test3</a></li>
+								<li><a id="test1">notify test 1</a></li>
+								<li><a id="test2">notify test 2</a></li>
+								<li><a id="test3">notify test 3</a></li>
+								<li><a id="test4">notify test 4</a></li>
 								<li class="divider"></li>
-								<li><a href="">test4</a></li>
+								<li><a id="showHeights">show heights</a></li>
 							</ul></li>
 					</ul>
 
 					<!-- navbar right -->
 					<ul class="nav navbar-nav navbar-right">
 						<li>
-							<button id="basicStatus" name="status" type="button" class="btn btn-primary navbar-btn hidden-xs">
+							<button id="basicStatus" name="status" type="button" class="btn btn-primary navbar-btn hidden-xs" data-toggle="tooltip" data-placement="bottom" title="Hide toolbar!">
 								Basic<span id="basicStatusBadge" class="badge">0</span>
 							</button>
 						</li>
@@ -127,15 +127,12 @@ body {
 				right: 'month,agendaWeek,agendaDay'
 			},
 			editable: true,
+			// for resizing (removing vertical scroll bar)
+			contentHeight: 'auto',
 			events: [
 				{
 					title: 'All Day Event',
 					start: '2016-05-01'
-				},
-				{
-					title: 'Long Event',
-					start: '2014-05-07',
-					end: '2016-05-10'
 				},
 				{
 					id: 999,
@@ -172,6 +169,9 @@ body {
 			calendar.fullCalendar('render');
 		});
 		
+		
+// ===================================================================================================
+		
 		var jqObj = {
 				
 				chatArea : $('#chatArea'),
@@ -181,6 +181,8 @@ body {
 				joinToggleBtn : $('#joinToggleBtn'),
 				toolbarToggleBtn : $('#toolbarToggleBtn'),
 				toolbarToggle : $('#toolbarToggle'),
+				chatNotifyToggleBtn : $('#chatNotifyToggleBtn'),
+				chatNotifyToggle : $('#chatNotifyToggle'),
 				formGroup1 : $('#formGroup1'),
 				formGroup2 : $('#formGroup2'),
 				formGroup3 : $('#formGroup3'),
@@ -192,7 +194,10 @@ body {
 				btnGroup2 : $('#btnGroup2'),
 				basicStatus : $('#basicStatus'),
 				mobileStatus : $('#mobileStatus'),
-				IMColla : $('#IMColla')
+				basicStatusBadge : $('#basicStatusBadge'),
+				mobileStatusBadge : $('#mobileStatusBadge'),
+				IMColla : $('#IMColla'),
+				editorBtnGroupDiv : $('#editorBtnGroupDiv'),
 				
 			};
 			
@@ -206,10 +211,11 @@ body {
 				var URL = location.protocol + '//' + location.host;
 				this.socket = new SockJS(URL + '/myPractice/socket');
 				this.socket.onopen = function(event) {
-					utils.chatAppend('연결 성공');
+					notify.notifyChat('연결 성공', 'success');
 				};
 				this.socket.onclose = function(event) {
-					utils.chatAppend('연결 종료');
+					notify.notifyChat('연결 종료', 'success');
+					
 					// Unespected disconnection
 					if (jqObj.joinToggleBtn.html() == ('Exit')) {
 						utils.chatAppend('Unstable disconnection happened!');
@@ -222,6 +228,7 @@ body {
 				
 				this.socket.onmessage = function(event) {
 					utils.chatAppend(event.data);
+					notify.notifyChat(event.data);
 					badge.add();
 				};
 				this.socket.onerror = function(event) {
@@ -241,17 +248,13 @@ body {
 			// Send data to socket
 			send : function() {
 				var msg = jqObj.chatInput.val();
-				if (this.socket) {
-					utils.chatAppend('나 : ' + msg);
-					this.socket.send(session.nickname + ' : ' + msg);
-					jqObj.chatInput.val('');
-				} else {
-					utils.chatAppend('You need to join first!');
-				}
+				utils.chatAppend('나 : ' + msg);
+				this.socket.send(this.nickname + ' : ' + msg);
+				jqObj.chatInput.val('');
 				msg = null;
 			}
 		};
-		
+
 		var badge = {
 			
 			msgCnt : 0,
@@ -273,6 +276,33 @@ body {
 				utils.addClassFunc(this.badgeBtnArray, 'btn-primary');
 			}
 			
+		};
+		
+		var notify = {
+				
+			toggle : true,
+			
+			notifyChat : function(msg, type) {
+				if(!type)
+					type = 'info'; 
+				if (this.toggle)
+					$.notify(msg, type);				
+			},
+			
+			toggleChatNotify : function() {
+				
+				var str = 'data-original-title';
+				
+				this.toggle = !this.toggle;
+				jqObj.chatNotifyToggle.toggleClass('glyphicon-eye-close');
+				jqObj.chatNotifyToggle.toggleClass('glyphicon-eye-open');
+				if(this.toggle) {
+					jqObj.chatNotifyToggleBtn.attr(str, 'Hide chat notification!').tooltip('hide');			        
+				}
+				else {
+					jqObj.chatNotifyToggleBtn.attr(str, 'Show chat notification!').tooltip('hide');
+				}
+			}
 		};
 		
 		var utils = {
@@ -305,6 +335,19 @@ body {
 				else
 					return false;
 				//]]>
+			},
+			
+			// veryfy chat input
+			verifyChatInput : function() {
+				if (!session.socket) {
+					notify.notifyChat('You need to join first!');
+					jqObj.nicknameInput.focus();
+				} else if (!(this.checkStr(jqObj.chatInput.val()))) {
+					jqObj.chatInput.focus();
+				} else {
+					session.send();
+					jqObj.chatInput.focus();
+				}
 			},
 			
 			// Verify and control Join condition
@@ -351,9 +394,9 @@ body {
 				this.chatAppend('#mobileEditor : ' + jqObj.mobileEditor.height());
 				this.chatAppend('#chatArea : ' + jqObj.chatArea.height());
 				this.chatAppend('#chatContainer - editorContainer : ' + (jqObj.chatContainer.height() - jqObj.editorContainer.height()));
-				this.chatAppend('toolbar toggle button : ' + jqObj.toolbarToggleBtn.val());
 			}
 		};
+
 		var eventFuncs = {
 			tooltipActivate : function() {
 				$('[data-toggle="tooltip"]').tooltip();
@@ -363,19 +406,15 @@ body {
 				// Focus back to chatInput on pressing enter key on chatInput
 				jqObj.chatInput.keypress(function(event) {
 					if (event.keyCode === 13) {
-						if ((jqObj.chatInput.val())) {
-							session.send();
-							jqObj.chatInput.focus();
-						}
+						utils.verifyChatInput();
 					}
 				});
 				// Focus back to chatInput on clicking chatInputBtn
 				jqObj.chatInputBtn.click(function() {
-					if ((jqObj.chatInput.val()))
-						session.send();
-					jqObj.chatInput.focus();
+					utils.verifyChatInput();
 				});
 			},
+			
 			badgeEvent : function() {
 				// Badge event function
 				jqObj.chatArea.focus(function(event) {
@@ -389,6 +428,13 @@ body {
 				});
 				jqObj.mobileStatus.click(function() {
 					badge.reset();
+				});
+			},
+			
+			// Toggle chat notification
+			toggleChatNotifyEvent : function() {
+				jqObj.chatNotifyToggleBtn.click(function() {
+					notify.toggleChatNotify();
 				});
 			},
 			
@@ -407,15 +453,31 @@ body {
 			// Toggle toolbar function
 			toggleToolbarFunc : function() {
 				setTimeout(function() {
+					this.toggle = !this.toggle;
 					$('#cke_1_top').toggle();
 					$('#cke_2_top').toggle();
-					jqObj.toolbarToggle.toggleClass('glyphicon glyphicon-eye-close');
-					jqObj.toolbarToggle.toggleClass('glyphicon glyphicon-eye-open');
+					jqObj.toolbarToggle.toggleClass('glyphicon-ice-lolly-tasted');
+					jqObj.toolbarToggle.toggleClass('glyphicon-ice-lolly');
 					if (matchMedia("screen and (min-width: 768px)").matches) {
 						resizeFuncs.setBasicHeight();
 						basicEditor.focus();
 					} else {
 						jqObj.mobileEditor.focus();
+					}
+				}, 135);
+				
+				setTimeout(function() {
+					
+					var str = 'data-original-title';
+					
+					if(jqObj.toolbarToggle.hasClass('glyphicon-ice-lolly-tasted')) {
+						jqObj.toolbarToggleBtn.attr(str, 'Hide toolbar!').tooltip('hide');
+						jqObj.basicStatus.attr(str, 'Hide toolbar!').tooltip('hide');
+						jqObj.mobileStatus.attr(str, 'Hide toolbar!').tooltip('hide');
+					} else {
+						jqObj.toolbarToggleBtn.attr(str, 'Show toolbar!').tooltip('hide');
+						jqObj.basicStatus.attr(str, 'Show toolbar!').tooltip('hide');
+						jqObj.mobileStatus.attr(str, 'Show toolbar!').tooltip('hide');
 					}
 				}, 135);
 			},
@@ -471,6 +533,7 @@ body {
 				this.windowOutEvent();
 				this.showHeights();
 				this.tooltipActivate();
+				this.toggleChatNotifyEvent();
 			}
 			
 		};
@@ -506,17 +569,19 @@ body {
 			}
 			
 		};
+		
+// ===================================================================================================
+		
 		// == $(function() {
 		$(document).ready(function() {
 			
+			// add element event
 			eventFuncs.addAll();
 			
+			// this is for only testing
 			jqObj.nicknameInput.focus();
 			
-			// Popover on
-			$('[data-toggle="popover"]').popover();
-			
-			// Necessary arrays to set different sets between basic and mobile
+			// arrays to set different sets between basic and mobile
 			var formGroupArray = [ jqObj.formGroup1, jqObj.formGroup2, jqObj.formGroup3 ];
 			var formControlArray = [ jqObj.chatInputBtn ];
 			var btnGroupArray = [ jqObj.btnGroup1, jqObj.btnGroup2 ];
@@ -535,12 +600,14 @@ body {
 			calendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.5);
 			
 			$(window).resize(function() {
+				
+				// resize calendar in modal
+				calendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.5);
+				
 				// To basic from mobile
 				if (matchMedia("screen and (min-width: 768px)").matches) {
 					// resize editor, chatArea
 					resizeFuncs.setBasicHeight();
-					// resize calendar in modal
-					calendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.5);
 					// Applied only once after mode has been changed
 					if (!(formGroupArray[0].hasClass('form-group'))) {
 						// utils.chatAppend("큰 화면 전용");

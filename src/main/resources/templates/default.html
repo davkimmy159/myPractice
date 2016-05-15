@@ -12,11 +12,14 @@
  <![endif]-->
 
 <!-- bootstrap.css & bootstrap theme.css -->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
 
 <!-- normalize.css -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css" rel="stylesheet" type="text/css" />
+
+<!-- font-awesome.css for bootstrap -->
+<link href="../etc/font-awesome-4.6.3/css/font-awesome.min.css" th:href="@{/etc/font-awesome-4.6.3/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
 
 <!-- fullcalendar.css & fullcalendar.print.css -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.7.1/fullcalendar.min.css" rel="stylesheet" type="text/css" />
@@ -24,6 +27,15 @@
 <!--  pnotify.css (with js!) -->
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.0.0/pnotify.min.css" rel="stylesheet" type="text/css" /> -->
 <link href="../etc/pnotify3/pnotify.custom.min.css" th:href="@{/etc/pnotify3/pnotify.custom.min.css}" rel="stylesheet" type="text/css" />
+
+<!-- bootstrap-editable.css (with js!) -->
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+
+<!-- bootstrap-toggle.css (with js!) -->
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet" />
+
+<!-- floating-label.css (with js!) -->
+
 
 <!-- CKEditor & SockJS is loaded here by under layer -->
 
@@ -36,7 +48,9 @@
 
 	<!-- jquery.js & bootstrap.js -->
 	<script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<!-- <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script> -->
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 	<!-- moment.js & its lang.js & fullcalendar.js (with css) & its lang.js -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
@@ -48,6 +62,21 @@
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.0.0/pnotify.min.js"></script> -->
 	<script src="../etc/pnotify3/pnotify.custom.min.js" th:src="@{/etc/pnotify3/pnotify.custom.min.js}"></script>
 
+	<!-- notify.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
+
+	<!-- bootstrap-editable.js (with css!) -->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
+	<!-- jqBootstrapValidation.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqBootstrapValidation/1.3.7/jqBootstrapValidation.min.js"></script>
+
+	<!-- bootstrap-toggle.js (with css!) -->
+	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+	<!-- floating-label (with css!) -->
+
+	
 	<!-- replaced here by under layer -->
 	<script layout:fragment="customScript"></script>
 </body>

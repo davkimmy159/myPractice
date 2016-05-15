@@ -36,16 +36,21 @@
 						<div id="mobileEditor" class="form-control" contenteditable="true">mobileEditor</div>
 					</div>
 				</div>
-				<div class="pull-right">
+				<div id="editorBtnGroupDiv" class="pull-right">
 					<div id="btnGroup2" class="btn-group" role="group" aria-label="">
 						<div class="btn-group" role="group">
 							<button id="editorInputBtn" type="button" class="btn btn-primary">
-								Save&nbsp;<span class="glyphicon glyphicon-floppy-disk"></span>
+								<span class="glyphicon glyphicon-floppy-disk"></span>
 							</button>
 						</div>
 						<div class="btn-group" role="group">
-							<button id="toolbarToggleBtn" type="button" class="btn btn-primary">
-								<span id="toolbarToggle" class="glyphicon glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+							<button id="toolbarToggleBtn" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Hide toolbar!" data-container="body">
+								<span id="toolbarToggle" class="glyphicon glyphicon-ice-lolly-tasted" aria-hidden="true"></span>
+							</button>
+						</div>
+						<div class="btn-group" role="group">
+							<button id="chatNotifyToggleBtn" type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="Hide chat notification!" data-container="body">
+								<span id="chatNotifyToggle" class="glyphicon glyphicon-eye-close"></span>
 							</button>
 						</div>
 					</div>
@@ -60,10 +65,14 @@
 					<!-- "javascript:if(event.keyCode==13){send();}" onkeypress="send2(event)" -->
 				</div>
 				<div>
-					<input id="chatInputBtn" type="button" class="btn btn-primary " value="Send" />
+					<button id="chatInputBtn" type="button" class="btn btn-primary">
+						<span class="glyphicon glyphicon-send"></span>&nbsp;Send
+					</button>
 				</div>
 			</div>
 		</div>
+
+		<!-- =================================================================================================== -->
 
 		<!-- Main modal -->
 		<div id="mainModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -92,7 +101,8 @@
 									<div class="panel panel-info">
 										<!-- panel-heading -->
 										<div class="panel-heading">
-											<h4><span class="label label-primary"><span class=" glyphicon glyphicon-comment"></span></span>&nbsp;<strong>Schedule</strong></h4>
+											<h4><span class="fa fa-refresh fa-spin fa-1x fa-fw"></span>&nbsp;<strong>Schedule</strong></h4>
+											<!-- <span class="label label-primary fa fa-spin"><span class="glyphicon glyphicon-equalizer"></span></span> -->
 										</div>
 										<!-- /.panel-heading -->
 										<!-- panel-body -->
@@ -115,7 +125,20 @@
 									<div class="panel panel-primary">
 										<div class="panel-heading">Panel content</div>
 										<div class="panel-body">Panel content</div>
-										<div class="panel-footer">Panel footer</div>
+										<div class="panel-footer">
+											<div class="btn-group" role="group">
+												<span class="glyphicon glyphicon-floppy-disk"></span>
+												<input data-toggle="toggle" data-size="mini" type="checkbox" />
+											</div>
+											<div class="btn-group" role="group">
+												<span id="toolbarToggle" class="glyphicon glyphicon-ice-lolly-tasted" aria-hidden="true"></span>
+												<input data-toggle="toggle" data-size="mini" type="checkbox" />
+											</div>
+											<div class="btn-group" role="group">
+												<span id="chatNotifyToggle" class="glyphicon glyphicon-eye-close"></span>
+												<input data-toggle="toggle" data-size="mini" type="checkbox" />
+											</div>
+										</div>
 									</div>
 									<!-- /.panel -->
 								</div>
@@ -266,12 +289,12 @@
 															<div id="memoListContent4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="memoListHeading4">
 																<div class="panel-body">
 																	<p>Accordion test 4</p>
-																	<p>JQuery 내용입니다.</p>
+																	<p>부트스트랩 사이트입니다.</p>
 																	<div class="embed-responsive embed-responsive-16by9">
-																		<iframe class="embed-responsive-item" src="http://gangzzang.tistory.com/entry/%EC%A0%9C%EC%9D%B4%EC%BF%BC%EB%A6%ACjQuery-%EC%84%A0%ED%83%9D%EC%9E%90"></iframe>
+																		<iframe class="embed-responsive-item" src="http://bootstrapk.com"></iframe>
 																	</div>
 																	<p>
-																		출처 : <a href="http://gangzzang.tistory.com/entry/%EC%A0%9C%EC%9D%B4%EC%BF%BC%EB%A6%ACjQuery-%EC%84%A0%ED%83%9D%EC%9E%90">http://gangzzang.tistory.com/entry/제이쿼리jQuery-선택자</a>
+																		출처 : <a href="http://bootstrapk.com">http://bootstrapk.com</a>
 																	</p>
 																</div>
 															</div>
@@ -301,7 +324,7 @@
 										</div>
 										<!-- /.panel-body -->
 										<div class="panel-footer">
-											<button id="memoFooterModalBtn" class="btn btn-primary" data-toggle="modal" data-target="#subModalMemoFooter">memo modal</button>
+											<button id="memoFooterBtn" class="btn btn-primary">sub button</button>
 										</div>
 										<!-- /.panel-footer -->
 									</div>
@@ -318,88 +341,89 @@
 											<h4><span class="label label-primary"><span class="glyphicon glyphicon-user"></span></span>&nbsp;<strong>참여자 목록</strong></h4>
 										</div>
 										<div class="panel-body">
-										<div class="container-fluid">
-											<div class="table-responsive">
-												<table class="table table-hover table-striped">
-													<thead>
-														<tr>
-															<td><strong>#</strong></td>
-															<td><strong>ID</strong></td>
-															<td><strong>Name</strong></td>
-															<td><strong>Authority</strong></td>
-															<td><strong>Part</strong></td>
-															<td><strong>기능1</strong></td>
-															<td><strong>기능2</strong></td>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td>1</td>
-															<td>Aluminum</td>
-															<td>Yu</td>
-															<td>Host</td>
-															<td>Refactoring</td>
-															<td>
-																<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="기능 1 입니다.">기능1</button>
-															</td>
-															<td>
-																<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="기능 1 입니다.">기능2</button>
-															</td>
-														</tr>
-														<tr>
-															<td>2</td>
-															<td>Chrome</td>
-															<td>Lee</td>
-															<td>Participant</td>
-															<td>Grammar check</td>
-															<td>
-																<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="기능 1 입니다.">
-																	<span class="glyphicon glyphicon-tag"></span>
-																</button>
-															</td>
-															<td>
-																<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="기능 1 입니다.">
-																	<span class="glyphicon glyphicon-minus-sign"></span>
-																</button>
-															</td>
-														</tr>
-														<tr>
-															<td>3</td>
-															<td>Titanium</td>
-															<td>Park</td>
-															<td>Guest</td>
-															<td>none</td>
-															<td>
-																<button type="button" class="btn btn-primary btn-sm">
-																	기능1&nbsp;<span class="glyphicon glyphicon-bullhorn"></span>
-																</button>
-															</td>
-															<td>
-																<button type="button" class="btn btn-danger btn-sm">
-																	기능2&nbsp;<span class="glyphicon glyphicon-minus-sign"></span>
-																</button>
-															</td>
-														</tr>
-														<tr>
-															<td>4</td>
-															<td>Tungsten</td>
-															<td>David</td>
-															<td>Visitor</td>
-															<td>None</td>
-															<td>
-																<button type="button" class="btn btn-primary btn-sm">
-																	기능1&nbsp;<span class="glyphicon glyphicon-send"></span>
-																</button>
-															</td>
-															<td>
-																<button type="button" class="btn btn-danger btn-sm">
-																	기능2&nbsp;<span class="glyphicon glyphicon-ban-circle"></span>
-																</button>
-															</td>
-														</tr>
-													</tbody>
-												</table>
-											</div></div>
+											<div class="container-fluid">
+												<div class="table-responsive">
+													<table class="table table-hover table-striped">
+														<thead>
+															<tr>
+																<td><strong>#</strong></td>
+																<td><strong>ID</strong></td>
+																<td><strong>Name</strong></td>
+																<td><strong>Authority</strong></td>
+																<td><strong>Part</strong></td>
+																<td><strong>기능1</strong></td>
+																<td><strong>기능2</strong></td>
+															</tr>
+														</thead>
+														<tbody>
+															<tr>
+																<td>1</td>
+																<td>Aluminum</td>
+																<td>Yu</td>
+																<td>Host</td>
+																<td>Refactoring</td>
+																<td>
+																	<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="기능 1 입니다.">기능1</button>
+																</td>
+																<td>
+																	<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="기능 1 입니다.">기능2</button>
+																</td>
+															</tr>
+															<tr>
+																<td>2</td>
+																<td>Chrome</td>
+																<td>Lee</td>
+																<td>Participant</td>
+																<td>Grammar check</td>
+																<td>
+																	<button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="left" title="기능 1 입니다.">
+																		<span class="label fa fa-spin"><span class="glyphicon glyphicon-tag"></span></span>
+																	</button>
+																</td>
+																<td>
+																	<button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="right" title="기능 1 입니다.">
+																		<span class="label fa fa-spin"><span class="glyphicon glyphicon-minus-sign"></span></span>
+																	</button>
+																</td>
+															</tr>
+															<tr>
+																<td>3</td>
+																<td>Titanium</td>
+																<td>Park</td>
+																<td>Guest</td>
+																<td>none</td>
+																<td>
+																	<button type="button" class="btn btn-primary btn-sm">
+																		기능1&nbsp;<span class="glyphicon glyphicon-bullhorn"></span>
+																	</button>
+																</td>
+																<td>
+																	<button type="button" class="btn btn-danger btn-sm">
+																		기능2&nbsp;<span class="glyphicon glyphicon-minus-sign"></span>
+																	</button>
+																</td>
+															</tr>
+															<tr>
+																<td>4</td>
+																<td>Tungsten</td>
+																<td>David</td>
+																<td>Visitor</td>
+																<td>None</td>
+																<td>
+																	<button type="button" class="btn btn-primary btn-sm">
+																		기능1&nbsp;<span class="glyphicon glyphicon-send"></span>
+																	</button>
+																</td>
+																<td>
+																	<button type="button" class="btn btn-danger btn-sm">
+																		기능2&nbsp;<span class="glyphicon glyphicon-ban-circle"></span>
+																	</button>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
 										</div>
 										<!-- /.panel-body -->
 										<div class="panel-footer">
@@ -437,12 +461,12 @@
 		<!-- /.modal -->
 
 		<!-- sub modal in memo panel -->
-		<div class="modal fade" id="subModalMemoFooter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div id="subModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
 						</button>
 						<h4 class="modal-title" id="myModalLabel">Memo modal</h4>
 					</div>
