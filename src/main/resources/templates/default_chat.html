@@ -110,8 +110,7 @@ body {
 		
 		// CKEditor setting	
 		var basicEditor = CKEDITOR.replace('basicEditor', {
-			contentsCss : 'body {overflow-x: scroll;}',
-			contentsCss : '.cke_source {white-space: nowrap;}'
+			contentsCss  : 'body {white-space: nowrap;}'
 		});
 		basicEditor.config.resize_enabled = false;
 		basicEditor.config.removePlugins = 'elementspath';
@@ -119,20 +118,25 @@ body {
 		var mobileEditor = CKEDITOR.inline('mobileEditor');
 		
 		var memoEditor = CKEDITOR.inline('memoEditor');
-		memoEditor.config.resize_enabled = false;
 		$('#memoEditor').height($(window).height() * 0.2);
 		
 		var basicCalInputEditor = CKEDITOR.inline('basicCalInputEditor');
 		basicCalInputEditor.config.resize_enabled = false;
 		$('#basicCalInputEditor').height($(window).height() * 0.2);
 		
-		// PNotify initial setting
-		PNotify.prototype.options.styling = "bootstrap3";
-		
 		// X-editable initial setting
 		 $('#username').editable();
 		
-		 var stack_modal = {"dir1": "top", "dir2": "left", "push": "top", "modal": true, "overlay_close": true};
+		// PNotify initial setting
+		PNotify.prototype.options.styling = "bootstrap3";
+		
+		 var stack_modal = {
+				 "dir1": "top",
+				 "dir2": "left",
+				 "push": "top",
+				 "modal": true,
+				 "overlay_close": true
+		};
 		
 		// FullCalendar in modal
 		var basicCalendar = $("#basicCalendar").fullCalendar({
@@ -170,33 +174,7 @@ body {
 			},
 			events: [
 				{
-					title: 'All Day Event',
-					start: '2016-05-01'
-				},
-				{
 					id: 999,
-					title: 'Repeating Event',
-					start: '2016-05-09T16:00:00'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2016-05-16T16:00:00'
-				},
-				{
-					title: 'Meeting',
-					start: '2016-05-12T10:30:00',
-					end: '2016-05-12T12:30:00'
-				},
-				{
-					title: 'Lunch',
-					start: '2016-05-12T12:00:00'
-				},
-				{
-					title: 'Birthday Party',
-					start: '2016-05-13T07:00:00'
-				},
-				{
 					title: 'Click for Google',
 					url: 'http://google.com/',
 					start: '2016-05-28'
@@ -204,6 +182,7 @@ body {
 			]
 		});
 		
+		// necessary for modal fullCalendar
 		$('#mainModal').on('shown.bs.modal', function () {
 			basicCalendar.fullCalendar('render');
 		});
@@ -247,15 +226,13 @@ body {
 		    if(event.id) {
 		        for(var i in dataSource) {
 		            if(dataSource[i].id == event.id) {
-		                dataSource[i].name = event.name;
+		         		dataSource[i].name = event.name;
 		                dataSource[i].location = event.location;
 		                dataSource[i].startDate = event.startDate;
 		                dataSource[i].endDate = event.endDate;
 		            }
 		        }
-		    }
-		    else
-		    {
+		    } else {
 		        var newId = 0;
 		        for(var i in dataSource) {
 		            if(dataSource[i].id > newId) {
