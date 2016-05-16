@@ -107,24 +107,32 @@ body {
 
 	<!-- Substitution of 'customScript' -->
 	<script layout:fragment="customScript" type="text/javascript">
+		
 		// CKEditor setting	
 		var basicEditor = CKEDITOR.replace('basicEditor', {
 			contentsCss : 'body {overflow-x: scroll;}',
-			contentsCss : '.cke_source {white-space : nowrap;}'
+			contentsCss : '.cke_source {white-space: nowrap;}'
 		});
 		basicEditor.config.resize_enabled = false;
 		basicEditor.config.removePlugins = 'elementspath';
 
 		var mobileEditor = CKEDITOR.inline('mobileEditor');
+		
 		var memoEditor = CKEDITOR.inline('memoEditor');
 		memoEditor.config.resize_enabled = false;
-		$('#memoEditor').height(150);
-
+		$('#memoEditor').height($(window).height() * 0.2);
+		
+		var basicCalInputEditor = CKEDITOR.inline('basicCalInputEditor');
+		basicCalInputEditor.config.resize_enabled = false;
+		$('#basicCalInputEditor').height($(window).height() * 0.2);
+		
 		// PNotify initial setting
 		PNotify.prototype.options.styling = "bootstrap3";
 		
 		// X-editable initial setting
 		 $('#username').editable();
+		
+		 var stack_modal = {"dir1": "top", "dir2": "left", "push": "top", "modal": true, "overlay_close": true};
 		
 		// FullCalendar in modal
 		var basicCalendar = $("#basicCalendar").fullCalendar({
@@ -138,45 +146,10 @@ body {
 			editable: true,
 			// initial height for resizing later(removing vertical scroll bar)
 			contentHeight: 100,
-			select: function(start, end, allDay)
-			{
-				/*
-					after selection user will be promted for enter title for event.
-				*/
+			select: function(start, end, allDay) {
+
+				$('#basicCalendarModal').modal();
 				
-				var notice = new PNotify({
-				    text: $('#form_notice').html(),
-				    icon: true,
-				    width: 'auto',
-				    hide: true,
-				    buttons: {
-				        closer: true,
-				        sticker: true
-				    },
-				    insert_brs: false
-				});
-				notice.get().find('form.pf-form').on('click', '[name=cancel]', function() {
-				    notice.remove();
-				}).submit(function() {
-				    var username = $(this).find('input[name=username]').val();
-				    if (!username) {
-				        alert('Please provide a username.');
-				        return false;
-				    }
-				    notice.update({
-				        title: 'Welcome',
-				        text: 'Successfully logged in as ' + username,
-				        icon: true,
-				        width: PNotify.prototype.options.width,
-				        hide: true,
-				        buttons: {
-				            closer: true,
-				            sticker: true
-				        },
-				        type: 'success'
-				    });
-				    return false;
-				});
 				/*
 					if title is enterd calendar will add title and event into fullCalendar.
 				
@@ -832,6 +805,13 @@ body {
 		
 		// == $(function() {
 		$(document).ready(function() {
+			
+			// for nested modal scroll focus (!!!important!!!)
+			$('.modal').on('hidden.bs.modal', function (e) {
+				if($('.modal').hasClass('in')) {
+					$('body').addClass('modal-open');
+				}    
+			});
 			
 			// add element event
 			eventFuncs.addAll();
