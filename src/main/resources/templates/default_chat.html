@@ -108,9 +108,13 @@ body {
 	<!-- Substitution of 'customScript' -->
 	<script layout:fragment="customScript" type="text/javascript">
 		// CKEditor setting	
-		var basicEditor = CKEDITOR.replace('basicEditor');
+		var basicEditor = CKEDITOR.replace('basicEditor', {
+			contentsCss : 'body {overflow-x: scroll;}',
+			contentsCss : '.cke_source {white-space : nowrap;}'
+		});
 		basicEditor.config.resize_enabled = false;
 		basicEditor.config.removePlugins = 'elementspath';
+
 		var mobileEditor = CKEDITOR.inline('mobileEditor');
 		var memoEditor = CKEDITOR.inline('memoEditor');
 		memoEditor.config.resize_enabled = false;
@@ -118,40 +122,6 @@ body {
 
 		// PNotify initial setting
 		PNotify.prototype.options.styling = "bootstrap3";
-		
-		var notice = new PNotify({
-		    text: $('#form_notice').html(),
-		    icon: true,
-		    width: 'auto',
-		    hide: false,
-		    buttons: {
-		        closer: true,
-		        sticker: true
-		    },
-		    insert_brs: false
-		});
-		notice.get().find('form.pf-form').on('click', '[name=cancel]', function() {
-		    notice.remove();
-		}).submit(function() {
-		    var username = $(this).find('input[name=username]').val();
-		    if (!username) {
-		        alert('Please provide a username.');
-		        return false;
-		    }
-		    notice.update({
-		        title: 'Welcome',
-		        text: 'Successfully logged in as ' + username,
-		        icon: true,
-		        width: PNotify.prototype.options.width,
-		        hide: true,
-		        buttons: {
-		            closer: true,
-		            sticker: true
-		        },
-		        type: 'success'
-		    });
-		    return false;
-		});
 		
 		// X-editable initial setting
 		 $('#username').editable();
@@ -173,10 +143,43 @@ body {
 				/*
 					after selection user will be promted for enter title for event.
 				*/
-				var title = prompt('Event Title:');
+				
+				var notice = new PNotify({
+				    text: $('#form_notice').html(),
+				    icon: true,
+				    width: 'auto',
+				    hide: true,
+				    buttons: {
+				        closer: true,
+				        sticker: true
+				    },
+				    insert_brs: false
+				});
+				notice.get().find('form.pf-form').on('click', '[name=cancel]', function() {
+				    notice.remove();
+				}).submit(function() {
+				    var username = $(this).find('input[name=username]').val();
+				    if (!username) {
+				        alert('Please provide a username.');
+				        return false;
+				    }
+				    notice.update({
+				        title: 'Welcome',
+				        text: 'Successfully logged in as ' + username,
+				        icon: true,
+				        width: PNotify.prototype.options.width,
+				        hide: true,
+				        buttons: {
+				            closer: true,
+				            sticker: true
+				        },
+				        type: 'success'
+				    });
+				    return false;
+				});
 				/*
 					if title is enterd calendar will add title and event into fullCalendar.
-				*/
+				
 				if (title)
 				{
 					calendar.fullCalendar('renderEvent',
@@ -189,6 +192,7 @@ body {
 						true // make the event "stick"
 					);
 				}
+				*/
 				calendar.fullCalendar('unselect');
 			},
 			events: [
@@ -244,7 +248,7 @@ body {
 		};
 
 		function deleteEvent(event) {
-		    var dataSource = $('#yearCalendar').data('calendar').getDataSource();
+		    var dataSource = $('#yearlyCalendar').data('calendar').getDataSource();
 
 		    for(var i in dataSource) {
 		        if(dataSource[i].id == event.id) {
@@ -253,7 +257,7 @@ body {
 		        }
 		    }
 		    
-		    $('#yearCalendar').data('calendar').setDataSource(dataSource);
+		    $('#yearlyCalendar').data('calendar').setDataSource(dataSource);
 		};
 
 		function saveEvent() {
@@ -265,7 +269,7 @@ body {
 		        endDate: $('#event-modal input[name="event-end-date"]').datepicker('getDate')
 		    }
 		    
-		    var dataSource = $('#yearCalendar').data('calendar').getDataSource();
+		    var dataSource = $('#yearlyCalendar').data('calendar').getDataSource();
 
 		    if(event.id) {
 		        for(var i in dataSource) {
@@ -292,7 +296,7 @@ body {
 		        dataSource.push(event);
 		    }
 		    
-		    $('#yearCalendar').data('calendar').setDataSource(dataSource);
+		    $('#yearlyCalendar').data('calendar').setDataSource(dataSource);
 		    $('#event-modal').modal('hide');
 		};
 		
