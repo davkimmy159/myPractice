@@ -110,8 +110,7 @@ body {
 		
 		// CKEditor setting	
 		var basicEditor = CKEDITOR.replace('basicEditor', {
-			contentsCss : 'body {overflow-x: scroll;}',
-			contentsCss : '.cke_source {white-space: nowrap;}'
+			contentsCss  : 'body {white-space: nowrap;}'
 		});
 		basicEditor.config.resize_enabled = false;
 		basicEditor.config.removePlugins = 'elementspath';
@@ -119,20 +118,10 @@ body {
 		var mobileEditor = CKEDITOR.inline('mobileEditor');
 		
 		var memoEditor = CKEDITOR.inline('memoEditor');
-		memoEditor.config.resize_enabled = false;
 		$('#memoEditor').height($(window).height() * 0.2);
 		
 		var basicCalInputEditor = CKEDITOR.inline('basicCalInputEditor');
-		basicCalInputEditor.config.resize_enabled = false;
 		$('#basicCalInputEditor').height($(window).height() * 0.2);
-		
-		// PNotify initial setting
-		PNotify.prototype.options.styling = "bootstrap3";
-		
-		// X-editable initial setting
-		 $('#username').editable();
-		
-		 var stack_modal = {"dir1": "top", "dir2": "left", "push": "top", "modal": true, "overlay_close": true};
 		
 		// FullCalendar in modal
 		var basicCalendar = $("#basicCalendar").fullCalendar({
@@ -144,7 +133,7 @@ body {
 			selectable: true,
 			selectHelper: true,
 			editable: true,
-			// initial height for resizing later(removing vertical scroll bar)
+			// initial height set for resizing later(removing vertical scroll bar)
 			contentHeight: 100,
 			select: function(start, end, allDay) {
 
@@ -170,33 +159,7 @@ body {
 			},
 			events: [
 				{
-					title: 'All Day Event',
-					start: '2016-05-01'
-				},
-				{
 					id: 999,
-					title: 'Repeating Event',
-					start: '2016-05-09T16:00:00'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2016-05-16T16:00:00'
-				},
-				{
-					title: 'Meeting',
-					start: '2016-05-12T10:30:00',
-					end: '2016-05-12T12:30:00'
-				},
-				{
-					title: 'Lunch',
-					start: '2016-05-12T12:00:00'
-				},
-				{
-					title: 'Birthday Party',
-					start: '2016-05-13T07:00:00'
-				},
-				{
 					title: 'Click for Google',
 					url: 'http://google.com/',
 					start: '2016-05-28'
@@ -204,6 +167,7 @@ body {
 			]
 		});
 		
+		// must be called right after the declaration of fullCalendar
 		$('#mainModal').on('shown.bs.modal', function () {
 			basicCalendar.fullCalendar('render');
 		});
@@ -325,7 +289,7 @@ body {
 	                id: 0,
 	                name: 'Google I/O',
 	                location: 'San Francisco, CA',
-	                startDate: new Date(currentYear, 4, 28),
+	                startDate: new Date(currentYear, 4, 1),
 	                endDate: new Date(currentYear, 4, 29)
 	            },
 	            {
@@ -334,62 +298,6 @@ body {
 	                location: 'New Orleans, LA',
 	                startDate: new Date(currentYear, 2, 16),
 	                endDate: new Date(currentYear, 2, 19)
-	            },
-	            {
-	                id: 2,
-	                name: 'Microsoft Build Developer Conference',
-	                location: 'San Francisco, CA',
-	                startDate: new Date(currentYear, 3, 29),
-	                endDate: new Date(currentYear, 4, 1)
-	            },
-	            {
-	                id: 3,
-	                name: 'Apple Special Event',
-	                location: 'San Francisco, CA',
-	                startDate: new Date(currentYear, 8, 1),
-	                endDate: new Date(currentYear, 8, 1)
-	            },
-	            {
-	                id: 4,
-	                name: 'Apple Keynote',
-	                location: 'San Francisco, CA',
-	                startDate: new Date(currentYear, 8, 9),
-	                endDate: new Date(currentYear, 8, 9)
-	            },
-	            {
-	                id: 5,
-	                name: 'Chrome Developer Summit',
-	                location: 'Mountain View, CA',
-	                startDate: new Date(currentYear, 10, 17),
-	                endDate: new Date(currentYear, 10, 18)
-	            },
-	            {
-	                id: 6,
-	                name: 'F8 2015',
-	                location: 'San Francisco, CA',
-	                startDate: new Date(currentYear, 2, 25),
-	                endDate: new Date(currentYear, 2, 26)
-	            },
-	            {
-	                id: 7,
-	                name: 'Yahoo Mobile Developer Conference',
-	                location: 'New York',
-	                startDate: new Date(currentYear, 7, 25),
-	                endDate: new Date(currentYear, 7, 26)
-	            },
-	            {
-	                id: 8,
-	                name: 'Android Developer Conference',
-	                location: 'Santa Clara, CA',
-	                startDate: new Date(currentYear, 11, 1),
-	                endDate: new Date(currentYear, 11, 4)
-	            },
-	            {
-	                id: 9,
-	                name: 'LA Tech Summit',
-	                location: 'Los Angeles, CA',
-	                startDate: new Date(currentYear, 10, 17),
-	                endDate: new Date(currentYear, 10, 17)
 	            }
 	        ]
 	    });
@@ -398,9 +306,16 @@ body {
 	        saveEvent();
 	    });
 		
-		
 // ===================================================================================================
 		
+	
+		var datepicker = {
+		
+			basicCalendarDatepicker : function() {
+				$('#"basicCalendarModal .datepicker')
+			}
+		
+		};
 		
 	
 		var jqObj = {
@@ -756,7 +671,7 @@ body {
 				});
 			},
 			
-			addAll() {
+			addAllEvents() {
 				this.focusBackToChatInput();
 				this.badgeEvent();
 				this.toggleJoinEvent();
@@ -765,32 +680,133 @@ body {
 				this.showHeights();
 				this.tooltipActivate();
 				this.toggleChatNotifyEvent();
+				modalFuncs.addAllEventsAndInitSet();
+				calendarFuncs.addAllEventsAndInitSet();
+				datepickerFuncs.addAllEventsAndInitSet();
+				pnotifyFuncs.addAllEventsAndInitSet();
+				xeditableFuncs.addAllEventsAndInitSet();
+				
 			}
 			
 		};
+
+		var modalFuncs = {
+				
+
+				
+				
+			// necessary for nested modal scroll focus (!!!important!!!)
+			resolveNestedModalScrollbarProblem : function() {
+				$('.modal').on('hidden.bs.modal', function (e) {
+					if($('.modal').hasClass('in')) {
+						$('body').addClass('modal-open');
+					}    
+				});					
+			},
+			
+			addAllEventsAndInitSet : function() {
+				this.resolveNestedModalScrollbarProblem();
+			}
+		};
+			
+		var calendarFuncs = {
+			
+		
+				
+			addAllEventsAndInitSet : function() {
+				
+			}
+			
+		};
+		
+		var datepickerFuncs = {
+				
+	
+			
+			addAllEventsAndInitSet : function() {
+				
+			}
+		};
+		
+		var pnotifyFuncs = {
+			
+			stack_modal : {
+				"dir1": "top",
+				"dir2": "left",
+				"push": "top",
+				"modal": true,
+				"overlay_close": true
+			},
+				
+			addAllEventsAndInitSet : function() {
+				// PNotify initial setting
+				PNotify.prototype.options.styling = "bootstrap3";
+				
+			}
+			
+		};
+		
+		var xeditableFuncs = {
+			
+			
+			addAllEventsAndInitSet : function() {
+				// X-editable initial setting
+				$('#username').editable();
+			}
+		};
+		
 		var resizeFuncs = {
+			
+			// arrays to set different sets between basic and mobile
+			formGroupArray : [ jqObj.formGroup1, jqObj.formGroup2, jqObj.formGroup3 ],
+			formControlArray : [ jqObj.chatInputBtn ],
+			btnGroupArray : [ jqObj.btnGroup1, jqObj.btnGroup2 ],
+			
+			setGapByTogglingClass : function() {
+				utils.toggleClassArrayFunc(this.formGroupArray, 'form-group');
+				utils.toggleClassArrayFunc(this.formControlArray, 'form-control');
+				utils.toggleClassArrayFunc(this.btnGroupArray, 'btn-group-justified');
+			},
+				
+			setBothCalendarHeight : function() {
+				// resize height of basicCalendar in modal
+				basicCalendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.48);
+				
+				// resize height of yearlyCalendar in modal
+				jqObj.yearlyCalendar.height($(window).height() * 0.48);
+			},
+			
+			setBasicEditorHeight : function() {
+				basicEditor.resize('100%', jqObj.chatArea.height() + 63);
+			},
+			
+			setBasicChatAreaHeight : function() {
+				jqObj.chatArea.height($(window).height() - 175);
+			},
 			
 			// There was a problem that editor's height is not compatible with chatArea's one at some point
 			// I think it was from CKEditor's toolbar height changes.
 			// So I've deicded to use an if statement to ensure it's compatible when resizing
 			checkEditorHeightAgainAndResize : function() {
 				if (jqObj.editorContainer.height() != jqObj.chatContainer.height()) {
-					basicEditor.resize('100%', jqObj.chatArea.height() + 63);
+					this.setBasicEditorHeight();
 				}
 			},
 			
 			setInitialBasicHeight : function() {
-				jqObj.chatArea.height($(window).height() - 175);
+				this.setBasicChatAreaHeight();
+				
 				// CKEditor is loaded at the last moment, so I used 'on' method from CKEditor
 				basicEditor.on('instanceReady', function() {
-					basicEditor.resize('100%', jqObj.chatArea.height() + 63);
-					this.checkEditorHeightAgainAndResize();
+					// keyword 'this' in 'on' method of CKEditor instance means basicEditor itself, so I specified 'resizeFuncs' object
+					resizeFuncs.setBasicEditorHeight();
+					resizeFuncs.checkEditorHeightAgainAndResize();
 				});
 			},
 			
 			setBasicHeight : function() {
-				jqObj.chatArea.height($(window).height() - 175);
-				basicEditor.resize('100%', jqObj.chatArea.height() + 63);
+				this.setBasicChatAreaHeight();
+				this.setBasicEditorHeight();
 				this.checkEditorHeightAgainAndResize();
 			},
 			
@@ -806,72 +822,49 @@ body {
 		// == $(function() {
 		$(document).ready(function() {
 			
-			// for nested modal scroll focus (!!!important!!!)
-			$('.modal').on('hidden.bs.modal', function (e) {
-				if($('.modal').hasClass('in')) {
-					$('body').addClass('modal-open');
-				}    
-			});
-			
-			// add element event
-			eventFuncs.addAll();
-			
 			// this is for only testing
 			jqObj.nicknameInput.focus();
 			
-			// arrays to set different sets between basic and mobile
-			var formGroupArray = [ jqObj.formGroup1, jqObj.formGroup2, jqObj.formGroup3 ];
-			var formControlArray = [ jqObj.chatInputBtn ];
-			var btnGroupArray = [ jqObj.btnGroup1, jqObj.btnGroup2 ];
+			// add element events and initial settings of frameworks
+			eventFuncs.addAllEvents();
+			
 			// Initial setting
 			if (matchMedia("screen and (min-width: 768px)").matches) {
 				// utils.chatAppend("큰 화면 전용");
 				resizeFuncs.setInitialBasicHeight();
 			} else {
 				// utils.chatAppend("작은 화면 전용");
-				utils.removeClassFunc(formGroupArray, 'form-group');
-				utils.addClassFunc(formControlArray, 'form-control');
-				utils.addClassFunc(btnGroupArray, 'btn-group-justified');
+				resizeFuncs.setGapByTogglingClass();
 				resizeFuncs.setMobileHeight();
 			}
-			// initial size setting of basicCalendar in modal
-			basicCalendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.48);
 			
-			// initial size setting of yearlyCalendar in modal
-			jqObj.yearlyCalendar.height($(window).height() * 0.48);
+			// resize height of both calendar in modal
+			resizeFuncs.setBothCalendarHeight();
 			
 			$(window).resize(function() {
-				
-				// resize basicCalendar in modal
-				basicCalendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.48);
-				
-				// resize yearlyCalendar in modal
-				jqObj.yearlyCalendar.height($(window).height() * 0.48);
 				
 				// To basic from mobile
 				if (matchMedia("screen and (min-width: 768px)").matches) {
 					// resize editor, chatArea
 					resizeFuncs.setBasicHeight();
 					// Applied only once after mode has been changed
-					if (!(formGroupArray[0].hasClass('form-group'))) {
-						// utils.chatAppend("큰 화면 전용");
-						utils.removeClassFunc(formControlArray, 'form-control');
-						utils.addClassFunc(formGroupArray, 'form-group');
-						utils.removeClassFunc(btnGroupArray, 'btn-group-justified');
+					if (!(resizeFuncs.formGroupArray[0].hasClass('form-group'))) {
+						resizeFuncs.setGapByTogglingClass();
 						resizeFuncs.setBasicHeight();
 					}
 				} else { // To mobile from basic
 					// resize editor, chatArea
 					resizeFuncs.setMobileHeight();
 					// // Applied only once after mode has been changed
-					if (formGroupArray[0].hasClass('form-group')) {
-						// utils.chatAppend("작은 화면 전용");
-						utils.removeClassFunc(formGroupArray, 'form-group');
-						utils.addClassFunc(formControlArray, 'form-control');
-						utils.addClassFunc(btnGroupArray, 'btn-group-justified');
+					if (resizeFuncs.formGroupArray[0].hasClass('form-group')) {
+						resizeFuncs.setGapByTogglingClass();
 						resizeFuncs.setMobileHeight();
 					}
 				}
+				
+				// resize height of both calendar in modal
+				resizeFuncs.setBothCalendarHeight();
+			
 			}).resize();
 		});
 	</script>
