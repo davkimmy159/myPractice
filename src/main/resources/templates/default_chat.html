@@ -122,6 +122,23 @@ body {
 		
 		var basicCalInputEditor = CKEDITOR.inline('basicCalInputEditor');
 		$('#basicCalInputEditor').height($(window).height() * 0.2);
+<<<<<<< HEAD
+=======
+		
+		// X-editable initial setting
+		 $('#username').editable();
+		
+		// PNotify initial setting
+		PNotify.prototype.options.styling = "bootstrap3";
+		
+		 var stack_modal = {
+				 "dir1": "top",
+				 "dir2": "left",
+				 "push": "top",
+				 "modal": true,
+				 "overlay_close": true
+		};
+>>>>>>> refs/remotes/origin/master
 		
 		// FullCalendar in modal
 		var basicCalendar = $("#basicCalendar").fullCalendar({
@@ -167,7 +184,11 @@ body {
 			]
 		});
 		
+<<<<<<< HEAD
 		// must be called right after the declaration of fullCalendar
+=======
+		// necessary for modal fullCalendar
+>>>>>>> refs/remotes/origin/master
 		$('#mainModal').on('shown.bs.modal', function () {
 			basicCalendar.fullCalendar('render');
 		});
@@ -211,15 +232,13 @@ body {
 		    if(event.id) {
 		        for(var i in dataSource) {
 		            if(dataSource[i].id == event.id) {
-		                dataSource[i].name = event.name;
+		         		dataSource[i].name = event.name;
 		                dataSource[i].location = event.location;
 		                dataSource[i].startDate = event.startDate;
 		                dataSource[i].endDate = event.endDate;
 		            }
 		        }
-		    }
-		    else
-		    {
+		    } else {
 		        var newId = 0;
 		        for(var i in dataSource) {
 		            if(dataSource[i].id > newId) {
