@@ -120,25 +120,16 @@ body {
 		var memoEditor = CKEDITOR.inline('memoEditor');
 		$('#memoEditor').height($(window).height() * 0.2);
 		
-		var basicCalInputEditor = CKEDITOR.inline('basicCalInputEditor');
+		var basicCalendarInputEditor = CKEDITOR.inline('basicCalendarInputEditor');
 		$('#basicCalInputEditor').height($(window).height() * 0.2);
-<<<<<<< HEAD
-=======
 		
-		// X-editable initial setting
-		 $('#username').editable();
-		
-		// PNotify initial setting
-		PNotify.prototype.options.styling = "bootstrap3";
-		
-		 var stack_modal = {
-				 "dir1": "top",
-				 "dir2": "left",
-				 "push": "top",
-				 "modal": true,
-				 "overlay_close": true
+		var stack_modal = {
+			"dir1": "top",
+			"dir2": "left",
+			"push": "top",
+			"modal": true,
+			"overlay_close": true
 		};
->>>>>>> refs/remotes/origin/master
 		
 		// FullCalendar in modal
 		var basicCalendar = $("#basicCalendar").fullCalendar({
@@ -154,25 +145,13 @@ body {
 			contentHeight: 100,
 			select: function(start, end, allDay) {
 
-				$('#basicCalendarModal').modal();
+				BCFunc.BCEventStartDate.datepicker('setDate', start.toDate());
+				BCFunc.BCEventEndDate.datepicker('setDate', end.subtract(1, 'days').toDate());
+				BCFunc.BCEventTitle.val(start.toDate() + ' : ' + end.toDate());
 				
-				/*
-					if title is enterd calendar will add title and event into fullCalendar.
+				$('#basicCalendarModal').modal('show');
 				
-				if (title)
-				{
-					calendar.fullCalendar('renderEvent',
-						{
-							title: title,
-							start: start,
-							end: end,
-							allDay: allDay
-						},
-						true // make the event "stick"
-					);
-				}
-				*/
-				calendar.fullCalendar('unselect');
+				$("#basicCalendar").fullCalendar('unselect');
 			},
 			events: [
 				{
@@ -184,14 +163,87 @@ body {
 			]
 		});
 		
-<<<<<<< HEAD
 		// must be called right after the declaration of fullCalendar
-=======
-		// necessary for modal fullCalendar
->>>>>>> refs/remotes/origin/master
 		$('#mainModal').on('shown.bs.modal', function () {
 			basicCalendar.fullCalendar('render');
 		});
+		
+		var BCFunc = {
+			BCEventData : {},
+			BCEventId : $('#basicCalendarModal input[name="BCEventId"]'),
+			BCEventTitle : $('#basicCalendarModal input[name="BCEventTitle"]'),
+			BCEventContent : $('#basicCalendarModal input[name="BCEventContent"]'),
+			BCEventStartDate : $('#basicCalendarModal input[name="BCEventStartDate"]'),
+			BCEventEndDate : $('#basicCalendarModal input[name="BCEventEndDate"]'),
+			
+			BCModalSaveBtn : $('#basicCalendarModal button[name="BCModalSaveBtn"]'),
+			BCModalCloseBtn : $('#basicCalendarModal button[name="BCModalCloseBtn"]'),
+			
+			BCInitialSettings : function() {
+				this.BCEventStartDate.css('z-index', 10000);
+				this.BCEventEndDate.css('z-index', 10000);
+				this.BCEventStartDate.datepicker();
+				this.BCEventEndDate.datepicker();
+			},
+			
+			addAllEventsAndInitSet : function() {
+				this.BCInitialSettings();
+			}
+		};
+		
+		var BCModalFunc = {
+			BCModalSaveBtnFunc : function() {
+				BCFunc.BCModalSaveBtn.click(function() {
+					BCFunc.BCEventData.id = BCFunc.BCEventId.val();
+					BCFunc.BCEventData.title = BCFunc.BCEventTitle.val();
+					BCFunc.BCEventData.content = basicCalendarInputEditor.getData();
+					BCFunc.BCEventData.startDate = BCFunc.BCEventStartDate.datepicker('getDate');
+					BCFunc.BCEventData.endDate = BCFunc.BCEventEndDate.datepicker('getDate');
+					BCFunc.BCEventData.endDate.setDate(BCFunc.BCEventData.endDate.getDate() + 1);
+					
+					if(BCFunc.BCEventData.title) {
+						
+						
+						
+						basicCalendar.fullCalendar('renderEvent', {
+								title: BCFunc.BCEventData.title,
+								start: BCFunc.BCEventData.startDate,
+								end: BCFunc.BCEventData.endDate
+							},
+							true // make the event "stick"
+						);
+						
+						BCFunc.BCEventId.val('');
+						BCFunc.BCEventTitle.val('');
+						basicCalendarInputEditor.setData('');
+						
+						$('#basicCalendarModal').modal('hide');
+					} else {
+						alert('input any info!');
+					}
+				});
+			},
+			
+			BCModalCloseBtnFunc : function() {
+				BCFunc.BCModalCloseBtn.click(function() {
+					BCFunc.BCEventId.val('');
+					BCFunc.BCEventTitle.val('');
+					basicCalendarInputEditor.setData('');
+					
+					$('#basicCalendarModal').modal('hide');
+				});
+			},
+			
+			addAllEventsAndInitSet : function() {
+				this.BCModalSaveBtnFunc();
+				this.BCModalCloseBtnFunc();
+			}
+		};
+		
+		BCFunc.addAllEventsAndInitSet();
+		BCModalFunc.addAllEventsAndInitSet();
+		
+		/*
 		
 		// bootstrap-year-calendar in modal
 		// var yearCalendar = $('#yearlyCalendar').calendar();
@@ -325,18 +377,10 @@ body {
 	        saveEvent();
 	    });
 		
+	    */
+	    
 // ===================================================================================================
 		
-	
-		var datepicker = {
-		
-			basicCalendarDatepicker : function() {
-				$('#"basicCalendarModal .datepicker')
-			}
-		
-		};
-		
-	
 		var jqObj = {
 				
 				chatArea : $('#chatArea'),
@@ -363,7 +407,9 @@ body {
 				mobileStatusBadge : $('#mobileStatusBadge'),
 				IMColla : $('#IMColla'),
 				editorBtnGroupDiv : $('#editorBtnGroupDiv'),
+				basicCalendar : $('#basicCalendar'),
 				yearlyCalendar : $('#yearlyCalendar')
+				
 			};
 			
 		// socket(SockJS)
