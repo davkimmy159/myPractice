@@ -108,30 +108,71 @@ body {
 	<!-- Substitution of 'customScript' -->
 	<script layout:fragment="customScript" type="text/javascript">
 		
-		// CKEditor setting	
+	var jqObj = {
+			
+			editorContainer : $('#editorContainer'),
+			chatContainer : $('#chatContainer'),
+			
+			mobileEditor : $('#mobileEditor'),
+			basicCalendarInputEditor : $('#basicCalendarInputEditor'),
+			memoEditor : $('#memoEditor'),
+			
+			chatArea : $('#chatArea'),
+			
+			chatInput : $('#chatInput'),
+			nicknameInput : $('#nicknameInput'),
+			
+			IMColla : $('#IMColla'),
+			
+			editorBtnGroupDiv : $('#editorBtnGroupDiv'),
+			
+			editorInputBtn : $('#editorInputBtn'),
+			chatInputBtn : $('#chatInputBtn'),
+			joinToggleBtn : $('#joinToggleBtn'),
+			toolbarToggleBtn : $('#toolbarToggleBtn'),
+			toolbarToggle : $('#toolbarToggle'),
+			chatNotifyToggleBtn : $('#chatNotifyToggleBtn'),
+			chatNotifyToggle : $('#chatNotifyToggle'),
+
+			btnGroup1 : $('#btnGroup1'),
+			btnGroup2 : $('#btnGroup2'),
+
+			formGroup1 : $('#formGroup1'),
+			formGroup2 : $('#formGroup2'),
+			formGroup3 : $('#formGroup3'),
+			
+			basicStatusBadge : $('#basicStatusBadge'),
+			mobileStatusBadge : $('#mobileStatusBadge'),
+			basicStatus : $('#basicStatus'),
+			mobileStatus : $('#mobileStatus'),
+
+			basicCalendar : $('#basicCalendar'),
+			yearlyCalendar : $('#yearlyCalendar'),
+
+			mainModal : $('#mailModal'),
+			basicCalendarModal : $('#basicCalendarModal')
+			
+		};
+		
+		// basicEditor settings (CKEditor)	
 		var basicEditor = CKEDITOR.replace('basicEditor', {
 			contentsCss  : 'body {white-space: nowrap;}'
 		});
 		basicEditor.config.resize_enabled = false;
 		basicEditor.config.removePlugins = 'elementspath';
 
+		// mobileEditor settings (inline CKEditor)
 		var mobileEditor = CKEDITOR.inline('mobileEditor');
 		
+		// memoEditor settings (inline CKEditor)
 		var memoEditor = CKEDITOR.inline('memoEditor');
 		$('#memoEditor').height($(window).height() * 0.2);
 		
+		// BCInputEditor settings (inline CKEditor)
 		var basicCalendarInputEditor = CKEDITOR.inline('basicCalendarInputEditor');
 		$('#basicCalendarInputEditor').height($(window).height() * 0.2);
 		
-		var stack_modal = {
-			"dir1": "top",
-			"dir2": "left",
-			"push": "top",
-			"modal": true,
-			"overlay_close": true
-		};
-		
-		// FullCalendar in modal
+		// FullCalendar (in modal)
 		var basicCalendar = $("#basicCalendar").fullCalendar({
 			header: {
 				left: 'prev,next today',
@@ -141,26 +182,37 @@ body {
 			selectable: true,
 			selectHelper: true,
 			editable: true,
+			
 			// initial height set for resizing later(removing vertical scroll bar)
 			contentHeight: 100,
-			select: function(start, end, allDay) {
+			
+			// fired when its calendar cell is clicked or dragged
+			select: function(start, end) {
 
-				BCFunc.BCEventStartDate.data("DateTimePicker").date(start);
-				BCFunc.BCEventEndDate.data("DateTimePicker").date(end.subtract(1, 'days'));
-				// BCFunc.BCEventTitle.val(start.toDate() + ' : ' + end.toDate());
+				BCModalFunc.BCEventStartDate.data("DateTimePicker").date(start);
+				BCModalFunc.BCEventEndDate.data("DateTimePicker").date(end.subtract(1, 'days'));
 
-				$('#basicCalendarModal').modal('show');
+				jqObj.basicCalendarModal.modal('show');
 				
 				$("#basicCalendar").fullCalendar('unselect');
 			},
 			events: [
 				{
-					id: 999,
-					title: 'Click for Google',
-					url: 'http://google.com/',
-					start: '2016-05-28'
+					id : 999,
+					title : 'Click for Google',
+					start : '2016-05-28',
+					editable : true,
+					startEditable : true
 				}
 			]
+		});
+		
+		basicCalendar.fullCalendar({
+			header: {
+				left: 'today',
+				center: 'title',
+				right: 'month'
+			}
 		});
 		
 		// must be called right after the declaration of fullCalendar
@@ -168,21 +220,30 @@ body {
 			basicCalendar.fullCalendar('render');
 		});
 		
-		var BCFunc = {
-			BCEventData : {},
-			BCEventId : $('#basicCalendarModal input[name="BCEventId"]'),
-			BCEventTitle : $('#basicCalendarModal input[name="BCEventTitle"]'),
-			BCEventContent : $('#basicCalendarModal input[name="BCEventContent"]'),
+		
+		var BCModalFunc = {
 			
-			BCEventStartDate : $('#basicCalendarModal input[name="BCEventStartDate"]'),
-			BCEventEndDate : $('#basicCalendarModal input[name="BCEventEndDate"]'),
+			BCEventVO : {},
 			
-			BCModalSaveBtn : $('#basicCalendarModal button[name="BCModalSaveBtn"]'),
-			BCModalCloseBtn : $('#basicCalendarModal button[name="BCModalCloseBtn"]'),
+			BCEvendDataId : 1,
+			// BCEventId : jqObj.basicCalendarModal.find('input[name="BCEventId"]'),
+			
+			
+			BCEventTitle : jqObj.basicCalendarModal.find('input[name="BCEventTitle"]'),
+			BCEventContent : jqObj.basicCalendarModal.find('input[name="BCEventContent"]'),
+			
+			BCEventAllDayToggle : jqObj.basicCalendarModal.find('input[name="BCEventAllDayToggle"]'),
+			BCEventStartDate : jqObj.basicCalendarModal.find('input[name="BCEventStartDate"]'),
+			BCEventEndDate : jqObj.basicCalendarModal.find('input[name="BCEventEndDate"]'),
+			
+			BCModalSaveBtn : jqObj.basicCalendarModal.find('button[name="BCModalSaveBtn"]'),
+			BCModalResetBtn : jqObj.basicCalendarModal.find('button[name="BCModalResetBtn"]'),
+			BCModalCloseBtn : jqObj.basicCalendarModal.find('button[name="BCModalCloseBtn"]'),
+
+			BCEventStartDateTmp : null,
+			BCEventEndDateTmp : null,
 			
 			BCInitialSettings : function() {
-				// this.BCEventStartDate.css('z-index', 10000);
-				// this.BCEventEndDate.css('z-index', 10000);
 				this.BCEventStartDate.datetimepicker({
 					format : 'YYYY.MM.DD A hh:mm ddd'
 				});
@@ -190,67 +251,91 @@ body {
 					format : 'YYYY.MM.DD A hh:mm ddd',
 					useCurrent: false
 				});
+				this.BCEventAllDayToggle.bootstrapToggle({
+					on : 'Yes',
+					off : 'No',
+					width : 75
+				});
+				
 				this.BCEventStartDate.on("dp.change", function (e) {
-					this.BCEventEndDate.data("DateTimePicker").minDate(e.date);
+					BCModalFunc.BCEventEndDate.data("DateTimePicker").minDate(e.date);
 		        });
 				this.BCEventEndDate.on("dp.change", function (e) {
-					this.BCEventStartDate.data("DateTimePicker").maxDate(e.date);
+					BCModalFunc.BCEventStartDate.data("DateTimePicker").maxDate(e.date);
 		        });
-			},
-			
-			addAllEventsAndInitSet : function() {
-				this.BCInitialSettings();
-			}
-		};
-		
-		var BCModalFunc = {
-			BCModalSaveBtnFunc : function() {
-				BCFunc.BCModalSaveBtn.click(function() {
-					BCFunc.BCEventData.id = BCFunc.BCEventId.val();
-					BCFunc.BCEventData.title = BCFunc.BCEventTitle.val();
-					BCFunc.BCEventData.content = basicCalendarInputEditor.getData();
-					// BCFunc.BCEventData.startDate = BCFunc.BCEventStartDate.datepicker('getDate');
-					// BCFunc.BCEventData.endDate = BCFunc.BCEventEndDate.datepicker('getDate');
-					// BCFunc.BCEventData.endDate.setDate(BCFunc.BCEventData.endDate.getDate() + 1);
-					
-					if(BCFunc.BCEventData.title) {
-						basicCalendar.fullCalendar('renderEvent', {
-								title: BCFunc.BCEventData.title
-								// start: BCFunc.BCEventData.startDate,
-								// end: BCFunc.BCEventData.endDate
-							},
-							true // make the event "stick"
-						);
-						
-						BCFunc.BCEventId.val('');
-						BCFunc.BCEventTitle.val('');
-						basicCalendarInputEditor.setData('');
-						
-						$('#basicCalendarModal').modal('hide');
+				
+				this.BCEventAllDayToggle.change(function() {
+					if (BCModalFunc.BCEventAllDayToggle.is(":checked")) {
+						BCModalFunc.BCEventStartDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
+						BCModalFunc.BCEventEndDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
 					} else {
-						alert('input any info!');
+						BCModalFunc.BCEventStartDate.data("DateTimePicker").format('YYYY.MM.DD A hh:mm ddd');
+						BCModalFunc.BCEventEndDate.data("DateTimePicker").format('YYYY.MM.DD A hh:mm ddd');
 					}
 				});
 			},
 			
-			BCModalCloseBtnFunc : function() {
-				BCFunc.BCModalCloseBtn.click(function() {
-					BCFunc.BCEventId.val('');
-					BCFunc.BCEventTitle.val('');
-					basicCalendarInputEditor.setData('');
+			BCModalSaveBtnFunc : function() {
+				this.BCModalSaveBtn.click(function() {
+					// BCFunc.BCEventVO.id = BCFunc.BCEventId.val();
+					BCModalFunc.BCEventVO.id = BCModalFunc.BCEvendDataId++;
+					BCModalFunc.BCEventVO.title = BCModalFunc.BCEventTitle.val();
+					BCModalFunc.BCEventVO.content = basicCalendarInputEditor.getData();
+					//BCFunc.BCEventWithTimeToggle = 
+					BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date().toDate();
+					BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date().toDate();
 					
-					$('#basicCalendarModal').modal('hide');
+					if(BCModalFunc.BCEventVO.title) {
+						if(BCModalFunc.BCEventVO.content) {
+							basicCalendar.fullCalendar('renderEvent', {
+									id : BCModalFunc.BCEventVO.id, 
+									title : BCModalFunc.BCEventVO.title,
+									start : BCModalFunc.BCEventVO.startDate,
+									end : BCModalFunc.BCEventVO.endDate,
+									allDay : BCModalFunc.BCEventAllDayToggle.is(":checked") ? true : false,
+									editable : true
+								},
+								true // make the event "stick"
+							);
+							
+							BCModalFunc.clearInputData();
+							
+							jqObj.basicCalendarModal.modal('hide');
+						} else {
+							notify.notify('input content!', 'error');
+						}
+					} else {
+						notify.notify('input title!', 'error');
+					}
 				});
 			},
 			
+			BCModalResetBtnFunc : function() {
+				this.BCModalResetBtn.click(function() {
+					BCModalFunc.clearInputData();
+				});
+			},
+			
+			BCModalCloseBtnFunc : function() {
+				this.BCModalCloseBtn.click(function() {
+					jqObj.basicCalendarModal.modal('hide');
+				});
+			},
+			
+			clearInputData : function() {
+				// this.BCEventId.val('');
+				this.BCEventTitle.val('');
+				basicCalendarInputEditor.setData('');
+			},
+			
 			addAllEventsAndInitSet : function() {
+				this.BCInitialSettings();
 				this.BCModalSaveBtnFunc();
+				this.BCModalResetBtnFunc();
 				this.BCModalCloseBtnFunc();
 			}
 		};
 		
-		BCFunc.addAllEventsAndInitSet();
-		BCModalFunc.addAllEventsAndInitSet();
 		
 		/*
 		
@@ -390,37 +475,6 @@ body {
 	    
 // ===================================================================================================
 		
-		var jqObj = {
-				
-				chatArea : $('#chatArea'),
-				chatInput : $('#chatInput'),
-				chatInputBtn : $('#chatInputBtn'),
-				nicknameInput : $('#nicknameInput'),
-				joinToggleBtn : $('#joinToggleBtn'),
-				toolbarToggleBtn : $('#toolbarToggleBtn'),
-				toolbarToggle : $('#toolbarToggle'),
-				chatNotifyToggleBtn : $('#chatNotifyToggleBtn'),
-				chatNotifyToggle : $('#chatNotifyToggle'),
-				formGroup1 : $('#formGroup1'),
-				formGroup2 : $('#formGroup2'),
-				formGroup3 : $('#formGroup3'),
-				editorContainer : $('#editorContainer'),
-				chatContainer : $('#chatContainer'),
-				mobileEditor : $('#mobileEditor'),
-				editorInputBtn : $('#editorInputBtn'),
-				btnGroup1 : $('#btnGroup1'),
-				btnGroup2 : $('#btnGroup2'),
-				basicStatus : $('#basicStatus'),
-				mobileStatus : $('#mobileStatus'),
-				basicStatusBadge : $('#basicStatusBadge'),
-				mobileStatusBadge : $('#mobileStatusBadge'),
-				IMColla : $('#IMColla'),
-				editorBtnGroupDiv : $('#editorBtnGroupDiv'),
-				basicCalendar : $('#basicCalendar'),
-				yearlyCalendar : $('#yearlyCalendar')
-				
-			};
-			
 		// socket(SockJS)
 		var session = {
 			
@@ -431,10 +485,10 @@ body {
 				var URL = location.protocol + '//' + location.host;
 				this.socket = new SockJS(URL + '/myPractice/socket');
 				this.socket.onopen = function(event) {
-					notify.notifyChat('연결 성공', 'success');
+					notify.notify('연결 성공', 'success');
 				};
 				this.socket.onclose = function(event) {
-					notify.notifyChat('연결 종료', 'success');
+					notify.notify('연결 종료', 'success');
 					
 					// Unespected disconnection
 					if (jqObj.joinToggleBtn.html() == ('Exit')) {
@@ -448,7 +502,7 @@ body {
 				
 				this.socket.onmessage = function(event) {
 					utils.chatAppend(event.data);
-					notify.notifyChat(event.data);
+					notify.notify(event.data);
 					badge.add();
 				};
 				this.socket.onerror = function(event) {
@@ -502,7 +556,7 @@ body {
 				
 			toggle : true,
 			
-			notifyChat : function(msg, type) {
+			notify : function(msg, type) {
 				if(!type)
 					type = 'info'; 
 				if (this.toggle)
@@ -560,7 +614,7 @@ body {
 			// veryfy chat input
 			verifyChatInput : function() {
 				if (!session.socket) {
-					notify.notifyChat('You need to join first!');
+					notify.notify('You need to join first!');
 					jqObj.nicknameInput.focus();
 				} else if (!(this.checkStr(jqObj.chatInput.val()))) {
 					jqObj.chatInput.focus();
@@ -617,7 +671,7 @@ body {
 			}
 		};
 
-		var eventFuncs = {
+		var eventFunc = {
 			tooltipActivate : function() {
 				$('[data-toggle="tooltip"]').tooltip();
 			},
@@ -705,14 +759,14 @@ body {
 			// Toggle toolbar
 			toggleToolbarEvent : function() {
 				jqObj.toolbarToggleBtn.click(function() {
-					eventFuncs.toggleToolbarFunc();
+					eventFunc.toggleToolbarFunc();
 				});
 				jqObj.basicStatus.click(function() {
-					eventFuncs.toggleToolbarFunc();
+					eventFunc.toggleToolbarFunc();
 					badge.reset();
 				});
 				jqObj.mobileStatus.click(function() {
-					eventFuncs.toggleToolbarFunc();
+					eventFunc.toggleToolbarFunc();
 				});
 			},
 			
@@ -754,36 +808,45 @@ body {
 				this.showHeights();
 				this.tooltipActivate();
 				this.toggleChatNotifyEvent();
-				modalFuncs.addAllEventsAndInitSet();
-				calendarFuncs.addAllEventsAndInitSet();
-				datepickerFuncs.addAllEventsAndInitSet();
-				pnotifyFuncs.addAllEventsAndInitSet();
-				xeditableFuncs.addAllEventsAndInitSet();
-				
+				modalFunc.addAllEventsAndInitSet();
+				calendarFunc.addAllEventsAndInitSet();
+				datetimepickerFunc.addAllEventsAndInitSet();
+				pnotifyFunc.addAllEventsAndInitSet();
+				xeditableFunc.addAllEventsAndInitSet();
+				BCModalFunc.addAllEventsAndInitSet();
 			}
 			
 		};
 
-		var modalFuncs = {
+		var modalFunc = {
 				
-
-				
-				
-			// necessary for nested modal scroll focus (!!!important!!!)
-			resolveNestedModalScrollbarProblem : function() {
-				$('.modal').on('hidden.bs.modal', function (e) {
-					if($('.modal').hasClass('in')) {
-						$('body').addClass('modal-open');
-					}    
-				});					
-			},
+			basicSettings : {
+				// necessary for nested modal scroll focus (!!!important!!!)
+				resolveNestedModalScrollbarProblem : function() {
+					$('.modal').on('hidden.bs.modal', function (e) {
+						if($('.modal').hasClass('in')) {
+							$('body').addClass('modal-open');
+						}
+					});
+				}
+			}, 
+			
+			basicCalendarModal : {
+				dateClearOnExit : function() {
+					jqObj.basicCalendarModal.on('hide.bs.modal', function(e) {
+						BCModalFunc.BCEventStartDate.data("DateTimePicker").date(null);
+						BCModalFunc.BCEventEndDate.data("DateTimePicker").date(null);
+					});	
+				}
+			}, 
 			
 			addAllEventsAndInitSet : function() {
-				this.resolveNestedModalScrollbarProblem();
+				this.basicSettings.resolveNestedModalScrollbarProblem();
+				this.basicCalendarModal.dateClearOnExit();
 			}
 		};
 			
-		var calendarFuncs = {
+		var calendarFunc = {
 			
 		
 				
@@ -793,7 +856,7 @@ body {
 			
 		};
 		
-		var datepickerFuncs = {
+		var datetimepickerFunc = {
 				
 	
 			
@@ -802,7 +865,7 @@ body {
 			}
 		};
 		
-		var pnotifyFuncs = {
+		var pnotifyFunc = {
 			
 			stack_modal : {
 				"dir1": "top",
@@ -820,7 +883,7 @@ body {
 			
 		};
 		
-		var xeditableFuncs = {
+		var xeditableFunc = {
 			
 			
 			addAllEventsAndInitSet : function() {
@@ -900,7 +963,7 @@ body {
 			jqObj.nicknameInput.focus();
 			
 			// add element events and initial settings of frameworks
-			eventFuncs.addAllEvents();
+			eventFunc.addAllEvents();
 			
 			// Initial setting
 			if (matchMedia("screen and (min-width: 768px)").matches) {
