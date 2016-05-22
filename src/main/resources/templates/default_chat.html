@@ -117,6 +117,7 @@ body {
 			memoEditor : $('#memoEditor'),
 			basicCalendarInputEditor : $('#basicCalendarInputEditor'),
 			basicCalendarEventContentViewer : $('#basicCalendarEventContentViewer'),
+			yearlyCalendarInputEditor : $('#yearlyCalendarInputEditor'),
 			
 			chatArea : $('#chatArea'),
 			
@@ -152,7 +153,9 @@ body {
 
 			mainModal : $('#mailModal'),
 			basicCalendarModal : $('#basicCalendarModal'),
-			BCEventViewerModal : $('#BCEventViewerModal')
+			BCEventViewerModal : $('#BCEventViewerModal'),
+			
+			yearlyCalendarModal : $('#yearlyCalendarModal')
 			
 		};
 	
@@ -180,6 +183,10 @@ body {
 		});
 		jqObj.basicCalendarEventContentViewer.height($(window).height() * 0.2);
 		
+		// YCInputEditor settings (inline CKEditor)
+		var yearlyCalendarInputEditor = CKEDITOR.inline('yearlyCalendarInputEditor');
+		jqObj.yearlyCalendarInputEditor.height($(window).height() * 0.2);
+
 		
 		
 		// FullCalendar (in modal)
@@ -325,12 +332,13 @@ body {
 
 					if(BCModalFunc.BCEventVO.allDay) {
 						BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date();
-						BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date();
+						BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date().add(1, 'days');
 					} else {
 						BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date();
 						BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date();
 					}
 					
+					BCModalFunc.BCEventVO.displayEventTime = !BCModalFunc.BCEventVO.allDay;
 					BCModalFunc.BCEventVO.editable = true;
 					
 					if(BCModalFunc.BCEventVO.title) {
@@ -344,7 +352,8 @@ body {
 									start : BCModalFunc.BCEventVO.startDate,
 									end : BCModalFunc.BCEventVO.endDate,
 									
-									editable : true
+									displayEventTime : BCModalFunc.BCEventVO.dispalyEventTime,
+									editable : BCModalFunc.BCEventVO.editable
 								},
 								true // make the event "stick"
 							);
@@ -418,16 +427,18 @@ body {
 			BCModalCloseBtn : jqObj.BCEventViewerModal.find('button[name="BCModalCloseBtn"]'),
 			
 			BCInitialSettings : function() {
+				/*
 				allDayFormatStr = 'YYYY.MM.DD ddd';
 				nonAllDayFormatStr = 'YYYY.MM.DD ddd A hh:mm';
 				formatStr = this.BCEventAllDayToggle.prop('checked') ? allDayFormatStr : nonAllDayFormatStr;
+				*/
 				
 				this.BCEventStartDate.datetimepicker({
-					format : formatStr
+				//	format : formatStr
 				});
 				this.BCEventEndDate.datetimepicker({
-					format : formatStr,
-					useCurrent: false
+				//	format : formatStr,
+				//	useCurrent: false
 				});
 				this.BCEventAllDayToggle.bootstrapToggle({
 					on : 'Yes',
@@ -438,13 +449,6 @@ body {
 			},
 			
 			clickEventForFullCalendar : function(event, jsEvent, view) {
-				event.start.tz('Asia/Seoul');
-				event.end.tz('Asia/Seoul');
-				/* if(event.allDay) {
-					this.BCEventStartDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
-					this.BCEventEndDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
-				} */
-				
 				notify.notify('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 				notify.notify('View: ' + view.name);
 				notify.notify('End: ' + event.end.toDate());
@@ -460,8 +464,19 @@ body {
 				this.BCEventAllDayToggle.bootstrapToggle(event.allDay ? 'on' : 'off');
 				this.BCEventAllDayToggle.bootstrapToggle('disable');
 				
-				this.BCEventStartDate.data("DateTimePicker").date(event.start);
-				this.BCEventEndDate.data("DateTimePicker").date(event.end);
+				if(event.allDay) {
+					this.BCEventStartDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
+					this.BCEventEndDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
+					this.BCEventStartDate.data("DateTimePicker").date(event.start);
+					this.BCEventEndDate.data("DateTimePicker").date(event.end.clone().subtract(1, 'days'));
+				} else {
+					event.start.tz('Asia/Seoul');
+					event.end.tz('Asia/Seoul');
+					this.BCEventStartDate.data("DateTimePicker").format('YYYY.MM.DD ddd A hh:mm');
+					this.BCEventEndDate.data("DateTimePicker").format('YYYY.MM.DD ddd A hh:mm');
+					this.BCEventStartDate.data("DateTimePicker").date(event.start);
+					this.BCEventEndDate.data("DateTimePicker").date(event.end);
+				}
 				
 				jqObj.BCEventViewerModal.modal('show');
 			},
@@ -561,6 +576,28 @@ body {
 		
 		var currentYear = new Date().getFullYear();
 
+		*/
+
+		$('#yearlyCalendar').calendar({
+			enableContextMenu : true,
+			enableRangeSelection: true,
+			contextMenuItems : [
+				{
+					text : 'Update',
+					// click : notify.notify('Update clicked!')
+				},
+				{
+					text : 'Delete',
+					// click : notify.notify('Delete clicked!')
+				}
+			]
+		});
+		
+		var YCModalFunc = { 
+			
+		};
+		
+		/*
 	    $('#yearlyCalendar').calendar({
 	        enableContextMenu: true,
 	        enableRangeSelection: true,

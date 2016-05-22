@@ -676,46 +676,76 @@
 		<!-- =================================================================================================== -->
 
 		<!-- sub modal of yearly calendar -->
-		<div id="event-modal" class="modal fade" tabindex="-1" style="padding-right: 17px;">
+		<!-- sub modal of basic calendar -->
+		<div id="yearlyCalendarModal" class="modal fade" tabindex="-1">
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
 						</button>
-						<h4 class="modal-title">Event</h4>
+						<h4 class="modal-title">Basic calendar input form</h4>
 					</div>
 					<div class="modal-body">
-						<input value="" name="event-index" type="hidden" />
-						<form class="form-horizontal">
-							<div class="form-group">
-								<label for="min-date" class="col-sm-2 control-label">Name</label>
-								<div class="col-sm-10">
-									<input name="event-name" class="form-control" type="text" />
+						<div class="container-fluid">
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									<h3 class="panel-title">Panel title</h3>
 								</div>
-							</div>
-							<div class="form-group">
-								<label for="min-date" class="col-sm-2 control-label">Location</label>
-								<div class="col-sm-10">
-									<input name="event-location" class="form-control" type="text" />
+								<div class="panel-body">
+									<form class="form-horizontal">
+										<input value="BCEventId" type="hidden" />
+
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">ID</label>
+											<div class="col-sm-10">
+												<input name="BCEventId" class="form-control" type="text" readonly="readonly" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">Title</label>
+											<div class="col-sm-10">
+												<input name="BCEventTitle" class="form-control" type="text" value="test" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">Content</label>
+											<div class="col-sm-10">
+												<div id="yearlyCalendarInputEditor" class="form-control" contenteditable="true">test</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">All day</label>
+											<div class="col-sm-10">
+												<input name="BCEventAllDayToggle" class="form-control" type="checkbox" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">Start</label>
+											<div class="col-sm-10">
+												<input name="BCEventStartDate" class="form-control" type="text" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">end</label>
+											<div class="col-sm-10">
+												<input name="BCEventEndDate" class="form-control" type="text" />
+											</div>
+										</div>
+									</form>
 								</div>
+								<!-- /.panel-body -->
+								<div class="panel-footer">Panel footer</div>
 							</div>
-							<div class="form-group">
-								<label for="min-date" class="col-sm-2 control-label">Dates</label>
-								<div class="col-sm-10">
-									<div class="input-group input-daterange" data-provide="datepicker">
-										<input name="event-start-date" class="form-control" value="2016-05-05" type="text" />
-										<span class="input-group-addon">to</span>
-										<input name="event-end-date" class="form-control" value="2016-05-06" type="text" />
-									</div>
-								</div>
-							</div>
-						</form>
+							<!-- /.panel -->
+						</div>
+						<!-- /.container-fluid -->
 					</div>
 					<!-- /.modal-body -->
 					<div class="modal-footer">
-						<button id="save-event" type="button" class="btn btn-primary">Save</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button name="BCModalSaveBtn" class="btn btn-primary" type="button">Save</button>
+						<button name="BCModalResetBtn" class="btn btn-danger" type="button">Reset</button>
+						<button name="BCModalCloseBtn" class="btn btn-default" type="button">Cancel</button>
 					</div>
 					<!-- /.modal-footer -->
 				</div>
