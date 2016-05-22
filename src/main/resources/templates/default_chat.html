@@ -175,7 +175,11 @@ body {
 		jqObj.basicCalendarInputEditor.height($(window).height() * 0.2);
 
 		// BCEventContentViewer settings (inline CKEditor)
+		var basicCalendarEventContentViewer = CKEDITOR.inline('basicCalendarEventContentViewer', {
+		    removePlugins: 'toolbar'
+		});
 		jqObj.basicCalendarEventContentViewer.height($(window).height() * 0.2);
+		
 		
 		
 		// FullCalendar (in modal)
@@ -207,14 +211,14 @@ body {
 			eventClick: function(event, jsEvent, view) {
 				notify.notify('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 				notify.notify('View: ' + view.name);
-				notify.notify('End: ' + event.end);
-				notify.notify('Start: ' + event.start);
+				notify.notify('End: ' + event.end.toDate());
+				notify.notify('Start: ' + event.start.toDate());
 				notify.notify('AllDay: ' + event.allDay);
 				notify.notify('Event: ' + event.title);
 
 				BCEventViewerModalFunc.BCEventId.val(event.id);
 				BCEventViewerModalFunc.BCEventTitle.val(event.title);
-				// jqObj.BCEventViewerModalFunc.BCEventContent = event.content;
+				BCEventViewerModalFunc.BCEventContentViewer.setData(event.content);
 				
 				BCEventViewerModalFunc.BCEventAllDayToggle.bootstrapToggle('enable');
 				BCEventViewerModalFunc.BCEventAllDayToggle.bootstrapToggle(event.allDay ? 'on' : 'off');
@@ -250,10 +254,10 @@ body {
 			BCEventVO : {},
 			
 			BCEventIdCnt : 1,
-			BCEventId : jqObj.basicCalendarModal.find('input[name="BCEventId"]'),
 			
+			BCEventId : jqObj.basicCalendarModal.find('input[name="BCEventId"]'),
 			BCEventTitle : jqObj.basicCalendarModal.find('input[name="BCEventTitle"]'),
-			BCEventContent : jqObj.basicCalendarModal.find('input[name="BCEventContent"]'),
+			BCEventContentEditor : basicCalendarInputEditor,
 			
 			BCEventAllDayToggle : jqObj.basicCalendarModal.find('input[name="BCEventAllDayToggle"]'),
 			BCEventStartDate : jqObj.basicCalendarModal.find('input[name="BCEventStartDate"]'),
@@ -304,21 +308,22 @@ body {
 			
 			BCModalSaveBtnFunc : function() {
 				this.BCModalSaveBtn.click(function() {
-
 					BCModalFunc.BCEventVO.id = BCModalFunc.BCEventId.val();
 					BCModalFunc.BCEventVO.title = BCModalFunc.BCEventTitle.val();
-					BCModalFunc.BCEventVO.content = basicCalendarInputEditor.getData();
+					BCModalFunc.BCEventVO.content = BCModalFunc.BCEventContentEditor.getData();
 					
 					BCModalFunc.BCEventVO.allDay = BCModalFunc.BCEventAllDayToggle.prop("checked");
 					BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date();
 					BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date().add(1, 'days');
+					
+					BCModalFunc.BCEventVO.editable = true; 
 					
 					if(BCModalFunc.BCEventVO.title) {
 						if(BCModalFunc.BCEventVO.content) {
 							basicCalendar.fullCalendar('renderEvent', {
 									id : BCModalFunc.BCEventVO.id, 
 									title : BCModalFunc.BCEventVO.title,
-									// content : BCModalFunc.BCEventVO.content,
+									content : BCModalFunc.BCEventVO.content,
 									
 									allDay : BCModalFunc.BCEventVO.allDay,
 									start : BCModalFunc.BCEventVO.startDate,
@@ -372,7 +377,7 @@ body {
 			
 			BCEventId : jqObj.BCEventViewerModal.find('input[name="BCEventId"]'),
 			BCEventTitle : jqObj.BCEventViewerModal.find('input[name="BCEventTitle"]'),
-			BCEventContentViewer : jqObj.basicCalendarEventContentViewer,
+			BCEventContentViewer : basicCalendarEventContentViewer,
 			
 			BCEventAllDayToggle : jqObj.BCEventViewerModal.find('input[name="BCEventAllDayToggle"]'),
 			BCEventStartDate : jqObj.BCEventViewerModal.find('input[name="BCEventStartDate"]'),

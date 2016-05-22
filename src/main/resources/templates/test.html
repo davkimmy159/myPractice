@@ -26,9 +26,8 @@
 	overflow: auto;
 }
 
-#BCSchFormContent {
-	overflow: auto;
-	white-space: nowrap;
+#basicCalendarModal input {
+	background: white;
 }
 
 #basicCalendarInputEditor {
@@ -36,14 +35,13 @@
 	white-space: nowrap;
 }
 
-#basicCalendarEventContentViewer {
-	background: white;
-	resize: none;
-	cursor: text;
-}
-
 #BCEventViewerModal input {
 	background: white;
+}
+
+#basicCalendarEventContentViewer {
+	overflow: auto;
+	white-space: nowrap;
 }
 </style>
 <title>test</title>
@@ -127,8 +125,8 @@
 										<!-- panel-heading -->
 										<div class="panel-heading">
 											<ul class="nav nav-pills" role="tablist">
-												<li role="presentation" class="active"><a href="#calendar1" data-toggle="tab">Basic&nbsp;<span class="fa fa-refresh fa-spin fa-1x fa-fw"></span></a></li>
-												<li role="presentation"><a href="#calendar2" data-toggle="tab">Year&nbsp;<span class="fa fa-refresh fa-spin fa-1x fa-fw"></span></a></li>
+												<li role="presentation" class="active"><a href="#calendar1" data-toggle="tab"><span class="glyphicon glyphicon-calendar"></span>&nbsp;Basic</a></li>
+												<li role="presentation"><a href="#calendar2" data-toggle="tab"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;Year</a></li>
 											</ul>
 										</div>
 										<div class="panel-body">
@@ -178,8 +176,8 @@
 									<div class="panel panel-info">
 										<div class="panel-heading">
 											<ul class="nav nav-pills" role="tablist">
-												<li role="presentation" class="active"><a href="#memoContent1" data-toggle="tab" aria-controls="memo writing" role="tab">메모 작성&nbsp;<span class="glyphicon glyphicon-edit"></span></a></li>
-												<li role="presentation"><a href="#memoContent2" data-toggle="tab" aria-controls="memo list" role="tab">메모 목록&nbsp;<span class="glyphicon glyphicon-th-list"></span></a></li>
+												<li role="presentation" class="active"><a href="#memoContent1" data-toggle="tab" aria-controls="memo writing" role="tab"><span class="glyphicon glyphicon-edit"></span>&nbsp;메모 작성</a></li>
+												<li role="presentation"><a href="#memoContent2" data-toggle="tab" aria-controls="memo list" role="tab"><span class="glyphicon glyphicon-th-list"></span>&nbsp;메모 목록</a></li>
 											</ul>
 										</div>
 										<div class="panel-body">
@@ -536,7 +534,7 @@
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">ID</label>
 											<div class="col-sm-10">
-												<input name="BCEventId" class="form-control" type="text" />
+												<input name="BCEventId" class="form-control" type="text" readonly="readonly" />
 											</div>
 										</div>
 										<div class="form-group">
@@ -627,7 +625,7 @@
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">Content</label>
 											<div class="col-sm-10">
-												<textarea id="basicCalendarEventContentViewer" class="form-control" readonly="readonly"></textarea>
+												<div id="basicCalendarEventContentViewer" class="form-control"></div>
 											</div>
 										</div>
 										<div class="form-group">
