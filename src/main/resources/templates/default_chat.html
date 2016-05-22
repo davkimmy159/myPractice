@@ -114,8 +114,9 @@ body {
 			chatContainer : $('#chatContainer'),
 			
 			mobileEditor : $('#mobileEditor'),
-			basicCalendarInputEditor : $('#basicCalendarInputEditor'),
 			memoEditor : $('#memoEditor'),
+			basicCalendarInputEditor : $('#basicCalendarInputEditor'),
+			basicCalendarEventContentViewer : $('#basicCalendarEventContentViewer'),
 			
 			chatArea : $('#chatArea'),
 			
@@ -150,7 +151,8 @@ body {
 			yearlyCalendar : $('#yearlyCalendar'),
 
 			mainModal : $('#mailModal'),
-			basicCalendarModal : $('#basicCalendarModal')
+			basicCalendarModal : $('#basicCalendarModal'),
+			BCEventViewerModal : $('#BCEventViewerModal')
 			
 		};
 		
@@ -170,7 +172,11 @@ body {
 		
 		// BCInputEditor settings (inline CKEditor)
 		var basicCalendarInputEditor = CKEDITOR.inline('basicCalendarInputEditor');
-		$('#basicCalendarInputEditor').height($(window).height() * 0.2);
+		jqObj.basicCalendarInputEditor.height($(window).height() * 0.2);
+
+		// BCEventContentViewer settings (inline CKEditor)
+		jqObj.basicCalendarEventContentViewer.height($(window).height() * 0.2);
+		
 		
 		// FullCalendar (in modal)
 		var basicCalendar = $("#basicCalendar").fullCalendar({
@@ -188,31 +194,49 @@ body {
 			
 			// fired when its calendar cell is clicked or dragged
 			select: function(start, end) {
-
+				BCModalFunc.BCEventId.val(BCModalFunc.BCEventIdCnt);
+				
 				BCModalFunc.BCEventStartDate.data("DateTimePicker").date(start);
 				BCModalFunc.BCEventEndDate.data("DateTimePicker").date(end.subtract(1, 'days'));
-
+				
 				jqObj.basicCalendarModal.modal('show');
 				
 				$("#basicCalendar").fullCalendar('unselect');
 			},
+			
+			eventClick: function(event, jsEvent, view) {
+				notify.notify('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+				notify.notify('View: ' + view.name);
+				notify.notify('End: ' + event.end);
+				notify.notify('Start: ' + event.start);
+				notify.notify('AllDay: ' + event.allDay);
+				notify.notify('Event: ' + event.title);
+
+				BCEventViewerModalFunc.BCEventId.val(event.id);
+				BCEventViewerModalFunc.BCEventTitle.val(event.title);
+				// jqObj.BCEventViewerModalFunc.BCEventContent = event.content;
+				
+				BCEventViewerModalFunc.BCEventAllDayToggle.bootstrapToggle('enable');
+				BCEventViewerModalFunc.BCEventAllDayToggle.bootstrapToggle(event.allDay ? 'on' : 'off');
+				BCEventViewerModalFunc.BCEventAllDayToggle.bootstrapToggle('disable');
+				
+				BCEventViewerModalFunc.BCEventStartDate.data("DateTimePicker").date(event.start);
+				BCEventViewerModalFunc.BCEventEndDate.data("DateTimePicker").date(event.end.subtract(1, 'days'));
+				event.end.add(1, 'days');
+				
+				jqObj.BCEventViewerModal.modal('show');
+		    },
+		    
 			events: [
 				{
 					id : 999,
 					title : 'Click for Google',
-					start : '2016-05-28',
+					start : '2016-05-01',
+					end : '2016-05-03',
 					editable : true,
-					startEditable : true
+					allDay : true
 				}
 			]
-		});
-		
-		basicCalendar.fullCalendar({
-			header: {
-				left: 'today',
-				center: 'title',
-				right: 'month'
-			}
 		});
 		
 		// must be called right after the declaration of fullCalendar
@@ -225,9 +249,8 @@ body {
 			
 			BCEventVO : {},
 			
-			BCEvendDataId : 1,
-			// BCEventId : jqObj.basicCalendarModal.find('input[name="BCEventId"]'),
-			
+			BCEventIdCnt : 1,
+			BCEventId : jqObj.basicCalendarModal.find('input[name="BCEventId"]'),
 			
 			BCEventTitle : jqObj.basicCalendarModal.find('input[name="BCEventTitle"]'),
 			BCEventContent : jqObj.basicCalendarModal.find('input[name="BCEventContent"]'),
@@ -244,11 +267,15 @@ body {
 			BCEventEndDateTmp : null,
 			
 			BCInitialSettings : function() {
+				allDayFormatStr = 'YYYY.MM.DD ddd';
+				nonAllDayFormatStr = 'YYYY.MM.DD ddd A hh:mm';
+				formatStr = this.BCEventAllDayToggle.prop('checked') ? allDayFormatStr : nonAllDayFormatStr;
+				
 				this.BCEventStartDate.datetimepicker({
-					format : 'YYYY.MM.DD A hh:mm ddd'
+					format : formatStr
 				});
 				this.BCEventEndDate.datetimepicker({
-					format : 'YYYY.MM.DD A hh:mm ddd',
+					format : formatStr,
 					useCurrent: false
 				});
 				this.BCEventAllDayToggle.bootstrapToggle({
@@ -265,38 +292,44 @@ body {
 		        });
 				
 				this.BCEventAllDayToggle.change(function() {
-					if (BCModalFunc.BCEventAllDayToggle.is(":checked")) {
-						BCModalFunc.BCEventStartDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
-						BCModalFunc.BCEventEndDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
+					if (BCModalFunc.BCEventAllDayToggle.prop("checked")) {
+						BCModalFunc.BCEventStartDate.data("DateTimePicker").format(allDayFormatStr);
+						BCModalFunc.BCEventEndDate.data("DateTimePicker").format(allDayFormatStr);
 					} else {
-						BCModalFunc.BCEventStartDate.data("DateTimePicker").format('YYYY.MM.DD A hh:mm ddd');
-						BCModalFunc.BCEventEndDate.data("DateTimePicker").format('YYYY.MM.DD A hh:mm ddd');
+						BCModalFunc.BCEventStartDate.data("DateTimePicker").format(nonAllDayFormatStr);
+						BCModalFunc.BCEventEndDate.data("DateTimePicker").format(nonAllDayFormatStr);
 					}
 				});
 			},
 			
 			BCModalSaveBtnFunc : function() {
 				this.BCModalSaveBtn.click(function() {
-					// BCFunc.BCEventVO.id = BCFunc.BCEventId.val();
-					BCModalFunc.BCEventVO.id = BCModalFunc.BCEvendDataId++;
+
+					BCModalFunc.BCEventVO.id = BCModalFunc.BCEventId.val();
 					BCModalFunc.BCEventVO.title = BCModalFunc.BCEventTitle.val();
 					BCModalFunc.BCEventVO.content = basicCalendarInputEditor.getData();
-					//BCFunc.BCEventWithTimeToggle = 
-					BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date().toDate();
-					BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date().toDate();
+					
+					BCModalFunc.BCEventVO.allDay = BCModalFunc.BCEventAllDayToggle.prop("checked");
+					BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date();
+					BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date().add(1, 'days');
 					
 					if(BCModalFunc.BCEventVO.title) {
 						if(BCModalFunc.BCEventVO.content) {
 							basicCalendar.fullCalendar('renderEvent', {
 									id : BCModalFunc.BCEventVO.id, 
 									title : BCModalFunc.BCEventVO.title,
+									// content : BCModalFunc.BCEventVO.content,
+									
+									allDay : BCModalFunc.BCEventVO.allDay,
 									start : BCModalFunc.BCEventVO.startDate,
 									end : BCModalFunc.BCEventVO.endDate,
-									allDay : BCModalFunc.BCEventAllDayToggle.is(":checked") ? true : false,
+									
 									editable : true
 								},
 								true // make the event "stick"
 							);
+							
+							BCModalFunc.BCEventIdCnt++;
 							
 							BCModalFunc.clearInputData();
 							
@@ -323,7 +356,6 @@ body {
 			},
 			
 			clearInputData : function() {
-				// this.BCEventId.val('');
 				this.BCEventTitle.val('');
 				basicCalendarInputEditor.setData('');
 			},
@@ -334,6 +366,67 @@ body {
 				this.BCModalResetBtnFunc();
 				this.BCModalCloseBtnFunc();
 			}
+		};
+		
+		var BCEventViewerModalFunc = {
+			
+			BCEventId : jqObj.BCEventViewerModal.find('input[name="BCEventId"]'),
+			BCEventTitle : jqObj.BCEventViewerModal.find('input[name="BCEventTitle"]'),
+			BCEventContentViewer : jqObj.basicCalendarEventContentViewer,
+			
+			BCEventAllDayToggle : jqObj.BCEventViewerModal.find('input[name="BCEventAllDayToggle"]'),
+			BCEventStartDate : jqObj.BCEventViewerModal.find('input[name="BCEventStartDate"]'),
+			BCEventEndDate : jqObj.BCEventViewerModal.find('input[name="BCEventEndDate"]'),
+			
+			BCModalModifyBtn : jqObj.BCEventViewerModal.find('button[name="BCModalModifyBtn"]'),
+			BCModalDeleteBtn : jqObj.BCEventViewerModal.find('button[name="BCModalDeleteBtn"]'),
+			BCModalCloseBtn : jqObj.BCEventViewerModal.find('button[name="BCModalCloseBtn"]'),
+			
+			BCInitialSettings : function() {
+				allDayFormatStr = 'YYYY.MM.DD ddd';
+				nonAllDayFormatStr = 'YYYY.MM.DD ddd A hh:mm';
+				formatStr = this.BCEventAllDayToggle.prop('checked') ? allDayFormatStr : nonAllDayFormatStr;
+				
+				this.BCEventStartDate.datetimepicker({
+					format : formatStr
+				});
+				this.BCEventEndDate.datetimepicker({
+					format : formatStr,
+					useCurrent: false
+				});
+				this.BCEventAllDayToggle.bootstrapToggle({
+					on : 'Yes',
+					off : 'No',
+					width : 75
+				});
+				this.BCEventAllDayToggle.bootstrapToggle('disable');
+			},
+			
+			BCModalModifyBtnFunc : function() {
+				this.BCModalModifyBtn.click(function() {
+					notify.notify('modify clicked!', 'primary');
+				});
+			},
+			
+			BCModalDeleteBtnFunc : function() {
+				this.BCModalDeleteBtn.click(function() {
+					notify.notify('delete clicked!', 'error');
+				});
+			},
+			
+			BCModalCloseBtnFunc : function() {
+				this.BCModalCloseBtn.click(function() {
+					jqObj.BCEventViewerModal.modal('hide');
+				});
+			},
+			
+			addAllEventsAndInitSet : function() {
+				this.BCInitialSettings();
+				this.BCModalModifyBtnFunc();
+				this.BCModalDeleteBtnFunc();
+				this.BCModalCloseBtnFunc();
+			}	
+		
 		};
 		
 		
@@ -814,6 +907,7 @@ body {
 				pnotifyFunc.addAllEventsAndInitSet();
 				xeditableFunc.addAllEventsAndInitSet();
 				BCModalFunc.addAllEventsAndInitSet();
+				BCEventViewerModalFunc.addAllEventsAndInitSet();
 			}
 			
 		};

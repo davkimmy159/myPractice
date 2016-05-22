@@ -30,6 +30,21 @@
 	overflow: auto;
 	white-space: nowrap;
 }
+
+#basicCalendarInputEditor {
+	overflow: auto;
+	white-space: nowrap;
+}
+
+#basicCalendarEventContentViewer {
+	background: white;
+	resize: none;
+	cursor: text;
+}
+
+#BCEventViewerModal input {
+	background: white;
+}
 </style>
 <title>test</title>
 </head>
@@ -150,8 +165,7 @@
 										<div class="panel-body">
 											<a href="#" id="username">superuser</a>
 										</div>
-										<div class="panel-footer">
-										</div>
+										<div class="panel-footer"></div>
 									</div>
 									<!-- /.panel -->
 								</div>
@@ -518,16 +532,23 @@
 								<div class="panel-body">
 									<form class="form-horizontal">
 										<input value="BCEventId" type="hidden" />
+
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">ID</label>
+											<div class="col-sm-10">
+												<input name="BCEventId" class="form-control" type="text" />
+											</div>
+										</div>
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">Title</label>
 											<div class="col-sm-10">
-												<input name="BCEventTitle" class="form-control" type="text" />
+												<input name="BCEventTitle" class="form-control" type="text" value="test" />
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">Content</label>
 											<div class="col-sm-10">
-												<div id="basicCalendarInputEditor" class="form-control" contenteditable="true"></div>
+												<div id="basicCalendarInputEditor" class="form-control" contenteditable="true">test</div>
 											</div>
 										</div>
 										<div class="form-group">
@@ -561,6 +582,85 @@
 					<div class="modal-footer">
 						<button name="BCModalSaveBtn" class="btn btn-primary" type="button">Save</button>
 						<button name="BCModalResetBtn" class="btn btn-danger" type="button">Reset</button>
+						<button name="BCModalCloseBtn" class="btn btn-default" type="button">Cancel</button>
+					</div>
+					<!-- /.modal-footer -->
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal (event sub modal) -->
+
+		<!-- sub modal of basic calendar -->
+		<div id="BCEventViewerModal" class="modal fade" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+						</button>
+						<h4 class="modal-title">Basic calendar event viewer</h4>
+					</div>
+					<div class="modal-body">
+						<div class="container-fluid">
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									<h3 class="panel-title">Panel title</h3>
+								</div>
+								<div class="panel-body">
+									<form class="form-horizontal">
+										<input value="BCEventId" type="hidden" />
+
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">ID</label>
+											<div class="col-sm-10">
+												<input name="BCEventId" class="form-control" type="text" readonly="readonly" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">Title</label>
+											<div class="col-sm-10">
+												<input name="BCEventTitle" class="form-control" type="text" readonly="readonly" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">Content</label>
+											<div class="col-sm-10">
+												<textarea id="basicCalendarEventContentViewer" class="form-control" readonly="readonly"></textarea>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">All day</label>
+											<div class="col-sm-10">
+												<input name="BCEventAllDayToggle" class="form-control" type="checkbox" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">Start</label>
+											<div class="col-sm-10">
+												<input name="BCEventStartDate" class="form-control" type="text" readonly="readonly" />
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-2 control-label" for="">end</label>
+											<div class="col-sm-10">
+												<input name="BCEventEndDate" class="form-control" type="text" readonly="readonly" />
+											</div>
+										</div>
+									</form>
+								</div>
+								<!-- /.panel-body -->
+								<div class="panel-footer">Panel footer</div>
+							</div>
+							<!-- /.panel -->
+						</div>
+						<!-- /.container-fluid -->
+					</div>
+					<!-- /.modal-body -->
+					<div class="modal-footer">
+						<button name="BCModalModifyBtn" class="btn btn-primary" type="button">Modify</button>
+						<button name="BCModalDeleteBtn" class="btn btn-danger" type="button">Delete</button>
 						<button name="BCModalCloseBtn" class="btn btn-default" type="button">Cancel</button>
 					</div>
 					<!-- /.modal-footer -->
