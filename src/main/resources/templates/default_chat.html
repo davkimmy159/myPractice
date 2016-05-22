@@ -155,7 +155,7 @@ body {
 			BCEventViewerModal : $('#BCEventViewerModal')
 			
 		};
-		
+	
 		// basicEditor settings (CKEditor)	
 		var basicEditor = CKEDITOR.replace('basicEditor', {
 			contentsCss  : 'body {white-space: nowrap;}'
@@ -185,50 +185,41 @@ body {
 		// FullCalendar (in modal)
 		var basicCalendar = $("#basicCalendar").fullCalendar({
 			header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
+				left : 'prev,next,today',
+				center : 'title',
+				right : 'month,agendaWeek,agendaDay'
 			},
-			selectable: true,
-			selectHelper: true,
-			editable: true,
+			selectable : true,
+			selectHelper : true,
+			editable : true,
+			timezone : 'local',
+			displayEventEnd : true,
 			
 			// initial height set for resizing later(removing vertical scroll bar)
 			contentHeight: 100,
 			
+			views: {
+				month : {
+					titleFormat : 'YYYY년 M월'
+				},
+				agenda: {
+					titleFormat : 'M월 D일'	
+				},
+				week : {
+				
+				},
+				day : {
+
+				}
+			},
+			
 			// fired when its calendar cell is clicked or dragged
 			select: function(start, end) {
-				BCModalFunc.BCEventId.val(BCModalFunc.BCEventIdCnt);
-				
-				BCModalFunc.BCEventStartDate.data("DateTimePicker").date(start);
-				BCModalFunc.BCEventEndDate.data("DateTimePicker").date(end.subtract(1, 'days'));
-				
-				jqObj.basicCalendarModal.modal('show');
-				
-				$("#basicCalendar").fullCalendar('unselect');
+				BCModalFunc.selectForFullCalendar(start, end);
 			},
 			
 			eventClick: function(event, jsEvent, view) {
-				notify.notify('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-				notify.notify('View: ' + view.name);
-				notify.notify('End: ' + event.end.toDate());
-				notify.notify('Start: ' + event.start.toDate());
-				notify.notify('AllDay: ' + event.allDay);
-				notify.notify('Event: ' + event.title);
-
-				BCEventViewerModalFunc.BCEventId.val(event.id);
-				BCEventViewerModalFunc.BCEventTitle.val(event.title);
-				BCEventViewerModalFunc.BCEventContentViewer.setData(event.content);
-				
-				BCEventViewerModalFunc.BCEventAllDayToggle.bootstrapToggle('enable');
-				BCEventViewerModalFunc.BCEventAllDayToggle.bootstrapToggle(event.allDay ? 'on' : 'off');
-				BCEventViewerModalFunc.BCEventAllDayToggle.bootstrapToggle('disable');
-				
-				BCEventViewerModalFunc.BCEventStartDate.data("DateTimePicker").date(event.start);
-				BCEventViewerModalFunc.BCEventEndDate.data("DateTimePicker").date(event.end.subtract(1, 'days'));
-				event.end.add(1, 'days');
-				
-				jqObj.BCEventViewerModal.modal('show');
+				BCEventViewerModalFunc.clickEventForFullCalendar(event, jsEvent, view);
 		    },
 		    
 			events: [
@@ -247,7 +238,6 @@ body {
 		$('#mainModal').on('shown.bs.modal', function () {
 			basicCalendar.fullCalendar('render');
 		});
-		
 		
 		var BCModalFunc = {
 			
@@ -274,6 +264,13 @@ body {
 				
 				this.BCEventStartDate.datetimepicker({
 					format : formatStr,
+					stepping : 5,
+					sideBySide : true,
+					calendarWeeks : true,
+					showTodayButton : true,
+					showClear : true,
+					showClose : true,
+					toolbarPlacement : 'bottom',
 					widgetPositioning : {
 						horizontal: 'right',
 						vertical: 'top'
@@ -282,6 +279,13 @@ body {
 				this.BCEventEndDate.datetimepicker({
 					useCurrent: false,
 					format : formatStr,
+					stepping : 5,
+					sideBySide : true,
+					calendarWeeks : true,
+					showTodayButton : true,
+					showClear : true,
+					showClose : true,
+					toolbarPlacement : 'top',
 					widgetPositioning : {
 						horizontal: 'right',
 						vertical: 'bottom'
@@ -318,8 +322,14 @@ body {
 					BCModalFunc.BCEventVO.content = BCModalFunc.BCEventContentEditor.getData();
 					
 					BCModalFunc.BCEventVO.allDay = BCModalFunc.BCEventAllDayToggle.prop("checked");
-					BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date();
-					BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date().add(1, 'days');
+
+					if(BCModalFunc.BCEventVO.allDay) {
+						BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date();
+						BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date();
+					} else {
+						BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date();
+						BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date();
+					}
 					
 					BCModalFunc.BCEventVO.editable = true;
 					
@@ -351,6 +361,21 @@ body {
 						notify.notify('input title!', 'error');
 					}
 				});
+			},
+			
+			selectForFullCalendar : function(start, end) {
+				start.tz("Asia/Seoul");
+				end.tz("Asia/Seoul");
+				end.subtract(16, 'hours');
+				
+				this.BCEventId.val(BCModalFunc.BCEventIdCnt);
+				
+				this.BCEventStartDate.data("DateTimePicker").date(start);
+				this.BCEventEndDate.data("DateTimePicker").date(end);
+				
+				jqObj.basicCalendarModal.modal('show');
+				
+				$("#basicCalendar").fullCalendar('unselect');
 			},
 			
 			BCModalResetBtnFunc : function() {
@@ -410,6 +435,35 @@ body {
 					width : 75
 				});
 				this.BCEventAllDayToggle.bootstrapToggle('disable');
+			},
+			
+			clickEventForFullCalendar : function(event, jsEvent, view) {
+				event.start.tz('Asia/Seoul');
+				event.end.tz('Asia/Seoul');
+				/* if(event.allDay) {
+					this.BCEventStartDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
+					this.BCEventEndDate.data("DateTimePicker").format('YYYY.MM.DD ddd');
+				} */
+				
+				notify.notify('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+				notify.notify('View: ' + view.name);
+				notify.notify('End: ' + event.end.toDate());
+				notify.notify('Start: ' + event.start.toDate());
+				notify.notify('AllDay: ' + event.allDay);
+				notify.notify('Event: ' + event.title);
+
+				this.BCEventId.val(event.id);
+				this.BCEventTitle.val(event.title);
+				this.BCEventContentViewer.setData(event.content);
+				
+				this.BCEventAllDayToggle.bootstrapToggle('enable');
+				this.BCEventAllDayToggle.bootstrapToggle(event.allDay ? 'on' : 'off');
+				this.BCEventAllDayToggle.bootstrapToggle('disable');
+				
+				this.BCEventStartDate.data("DateTimePicker").date(event.start);
+				this.BCEventEndDate.data("DateTimePicker").date(event.end);
+				
+				jqObj.BCEventViewerModal.modal('show');
 			},
 			
 			BCModalModifyBtnFunc : function() {
