@@ -267,20 +267,25 @@ body {
 			BCModalResetBtn : jqObj.basicCalendarModal.find('button[name="BCModalResetBtn"]'),
 			BCModalCloseBtn : jqObj.basicCalendarModal.find('button[name="BCModalCloseBtn"]'),
 
-			BCEventStartDateTmp : null,
-			BCEventEndDateTmp : null,
-			
 			BCInitialSettings : function() {
 				allDayFormatStr = 'YYYY.MM.DD ddd';
 				nonAllDayFormatStr = 'YYYY.MM.DD ddd A hh:mm';
 				formatStr = this.BCEventAllDayToggle.prop('checked') ? allDayFormatStr : nonAllDayFormatStr;
 				
 				this.BCEventStartDate.datetimepicker({
-					format : formatStr
+					format : formatStr,
+					widgetPositioning : {
+						horizontal: 'right',
+						vertical: 'top'
+					}
 				});
 				this.BCEventEndDate.datetimepicker({
+					useCurrent: false,
 					format : formatStr,
-					useCurrent: false
+					widgetPositioning : {
+						horizontal: 'right',
+						vertical: 'bottom'
+					}
 				});
 				this.BCEventAllDayToggle.bootstrapToggle({
 					on : 'Yes',
@@ -316,7 +321,7 @@ body {
 					BCModalFunc.BCEventVO.startDate = BCModalFunc.BCEventStartDate.data("DateTimePicker").date();
 					BCModalFunc.BCEventVO.endDate = BCModalFunc.BCEventEndDate.data("DateTimePicker").date().add(1, 'days');
 					
-					BCModalFunc.BCEventVO.editable = true; 
+					BCModalFunc.BCEventVO.editable = true;
 					
 					if(BCModalFunc.BCEventVO.title) {
 						if(BCModalFunc.BCEventVO.content) {
