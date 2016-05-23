@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="index">
+<head>
+<style type="text/css">
+#chatArea {
+	background: white;
+	resize: none;
+	cursor: text;
+}
+
+.well {
+	background: white;
+	padding: 0;
+	margin: 0;
+}
+
+#bottomFormGroup {
+	margin-bottom : 0px;
+}
+
+</style>
+<title>index_text</title>
+</head>
+<body>
+	<!-- Substitution of 'main' on upper layer -->
+	<div layout:fragment="main">
+		<div id="" class="row">
+			<div id="" class="col-sm-8 container-fluid">
+				<div id="" class="form-group">
+					<textarea id="chatArea" class="form-control" readonly="readonly"></textarea>
+				</div>
+				<div class="form-horizontal">
+					<div id="bottomFormGroup" class="form-group">
+						<div class="col-sm-10">
+							<input class="form-control" type="text" />
+						</div>
+						<div class="col-sm-2">
+							<button class="btn btn-primary btn-block">Send</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="" class="col-sm-4 container-fluid hidden-xs">
+				<div>
+					<div id="registerForm" class="well">
+						<form></form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -34,17 +34,21 @@ body {
 .badge {
 	margin-left: 5px;
 }
+
+.colorText {
+	color: pink;
+}
 </style>
 <title>default_chat</title>
 </head>
 <body>
 	<!-- Substitution of 'body' on upper layer -->
 	<div layout:fragment="body" id="container" class="container-fluid">
-		<nav id="vavBar" class="navbar navbar-default navbar-fixed-top navbar-inverse">
+		<nav id="navBar" class="navbar navbar-default navbar-fixed-top navbar-inverse">
 			<div id="navBarContainer" class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colla-collapse-1">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colla-collapse-default_chat">
 						<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 					</button>
 					<div class="btn-group visible-xs-block pull-right">
@@ -56,7 +60,7 @@ body {
 				</div>
 
 				<!-- Collect the nav links, forms, and other content for toggling -->
-				<div class="collapse navbar-collapse" id="colla-collapse-1">
+				<div id="colla-collapse-default_chat" class="collapse navbar-collapse">
 					<!-- form -->
 					<form id="nicknameForm" class="navbar-form navbar-left" role="Join">
 						<div class="form-group">
@@ -73,9 +77,9 @@ body {
 					<!-- navbar left -->
 					<ul class="nav navbar-nav">
 						<!-- dropdown -->
-						<li class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> Dropdown <span class="caret"></span></a>
+						<li class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown<span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a id="test1">notify test 1</a></li>
+								<li><a id="login" href="login">login</a></li>
 								<li><a id="test2">notify test 2</a></li>
 								<li><a id="test3">notify test 3</a></li>
 								<li><a id="test4">notify test 4</a></li>
@@ -93,11 +97,11 @@ body {
 						</li>
 					</ul>
 				</div>
-				<!-- .navbar-collapse -->
+				<!-- /.navbar-collapse -->
 			</div>
-			<!-- .container-fluid -->
+			<!-- /.container-fluid -->
 		</nav>
-		<!-- .navbar -->
+		<!-- /.navbar -->
 
 		<!-- replaced here by under layer -->
 		<div layout:fragment="main"></div>
@@ -942,7 +946,7 @@ body {
 			// Send data to socket
 			send : function() {
 				var msg = jqObj.chatInput.val();
-				utils.chatAppend('나 : ' + msg);
+				utils.chatAppend(this.nickname + ' : ' + msg);
 				this.socket.send(this.nickname + ' : ' + msg);
 				jqObj.chatInput.val('');
 				msg = null;
@@ -1000,6 +1004,7 @@ body {
 		};
 		
 		var utils = {
+			
 			// chatArea append function
 			chatAppend : function(str) {
 				jqObj.chatArea.append(str + '\n');
@@ -1378,7 +1383,7 @@ body {
 		
 // ===================================================================================================
 		
-		// == $(function() {
+		// $(function() {
 		$(document).ready(function() {
 			
 			// this is for only testing

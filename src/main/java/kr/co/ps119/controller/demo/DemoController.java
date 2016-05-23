@@ -71,12 +71,19 @@ public class DemoController {
 	public String test() {
 		return "test";
 	}
-	@RequestMapping(value = "test1")
-	public String test1() {
-		return "test1";
+	
+	@RequestMapping(value = "login")
+	public String login() {
+		return "login";
 	}
-	@RequestMapping(value = "modal")
-	public String test2() {
-		return "modal";
+	
+	@RequestMapping(value = "index")
+	public String index() {
+		return "index";
+	}
+	
+	@RequestMapping(value = "itest")
+	public String itest() {
+		return "itest";
 	}
 }
