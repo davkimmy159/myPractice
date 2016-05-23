@@ -201,6 +201,10 @@ body {
 			editable : true,
 			timezone : 'local',
 			displayEventEnd : true,
+			timeFormat : 'A hh : mm',
+			
+			eventLimit : 3,
+			
 			
 			// initial height set for resizing later(removing vertical scroll bar)
 			contentHeight: 100,
@@ -222,11 +226,11 @@ body {
 			
 			// fired when its calendar cell is clicked or dragged
 			select: function(start, end) {
-				BCModalFunc.selectForFullCalendar(start, end);
+				BCModalFunc.select(start, end);
 			},
 			
 			eventClick: function(event, jsEvent, view) {
-				BCEventViewerModalFunc.clickEventForFullCalendar(event, jsEvent, view);
+				BCEventViewerModalFunc.clickEventFor(event, jsEvent, view);
 		    },
 		    
 			events: [
@@ -237,6 +241,28 @@ body {
 					end : '2016-05-03',
 					editable : true,
 					allDay : true
+				},
+				{
+					id : 9998,
+					title : 'test',
+					start : '2016-05-01',
+					end : '2016-05-04',
+					editable : true,
+					allDay : true
+				},
+				{
+					id : 997,
+					title : 'test2',
+					start : '2016-05-01',
+					end : '2016-05-05',
+					editable : true
+				},
+				{
+					id : 996,
+					title : 'test3',
+					start : '2016-05-01',
+					end : '2016-05-06',
+					editable : true
 				}
 			]
 		});
@@ -322,6 +348,21 @@ body {
 				});
 			},
 			
+			select : function(start, end) {
+				start.tz("Asia/Seoul");
+				end.tz("Asia/Seoul");
+				end.subtract(16, 'hours');
+				
+				this.BCEventId.val(BCModalFunc.BCEventIdCnt);
+				
+				this.BCEventStartDate.data("DateTimePicker").date(start);
+				this.BCEventEndDate.data("DateTimePicker").date(end);
+				
+				jqObj.basicCalendarModal.modal('show');
+				
+				$("#basicCalendar").fullCalendar('unselect');
+			},
+			
 			BCModalSaveBtnFunc : function() {
 				this.BCModalSaveBtn.click(function() {
 					BCModalFunc.BCEventVO.id = BCModalFunc.BCEventId.val();
@@ -370,21 +411,6 @@ body {
 						notify.notify('input title!', 'error');
 					}
 				});
-			},
-			
-			selectForFullCalendar : function(start, end) {
-				start.tz("Asia/Seoul");
-				end.tz("Asia/Seoul");
-				end.subtract(16, 'hours');
-				
-				this.BCEventId.val(BCModalFunc.BCEventIdCnt);
-				
-				this.BCEventStartDate.data("DateTimePicker").date(start);
-				this.BCEventEndDate.data("DateTimePicker").date(end);
-				
-				jqObj.basicCalendarModal.modal('show');
-				
-				$("#basicCalendar").fullCalendar('unselect');
 			},
 			
 			BCModalResetBtnFunc : function() {
@@ -448,7 +474,7 @@ body {
 				this.BCEventAllDayToggle.bootstrapToggle('disable');
 			},
 			
-			clickEventForFullCalendar : function(event, jsEvent, view) {
+			clickEventFor : function(event, jsEvent, view) {
 				notify.notify('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
 				notify.notify('View: ' + view.name);
 				notify.notify('End: ' + event.end.toDate());
@@ -577,25 +603,6 @@ body {
 		var currentYear = new Date().getFullYear();
 
 		*/
-
-		$('#yearlyCalendar').calendar({
-			enableContextMenu : true,
-			enableRangeSelection: true,
-			contextMenuItems : [
-				{
-					text : 'Update',
-					// click : notify.notify('Update clicked!')
-				},
-				{
-					text : 'Delete',
-					// click : notify.notify('Delete clicked!')
-				}
-			]
-		});
-		
-		var YCModalFunc = { 
-			
-		};
 		
 		/*
 	    $('#yearlyCalendar').calendar({
@@ -664,9 +671,228 @@ body {
 	    $('#save-event').click(function() {
 	        saveEvent();
 	    });
-		
 	    */
+
+		var currentYear = new Date().getFullYear();
 	    
+		$('#yearlyCalendar').calendar({
+			enableContextMenu : true,
+			enableRangeSelection: true,
+			displayWeekNumber : true,
+			roundRangeLimits : true,
+			
+			contextMenuItems : [
+				{
+					text : 'Update',
+					// click : notify.notify('Update clicked!')
+				},
+				{
+					text : 'Delete',
+					// click : notify.notify('Delete clicked!')
+				}
+			],
+			
+			dataSource: [
+				{
+					id: 0,
+					name: 'Google I/O',
+					location: 'San Francisco, CA',
+					startDate: new Date(currentYear, 1, 1),
+					endDate: new Date(currentYear, 1, 15)
+				},
+				{
+					id: 1,
+					name: 'Microsoft Convergence',
+					location: 'New Orleans, LA',
+					startDate: new Date(currentYear, 2, 16),
+					endDate: new Date(currentYear, 2, 19)
+				}
+			],
+			
+			
+			/* events */
+			
+			clickDay : function(e) {
+				YCModalFunc.clickDay(e);
+			},
+			
+			selectRange : function(e) {
+				YCModalFunc.selectRange(e);
+			},
+			
+	        dayContextMenu : function(e) {
+	        	notify.notify('element : ' + e.element);
+	        	notify.notify('date : ' + e.date);
+	        	notify.notify('events : ' + e.events);
+	        },
+			
+	        mouseOnDay : function(e) {
+	            if(e.events.length > 0) {
+	                var content = '';
+	                
+	                for(var i in e.events) {
+	                    content += '<div class="event-tooltip-content">'
+	                             + '<div class="event-name" style="color:' + e.events[i].color + '">' + e.events[i].name + '</div>'
+	                             + '<div class="event-location">' + e.events[i].location + '</div>'
+	                             + '</div>';
+	                }
+	            
+	                $(e.element).popover({
+	                    trigger: 'manual',
+	                    container: 'body',
+	                    html:true,
+	                    content: content
+	                });
+	                
+	                $(e.element).popover('show');
+	            }
+	        },
+	        
+	        mouseOutDay : function(e) {
+	            if(e.events.length > 0) {
+	                $(e.element).popover('hide');
+	            }
+	        }
+		});
+		
+		var YCModalFunc = {
+			YCEventVO : {},
+			
+			YCEventIdCnt : 1,
+			
+			YCEventId : jqObj.yearlyCalendarModal.find('input[name="YCEventId"]'),
+			YCEventTitle : jqObj.yearlyCalendarModal.find('input[name="YCEventTitle"]'),
+			YCEventContentEditor : yearlyCalendarInputEditor,
+			
+			YCEventAllDayToggle : jqObj.yearlyCalendarModal.find('input[name="YCEventAllDayToggle"]'),
+			YCEventStartDate : jqObj.yearlyCalendarModal.find('input[name="YCEventStartDate"]'),
+			YCEventEndDate : jqObj.yearlyCalendarModal.find('input[name="YCEventEndDate"]'),
+			
+			YCModalSaveBtn : jqObj.yearlyCalendarModal.find('button[name="YCModalSaveBtn"]'),
+			YCModalResetBtn : jqObj.yearlyCalendarModal.find('button[name="YCModalResetBtn"]'),
+			YCModalCloseBtn : jqObj.yearlyCalendarModal.find('button[name="YCModalCloseBtn"]'),
+
+			
+			YCInitialSettings : function() {
+				allDayFormatStr = 'YYYY.MM.DD ddd';
+				nonAllDayFormatStr = 'YYYY.MM.DD ddd A hh:mm';
+				formatStr = this.YCEventAllDayToggle.prop('checked') ? allDayFormatStr : nonAllDayFormatStr;
+				
+				this.YCEventStartDate.datetimepicker({
+					format : formatStr,
+					stepping : 5,
+					sideBySide : true,
+					calendarWeeks : true,
+					showTodayButton : true,
+					showClear : true,
+					showClose : true,
+					toolbarPlacement : 'bottom',
+					widgetPositioning : {
+						horizontal: 'right',
+						vertical: 'top'
+					}
+				});
+				this.YCEventEndDate.datetimepicker({
+					useCurrent: false,
+					format : formatStr,
+					stepping : 5,
+					sideBySide : true,
+					calendarWeeks : true,
+					showTodayButton : true,
+					showClear : true,
+					showClose : true,
+					toolbarPlacement : 'top',
+					widgetPositioning : {
+						horizontal: 'right',
+						vertical: 'bottom'
+					}
+				});
+				
+				this.YCEventAllDayToggle.bootstrapToggle({
+					on : 'Yes',
+					off : 'No',
+					width : 75
+				});
+				
+				this.YCEventStartDate.on("dp.change", function (e) {
+					YCModalFunc.YCEventEndDate.data("DateTimePicker").minDate(e.date);
+		        });
+				this.YCEventEndDate.on("dp.change", function (e) {
+					YCModalFunc.YCEventStartDate.data("DateTimePicker").maxDate(e.date);
+		        });
+				
+				this.YCEventAllDayToggle.change(function() {
+					if (YCModalFunc.YCEventAllDayToggle.prop("checked")) {
+						YCModalFunc.YCEventStartDate.data("DateTimePicker").format(allDayFormatStr);
+						YCModalFunc.YCEventEndDate.data("DateTimePicker").format(allDayFormatStr);
+					} else {
+						YCModalFunc.YCEventStartDate.data("DateTimePicker").format(nonAllDayFormatStr);
+						YCModalFunc.YCEventEndDate.data("DateTimePicker").format(nonAllDayFormatStr);
+					}
+				});
+			},
+
+			/*
+			editEvent : function(event) {
+				this.YCEventId.val(event ? event.id : '');
+				this.YCEventTitle.val(event ? event.name : '');
+				this.YCEventContentEditor.val(event ? event.location : '');
+				//this.YCEventStartDate.datepicker('update', event ? event.startDate : '');
+				//this.YCEventEndDate.datepicker('update', event ? event.endDate : '');
+			    $('#event-modal').modal();
+			},
+			*/
+
+			clickDay : function(e) {
+				
+				this.YCEventStartDate.data("DateTimePicker").date(e.date);
+				this.YCEventEndDate.data("DateTimePicker").date(e.date);
+				
+				jqObj.yearlyCalendarModal.modal('show');
+			},
+			
+			selectRange : function(e) {
+				notify.notify('endDate  : ' + e.endDate);
+				notify.notify('startDate : ' + e.startDate);
+				notify.notify('location: ' + e.location);
+				notify.notify('name : ' + e.name);
+				notify.notify('id : ' + e.id);
+				
+				this.YCEventStartDate.data("DateTimePicker").date(e.startDate);
+				this.YCEventEndDate.data("DateTimePicker").date(e.endDate);
+
+				jqObj.yearlyCalendarModal.modal('show');
+			},
+			
+			YCModalSaveBtnFunc : function() {
+				
+			},
+			
+			YCModalResetBtnFunc : function() {
+				this.YCModalResetBtn.click(function() {
+					YCModalFunc.clearInputData();
+				});
+			},
+			
+			YCModalCloseBtnFunc : function() {
+				this.YCModalCloseBtn.click(function() {
+					jqObj.yearlyCalendarModal.modal('hide');
+				});
+			},
+			
+			clearInputData : function() {
+				this.YCEventTitle.val('');
+				yearlyCalendarInputEditor.setData('');
+			},
+			
+			addAllEventsAndInitSet : function() {
+				this.YCInitialSettings();
+				this.YCModalSaveBtnFunc();
+				this.YCModalResetBtnFunc();
+				this.YCModalCloseBtnFunc();
+			}
+		};
+		
 // ===================================================================================================
 		
 		// socket(SockJS)
@@ -1009,6 +1235,7 @@ body {
 				xeditableFunc.addAllEventsAndInitSet();
 				BCModalFunc.addAllEventsAndInitSet();
 				BCEventViewerModalFunc.addAllEventsAndInitSet();
+				YCModalFunc.addAllEventsAndInitSet();
 			}
 			
 		};

@@ -39,11 +39,16 @@
 	background: white;
 }
 
-#BCEventViewerModal input[name="BCEventAllDayToggle"] {
-	cursor: default;
+#basicCalendarEventContentViewer {
+	overflow: auto;
+	white-space: nowrap;
 }
 
-#basicCalendarEventContentViewer {
+#yearlyCalendarModal input {
+	background: white;
+}
+
+#yearlyCalendarInputEditor {
 	overflow: auto;
 	white-space: nowrap;
 }
@@ -533,8 +538,6 @@
 								</div>
 								<div class="panel-body">
 									<form class="form-horizontal">
-										<input value="BCEventId" type="hidden" />
-
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">ID</label>
 											<div class="col-sm-10">
@@ -612,8 +615,6 @@
 								</div>
 								<div class="panel-body">
 									<form class="form-horizontal">
-										<input value="BCEventId" type="hidden" />
-
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">ID</label>
 											<div class="col-sm-10">
@@ -684,7 +685,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
 						</button>
-						<h4 class="modal-title">Basic calendar input form</h4>
+						<h4 class="modal-title">Yearly calendar input form</h4>
 					</div>
 					<div class="modal-body">
 						<div class="container-fluid">
@@ -694,18 +695,16 @@
 								</div>
 								<div class="panel-body">
 									<form class="form-horizontal">
-										<input value="BCEventId" type="hidden" />
-
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">ID</label>
 											<div class="col-sm-10">
-												<input name="BCEventId" class="form-control" type="text" readonly="readonly" />
+												<input name="YCEventId" class="form-control" type="text" readonly="readonly" />
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">Title</label>
 											<div class="col-sm-10">
-												<input name="BCEventTitle" class="form-control" type="text" value="test" />
+												<input name="YCEventTitle" class="form-control" type="text" value="test" />
 											</div>
 										</div>
 										<div class="form-group">
@@ -717,19 +716,19 @@
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">All day</label>
 											<div class="col-sm-10">
-												<input name="BCEventAllDayToggle" class="form-control" type="checkbox" />
+												<input name="YCEventAllDayToggle" class="form-control" type="checkbox" />
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">Start</label>
 											<div class="col-sm-10">
-												<input name="BCEventStartDate" class="form-control" type="text" />
+												<input name="YCEventStartDate" class="form-control" type="text" />
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-sm-2 control-label" for="">end</label>
 											<div class="col-sm-10">
-												<input name="BCEventEndDate" class="form-control" type="text" />
+												<input name="YCEventEndDate" class="form-control" type="text" />
 											</div>
 										</div>
 									</form>
@@ -743,9 +742,9 @@
 					</div>
 					<!-- /.modal-body -->
 					<div class="modal-footer">
-						<button name="BCModalSaveBtn" class="btn btn-primary" type="button">Save</button>
-						<button name="BCModalResetBtn" class="btn btn-danger" type="button">Reset</button>
-						<button name="BCModalCloseBtn" class="btn btn-default" type="button">Cancel</button>
+						<button name="YCModalSaveBtn" class="btn btn-primary" type="button">Save</button>
+						<button name="YCModalResetBtn" class="btn btn-danger" type="button">Reset</button>
+						<button name="YCModalCloseBtn" class="btn btn-default" type="button">Cancel</button>
 					</div>
 					<!-- /.modal-footer -->
 				</div>
