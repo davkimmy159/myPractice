@@ -48,7 +48,7 @@ body {
 			<div id="navBarContainer" class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colla-collapse-default_chat">
+					<button id="collapseBtn" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colla-collapse-default_chat">
 						<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 					</button>
 					<div class="btn-group visible-xs-block pull-right">
@@ -140,6 +140,7 @@ body {
 			toolbarToggle : $('#toolbarToggle'),
 			chatNotifyToggleBtn : $('#chatNotifyToggleBtn'),
 			chatNotifyToggle : $('#chatNotifyToggle'),
+			collapseBtn : $('#collapseBtn'),
 
 			btnGroup1 : $('#btnGroup1'),
 			btnGroup2 : $('#btnGroup2'),
@@ -1182,6 +1183,18 @@ body {
 				$('[data-toggle="tooltip"]').tooltip();
 			},
 			
+			collapseBtnFocusMove : function() {
+				jqObj.collapseBtn.click(function() {
+					//<![CDATA[
+					if (!(matchMedia("screen and (min-width: 768px)").matches) && !(session.socket)) {
+					//]]>
+						setTimeout(function() {
+							jqObj.nicknameInput.focus();
+						}, 500);
+					}
+				});
+			},
+			
 			focusBackToChatInput : function() {
 				// Focus back to chatInput on pressing enter key on chatInput
 				jqObj.chatInput.keypress(function(event) {
@@ -1311,6 +1324,68 @@ body {
 				});
 			},
 			
+			editorKeyEvent : function() {
+				basicEditor.on('key', function(event){
+					//<![CDATA[
+					if(event.data.keyCode == 1114125) {
+					//]]>
+						notify.notify('enter clicked!');
+						jqObj.editorInputBtn.trigger('click'); 
+					}
+				});
+				
+				
+				
+				/*
+				basicEditor.on('contentDom', function() {
+					basicEditor.document.on('keydown', function(event) {
+						// notify.notify(event.data.getKey());
+						if(event.data.getKey() == 13) {
+							notify.notify('enter clicked!');
+							jqObj.editorInputBtn.trigger('click'); 
+						}
+					});
+				});
+				
+				mobileEditor.on('contentDom', function() {
+					mobileEditor.document.on('keydown', function(event) {
+						// notify.notify(event.data.getKey());
+						if(event.data.getKey() == 13) {
+							notify.notify('enter clicked!');
+							jqObj.editorInputBtn.trigger('click'); 
+						}
+					});
+				});
+				*/
+				/*
+				basicEditor.on('key', function(event){
+					// code
+				});
+				
+				basicEditor.on('key', function (evt) {
+				    var kc = evt.data.keyCode,
+				        csa = ~(CKEDITOR.CTRL | CKEDITOR.SHIFT | CKEDITOR.ALT);
+
+					//<![CDATA[
+					console.log(kc, kc & csa);
+					// kc & csa is what you need
+					//]]>
+				});
+				
+				basicEditor.on('contentDom', function() {
+				    basicEditor.editable().attachListener('keyup', basicEditor.document, function( event ) {
+						// code
+				    });
+				});
+				
+				basicEditor.document.on('keydown', function(evt) {
+				    notify.notify(evt.data.getKeystroke() + ', ' + evt.data.getKey());
+				    // code
+				});
+				*/
+			},
+			
+			
 			addAllEvents() {
 				this.focusBackToChatInput();
 				this.badgeEvent();
@@ -1329,6 +1404,8 @@ body {
 				BCEventViewerModalFunc.addAllEventsAndInitSet();
 				YCModalFunc.addAllEventsAndInitSet();
 				this.editorInputSend();
+				this.editorKeyEvent();
+				this.collapseBtnFocusMove();
 			}
 			
 		};
