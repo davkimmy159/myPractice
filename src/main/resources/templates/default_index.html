@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="default">
+<head>
+
+<!-- sockjs.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.0/sockjs.min.js" type="text/javascript"></script>
+
+<style type="text/css">
+body {
+	padding-top: 60px;
+}
+
+hr {
+	margin: 8px;
+}
+</style>
+<title>default_index</title>
+</head>
+<body>
+	<!-- Substitution of 'body' on upper layer -->
+	<div layout:fragment="body" id="" class="container-fluid">
+		<div class="row">
+			<nav id="" class="navbar navbar-default navbar-fixed-top">
+				<div id="" class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colla-collapse-index">
+							<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+						</button>
+						<a id="" class="navbar-brand btn" data-toggle="modal" data-target="#mainModal">IMColla</a>
+					</div>
+
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div id="colla-collapse-index" class="collapse navbar-collapse">
+						<!-- navbar left -->
+						<ul class="nav navbar-nav">
+							<!-- dropdown -->
+							<li class="dropdown visible-sm-block"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown<span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li><a id="">test1</a></li>
+									<li><a id="">test2</a></li>
+									<li><a id="">test3</a></li>
+									<li class="divider"></li>
+									<li><a id="">test4</a></li>
+									<li><a id="">test5</a></li>
+									<li><a id="">test6</a></li>
+								</ul></li>
+							<li><a id="" name="" class="hidden-sm" href="">test1</a></li>
+							<hr class="visible-xs-block" />
+							<li><a id="" name="" class="hidden-sm" href="">test2</a></li>
+							<hr class="visible-xs-block" />
+							<li><a id="" name="" class="hidden-sm" href="">test3</a></li>
+						</ul>
+
+						<div id="" class="navbar-form navbar-right" role="join">
+							<div class="form-group">
+								<input id="" type="text" class="form-control" placeholder="Search IMColla" />
+							</div>
+							<a class="btn btn-default hidden-xs" href="login.html" type="button">Sign in</a>
+							<a class="btn btn-success hidden-xs" href="" type="button">Sign up</a>
+							<div id="signBtnsDiv" class="row visible-xs-block">
+								<div class="col-xs-6">
+									<a class="btn btn-default btn-block" href="login.html" type="button">Sign in</a>
+								</div>
+								<div class="col-xs-6">
+									<a class="btn btn-success btn-block" href="" type="button">Sign up</a>
+								</div>
+							</div>
+						</div>
+
+						<!-- navbar right -->
+						<ul class="nav navbar-nav navbar-right">
+							<li><a id="" name="" class="hidden-sm hidden-xs" href="">test4</a></li>
+							<li><a id="" name="" class="hidden-sm hidden-xs" href="">test5</a></li>
+							<li><a id="" name="" class="hidden-sm hidden-xs" href="">test6</a></li>
+						</ul>
+					</div>
+					<!-- /.navbar-collapse -->
+				</div>
+				<!-- /.container-fluid -->
+			</nav>
+			<!-- /.navbar -->
+		</div>
+		<!-- /.row -->
+
+		<!-- replaced here by under layer -->
+		<div layout:fragment="main"></div>
+	</div>
+
+	<!-- jQuery & bootstrap JS is loaded here by upper layer -->
+
+	<!-- Substitution of 'customScript' -->
+	<script layout:fragment="customScript" type="text/javascript">
+		var jqObj = {
+			chatArea : $('#chatArea'),
+			registerForm : $('#registerForm'),
+
+			signBtnsDiv : $('#signBtnsDiv')
+
+		};
+
+		var utils = {
+
+			// chatArea append function
+			chatAppend : function(str) {
+			},
+
+			toggleClassArrayFunc : function(array, str) {
+				for ( var ctr in array)
+					array[ctr].toggleClass(str);
+			},
+
+			addClassFunc : function(array, str) {
+				for ( var ctr in array)
+					array[ctr].addClass(str);
+			},
+
+			removeClassFunc : function(array, str) {
+				for ( var ctr in array)
+					array[ctr].removeClass(str);
+			}
+		};
+
+		var resizeFuncs = {
+
+			setBasicHeight : function() {
+				jqObj.chatArea.height($(window).height() - 140);
+				jqObj.registerForm.height(jqObj.chatArea.height() + 60);
+			},
+
+			setMobileHeight : function() {
+				jqObj.chatArea.height($(window).height() - 175);
+			}
+		};
+
+		// $(function() {
+		$(document).ready(function() {
+
+			// Initial setting
+			if (matchMedia("screen and (min-width: 768px)").matches) {
+				resizeFuncs.setBasicHeight();
+			} else {
+				resizeFuncs.setMobileHeight();
+			}
+
+			$(window).resize(function() {
+
+				// To basic from mobile
+				if (matchMedia("screen and (min-width: 768px)").matches) {
+
+					// resize chatArea
+					resizeFuncs.setBasicHeight();
+
+					// Applied only once after mode has been changed
+					if (true) {
+					}
+					// To mobile from basic
+				} else {
+
+					// resize chatArea
+					resizeFuncs.setMobileHeight();
+
+					// Applied only once after mode has been changed
+					if (true) {
+					}
+				}
+			}).resize();
+		});
+	</script>
+</body>
+</html>

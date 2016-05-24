@@ -159,7 +159,9 @@ body {
 			basicCalendarModal : $('#basicCalendarModal'),
 			BCEventViewerModal : $('#BCEventViewerModal'),
 			
-			yearlyCalendarModal : $('#yearlyCalendarModal')
+			yearlyCalendarModal : $('#yearlyCalendarModal'),
+			
+			joinTable : $('#joinTable')
 			
 		};
 	
@@ -1312,10 +1314,63 @@ body {
 		
 		var xeditableFunc = {
 			
+			userNumbers : jqObj.joinTable.find('td span[name="userNumber"]'),
+			userNames : jqObj.joinTable.find('td span[name="userName"]'),
+			userEmails : jqObj.joinTable.find('td span[name="userEmail"]'),
+			userAuths : jqObj.joinTable.find('td span[name="userAuth"]'),
+			userParts : jqObj.joinTable.find('td span[name="userPart"]'),
+			test1 : jqObj.joinTable.find('td span[name="test1"]'),
+			test2 : jqObj.joinTable.find('td span[name="test2"]'),
 			
+			joinTableSet : function() {
+				this.userNumbers.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'Enter username',
+				});
+				this.userNames.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'Enter username',
+				});
+				this.userEmails.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'Enter username',
+				    placement : 'right'
+				});
+				this.userAuths.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'Enter username',
+				    placement : 'left'
+				});
+				this.userParts.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'Enter username',
+				    placement : 'left'
+				});
+				this.test1.editable({
+			        type : 'textarea',
+					url: '/post',
+			        title: 'Enter comments',
+			        rows: 6
+				});
+				this.test2.editable({
+			        type : 'date',
+			        title : 'test',
+					format: 'yyyy-mm-dd',    
+			        viewformat: 'dd/mm/yyyy',    
+			        datepicker: {
+			                weekStart: 1
+			       	}
+				});
+			},
+				
 			addAllEventsAndInitSet : function() {
 				// X-editable initial setting
-				$('#username').editable();
+				this.joinTableSet();
 			}
 		};
 		
@@ -1409,17 +1464,22 @@ body {
 				
 				// To basic from mobile
 				if (matchMedia("screen and (min-width: 768px)").matches) {
+					
 					// resize editor, chatArea
 					resizeFuncs.setBasicHeight();
+					
 					// Applied only once after mode has been changed
 					if (!(resizeFuncs.formGroupArray[0].hasClass('form-group'))) {
 						resizeFuncs.setGapByTogglingClass();
 						resizeFuncs.setBasicHeight();
 					}
-				} else { // To mobile from basic
+				// To mobile from basic
+				} else {
+					
 					// resize editor, chatArea
 					resizeFuncs.setMobileHeight();
-					// // Applied only once after mode has been changed
+					
+					// Applied only once after mode has been changed
 					if (resizeFuncs.formGroupArray[0].hasClass('form-group')) {
 						resizeFuncs.setGapByTogglingClass();
 						resizeFuncs.setMobileHeight();
