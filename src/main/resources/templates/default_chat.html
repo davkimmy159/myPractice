@@ -907,21 +907,21 @@ body {
 			
 			socket : null,
 			nickname : null,
-			contentSocket : null,
+			editorContentSocket : null,
 			
 			connect : function() {
 				var URL = location.protocol + '//' + location.host;
 				this.socket = new SockJS(URL + '/myPractice/socket');
 				this.socket.onopen = function(event) {
-					notify.notify('연결 성공', 'success');
+					notify.notify('메신저 연결 성공', 'success');
 				};
 				this.socket.onclose = function(event) {
-					notify.notify('연결 종료', 'success');
+					notify.notify('메신저 연결 종료', 'success');
 					
 					// Unespected disconnection
 					if (jqObj.joinToggleBtn.html() == ('Exit')) {
-						utils.chatAppend('Unstable disconnection happened!');
-						utils.chatAppend('Please join again!');
+						notify.notify('Chatting is disconnected accidentaly!', 'error');
+						notify.notify('Join again please!', 'error');
 						jqObj.joinToggleBtn.html('Join');
 						jqObj.joinToggleBtn.removeClass('btn-danger');
 						jqObj.joinToggleBtn.addClass('btn-success');
@@ -934,39 +934,84 @@ body {
 					badge.add();
 				};
 				this.socket.onerror = function(event) {
-					alert('에러 발생 : ' + event.data);
+					alert('메신저 에러 발생 : ' + event.data);
 				};
 				
 				// URL = null;
 				
 				// Editor content socket
-				this.contentSocket = new SockJS(URL + '/myPractice/contentSocket');
+				this.editorContentSocket = new SockJS(URL + '/myPractice/editorContentSocket');
 				
-				this.contentSocket.onmessage = function(event) {
+				this.editorContentSocket.onopen = function(event) {
+					notify.notify('에디터 연결 성공', 'success');
+				};
+				this.editorContentSocket.onclose = function(event) {
+					notify.notify('에디터 연결 종료', 'success');
+					
+					// Unespected disconnection
+					if (jqObj.joinToggleBtn.html() == ('Exit')) {
+						notify.notify('Editor is disconnected accidentaly!', 'error');
+						notify.notify('Reconnect please!', 'error');
+					}
+				};
+				
+				this.editorContentSocket.onmessage = function(event) {
 					basicEditor.setData(event.data);
+					mobileEditor.setData(event.data);
+					notify.notify('에디터 갱신됨');
+				};
+				
+				this.socket.onerror = function(event) {
+					alert('에디터 에러 발생 : ' + event.data);
 				};
 				
 				URL = null;
 			},
 			
 			disconnect : function() {
-				this.socket.send(this.nickname + ' 님이 퇴장했습니다.');
-				this.socket.close();
-				this.socket = null;
-				this.nickname = null;
+				// Close socket
+				if(this.socket) {
+					this.socket.send(this.nickname + ' 님이 퇴장했습니다.');
+					this.socket.close();
+					this.socket = null;
+				};
 				
-				// Editor content socket
-				this.contentSocket.close();
-				this.contentSocket = null;
+				// Close editor content socket
+				if(this.editorContentSocket) {
+					this.editorContentSocket.close();
+					this.editorContentSocket = null;
+				};
+				
+				if(this.nickname) {
+					this.nickname = null;
+				};
+			},
+			
+			reconnect : function() {
+				this.disconnect();
+				this.connect();
 			},
 			
 			// Send data to socket
-			send : function() {
+			msgSend : function() {
 				var msg = jqObj.chatInput.val();
-				utils.chatAppend('(' + this.nickname + ') : ' + msg);
+				utils.chatAppend('[' + this.nickname + '] : ' + msg);
 				this.socket.send(this.nickname + ' : ' + msg);
 				jqObj.chatInput.val('');
 				msg = null;
+			},
+			
+			contentSend : function() {
+				// basic size
+				if (matchMedia("screen and (min-width: 768px)").matches) {
+					session.editorContentSocket.send(basicEditor.getData());
+					basicEditor.focus();
+
+				// mobile size
+				} else {
+					session.editorContentSocket.send(mobileEditor.getData());
+					mobileEditor.focus();
+				}
 			}
 		};
 
@@ -1061,7 +1106,7 @@ body {
 				} else if (!(this.checkStr(jqObj.chatInput.val()))) {
 					jqObj.chatInput.focus();
 				} else {
-					session.send();
+					session.msgSend();
 					jqObj.chatInput.focus();
 				}
 			},
@@ -1078,6 +1123,15 @@ body {
 						jqObj.nicknameInput.val('');
 						jqObj.nicknameInput.attr('placeholder', 'Login is successful!');
 						session.connect();
+						
+						// Hide navbar content (in effect only in mobile mode)
+						if (!(matchMedia("screen and (min-width: 768px)").matches)) {
+							if($('.navbar-toggle').css('display') !='none'){
+								$(".navbar-toggle").trigger( "click" );
+							}
+				        }
+						
+						// Focus back to chat input
 						jqObj.chatInput.focus();
 					} else {
 						jqObj.nicknameInput.attr('placeholder', 'Worng! type again!');
@@ -1091,6 +1145,15 @@ body {
 					jqObj.nicknameInput.val('');
 					jqObj.nicknameInput.attr('placeholder', 'Type nickname');
 					session.disconnect();
+					
+					// Hide navbar content (in effect only in mobile mode)
+					if (!(matchMedia("screen and (min-width: 768px)").matches)) {
+						if($('.navbar-toggle').css('display') !='none'){
+							$(".navbar-toggle").trigger( "click" );
+						}
+			        }
+					
+					// Focus back to nickname input
 					jqObj.nicknameInput.focus();
 				}
 			},
@@ -1244,7 +1307,7 @@ body {
 			
 			editorInputSend : function() {
 				jqObj.editorInputBtn.click(function() {
-					session.contentSocket.send(basicEditor.getData());	
+					session.contentSend();
 				});
 			},
 			
@@ -1497,6 +1560,7 @@ body {
 					if (!(resizeFuncs.formGroupArray[0].hasClass('form-group'))) {
 						resizeFuncs.setGapByTogglingClass();
 						resizeFuncs.setBasicHeight();
+						basicEditor.setData(mobileEditor.getData());
 					}
 				// To mobile from basic
 				} else {
@@ -1508,6 +1572,7 @@ body {
 					if (resizeFuncs.formGroupArray[0].hasClass('form-group')) {
 						resizeFuncs.setGapByTogglingClass();
 						resizeFuncs.setMobileHeight();
+						mobileEditor.setData(basicEditor.getData());
 					}
 				}
 				

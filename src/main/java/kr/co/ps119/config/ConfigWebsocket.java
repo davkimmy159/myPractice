@@ -17,7 +17,7 @@ public class ConfigWebsocket implements WebSocketConfigurer {
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(chatHandler(), "/socket").withSockJS();
-		registry.addHandler(editorContentHandler(), "/socket2").withSockJS();
+		registry.addHandler(editorContentHandler(), "/editorContentSocket").withSockJS();
 	}
 
 	@Bean
