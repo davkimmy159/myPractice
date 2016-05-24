@@ -22,18 +22,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component
-// 서버단의 WebSocketEndPoint 정의
-// Websocket에서 서버단의 프로세스를 정의할 수 있다
-// xml에 설정안하고 @ServerEndpoint(path) 로 정의할 수 있다고 알고 있다.
-public class ChatHandler extends TextWebSocketHandler {
+public class EditorContentHandler extends TextWebSocketHandler {
 
 	private List<WebSocketSession> sessionList = new ArrayList<>();
 	private Map<String, WebSocketSession> sessionMap = new HashMap<>();
-	
-	public ChatHandler() {
+
+	public EditorContentHandler() {
 		super();
 	}
-
+	
 	/**
 	 * 클라이언트 연결 이후에 실행되는 메소드
 	 */
@@ -53,7 +50,7 @@ public class ChatHandler extends TextWebSocketHandler {
 		String id = session.getId();
 		String payloadMessage = message.getPayload();
 
-		for (WebSocketSession eachSession: sessionList) {
+		for (WebSocketSession eachSession : sessionList) {
 			if (!eachSession.equals(session))
 				eachSession.sendMessage(new TextMessage(payloadMessage));
 		}
@@ -71,5 +68,4 @@ public class ChatHandler extends TextWebSocketHandler {
 		// sessions.remove(session.getId());
 		// logger.info("{} 연결 끊김", session.getId());
 	}
-
 }

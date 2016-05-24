@@ -107,6 +107,7 @@ body {
 		<div layout:fragment="main"></div>
 	</div>
 
+
 	<!-- jQuery & bootstrap JS is loaded here by upper layer -->
 
 	<!-- Substitution of 'customScript' -->
@@ -906,6 +907,7 @@ body {
 			
 			socket : null,
 			nickname : null,
+			contentSocket : null,
 			
 			connect : function() {
 				var URL = location.protocol + '//' + location.host;
@@ -935,6 +937,15 @@ body {
 					alert('에러 발생 : ' + event.data);
 				};
 				
+				// URL = null;
+				
+				// Editor content socket
+				this.contentSocket = new SockJS(URL + '/myPractice/contentSocket');
+				
+				this.contentSocket.onmessage = function(event) {
+					basicEditor.setData(event.data);
+				};
+				
 				URL = null;
 			},
 			
@@ -943,12 +954,16 @@ body {
 				this.socket.close();
 				this.socket = null;
 				this.nickname = null;
+				
+				// Editor content socket
+				this.contentSocket.close();
+				this.contentSocket = null;
 			},
 			
 			// Send data to socket
 			send : function() {
 				var msg = jqObj.chatInput.val();
-				utils.chatAppend(this.nickname + ' : ' + msg);
+				utils.chatAppend('(' + this.nickname + ') : ' + msg);
 				this.socket.send(this.nickname + ' : ' + msg);
 				jqObj.chatInput.val('');
 				msg = null;
@@ -1099,6 +1114,7 @@ body {
 		};
 
 		var eventFunc = {
+			
 			tooltipActivate : function() {
 				$('[data-toggle="tooltip"]').tooltip();
 			},
@@ -1226,6 +1242,12 @@ body {
 				});
 			},
 			
+			editorInputSend : function() {
+				jqObj.editorInputBtn.click(function() {
+					session.contentSocket.send(basicEditor.getData());	
+				});
+			},
+			
 			addAllEvents() {
 				this.focusBackToChatInput();
 				this.badgeEvent();
@@ -1243,6 +1265,7 @@ body {
 				BCModalFunc.addAllEventsAndInitSet();
 				BCEventViewerModalFunc.addAllEventsAndInitSet();
 				YCModalFunc.addAllEventsAndInitSet();
+				this.editorInputSend();
 			}
 			
 		};
@@ -1326,36 +1349,37 @@ body {
 				this.userNumbers.editable({
 				    type : 'text',
 				    url : '/post',
-				    title : 'Enter username',
+				    title : 'test',
 				});
 				this.userNames.editable({
 				    type : 'text',
 				    url : '/post',
-				    title : 'Enter username',
+				    title : 'test',
 				});
 				this.userEmails.editable({
 				    type : 'text',
 				    url : '/post',
-				    title : 'Enter username',
+				    title : 'test',
 				    placement : 'right'
 				});
 				this.userAuths.editable({
 				    type : 'text',
 				    url : '/post',
-				    title : 'Enter username',
+				    title : 'test',
 				    placement : 'left'
 				});
 				this.userParts.editable({
 				    type : 'text',
 				    url : '/post',
-				    title : 'Enter username',
+				    title : 'test',
 				    placement : 'left'
 				});
 				this.test1.editable({
 			        type : 'textarea',
 					url: '/post',
-			        title: 'Enter comments',
-			        rows: 6
+			        title: 'test',
+			        rows: 6,
+			        placement : 'left'
 				});
 				this.test2.editable({
 			        type : 'date',
@@ -1364,7 +1388,8 @@ body {
 			        viewformat: 'dd/mm/yyyy',    
 			        datepicker: {
 			                weekStart: 1
-			       	}
+			       	},
+			       	placement : 'left'
 				});
 			},
 				

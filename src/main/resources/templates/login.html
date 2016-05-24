@@ -1,30 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="default">
 <head>
 
-<!-- bootstrap.css & bootstrap theme.css -->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+<!-- common js and css are loaded here by upper layer -->
 
-<!-- normalize.css -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css" rel="stylesheet" type="text/css" />
-
-<!-- font-awesome.css for bootstrap -->
-<link href="../etc/font-awesome-4.6.3/css/font-awesome.min.css" th:href="@{/etc/font-awesome-4.6.3/css/font-awesome.min.css}" rel="stylesheet" type="text/css" />
-
-<!--  pnotify.css (with js!) -->
-<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/pnotify/3.0.0/pnotify.min.css" rel="stylesheet" type="text/css" /> -->
-<link href="../etc/pnotify3/pnotify.custom.min.css" th:href="@{/etc/pnotify3/pnotify.custom.min.css}" rel="stylesheet" type="text/css" />
-
-<!-- bootstrap-editable.css (with js!) -->
-<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
-
-<!-- bootstrap-toggle.css (with js!) -->
-<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet" />
-
-<!-- floating-label.css (with js!) -->
-
-
+<!-- custom elements in <head> tag -->
 <style type="text/css">
 .well {
 	background: white;
@@ -35,17 +15,13 @@
 <title>Login</title>
 </head>
 <body>
-	<div class="container-fluid">
+	<div layout:fragment="body" class="container-fluid">
 		<div class="row">
 			<div class="page-header">
 				<div class="text-center">
-					<h1>
-						<strong>IMColla</strong>
-					</h1>
+					<h1><strong>IMColla</strong></h1>
 				</div>
-				<h1 class="text-center">
-					<small>Collaborate immediately!</small>
-				</h1>
+				<h1 class="text-center"><small>Collaborate immediately!</small></h1>
 			</div>
 		</div>
 
@@ -62,9 +38,7 @@
 						<div class="form-group">
 							<label class="control-label" for="loginPassword">Password</label>
 							<div class="pull-right">
-								<h5>
-									<a href="#">Forgot password?</a>
-								</h5>
+								<h5><a href="#">Forgot password?</a></h5>
 							</div>
 							<div class="">
 								<input id="loginPassword" class="form-control" type="password" placeholder="type your password here" />
@@ -83,8 +57,7 @@
 			<div class="row">
 				<div class="well well-sm">
 					<div class="text-center">
-						<h5>
-							New to IMColla? <a href="#">Create an account.</a>
+						<h5>New to IMColla? <a href="#">Create an account.</a>
 						</h5>
 					</div>
 				</div>
@@ -117,5 +90,9 @@
 	<!-- floating-label (with css!) -->
 
 
+	<!-- jQuery & bootstrap JS is loaded here by upper layer -->
+
+	<!-- Substitution of 'customScript' -->
+	<script layout:fragment="customScript" type="text/javascript"></script>
 </body>
 </html>

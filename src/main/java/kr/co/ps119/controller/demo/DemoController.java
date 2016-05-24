@@ -66,7 +66,7 @@ public class DemoController {
 	public String writing() {
 		return "a";
 	}
-
+	
 	@RequestMapping(value = "test")
 	public String test() {
 		return "test";
