@@ -52,7 +52,7 @@ body {
 						<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 					</button>
 					<div class="btn-group visible-xs-block pull-right">
-						<button id="mobileStatus" name="status" type="button" class="btn btn-primary navbar-btn" data-toggle="tooltip" data-placement="bottom" title="Hide toolbar!">
+						<button id="mobileStatus" name="status" type="button" class="btn btn-primary navbar-btn">
 							Mobile<span id="mobileStatusBadge" class="badge">0</span>
 						</button>
 					</div>
@@ -69,7 +69,7 @@ body {
 						</div>
 						<div id="btnGroup1" class="btn-group" role="group" aria-label="...">
 							<div class="btn-group" role="group">
-								<button id="joinToggleBtn" type="button" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" data-container="body" title="Type your name and Join">Join</button>
+								<button id="joinToggleBtn" type="button" class="btn btn-success">Join</button>
 							</div>
 						</div>
 					</form>
@@ -91,7 +91,7 @@ body {
 					<!-- navbar right -->
 					<ul class="nav navbar-nav navbar-right">
 						<li>
-							<button id="basicStatus" name="status" type="button" class="btn btn-primary navbar-btn hidden-xs" data-toggle="tooltip" data-placement="bottom" title="Hide toolbar!">
+							<button id="basicStatus" name="status" type="button" class="btn btn-primary navbar-btn hidden-xs">
 								Basic<span id="basicStatusBadge" class="badge">0</span>
 							</button>
 						</li>
@@ -959,7 +959,7 @@ body {
 				this.editorContentSocket.onmessage = function(event) {
 					basicEditor.setData(event.data);
 					mobileEditor.setData(event.data);
-					notify.notify('에디터 갱신됨');
+					notify.notify('컨텐츠 갱신');
 				};
 				
 				this.socket.onerror = function(event) {
@@ -1003,15 +1003,20 @@ body {
 			},
 			
 			contentSend : function() {
-				// basic size
-				if (matchMedia("screen and (min-width: 768px)").matches) {
-					session.editorContentSocket.send(basicEditor.getData());
-					basicEditor.focus();
+				// when editorContentSocket is connected
+				if (this.editorContentSocket) {
+					// basic size
+					if (matchMedia("screen and (min-width: 768px)").matches) {
+						this.editorContentSocket.send(basicEditor.getData());
+						basicEditor.focus();
 
-				// mobile size
+					// mobile size
+					} else {
+						this.editorContentSocket.send(mobileEditor.getData());
+						mobileEditor.focus();
+					}
 				} else {
-					session.editorContentSocket.send(mobileEditor.getData());
-					mobileEditor.focus();
+					jqObj.editorInputBtn.blur();
 				}
 			}
 		};
@@ -1179,10 +1184,6 @@ body {
 
 		var eventFunc = {
 			
-			tooltipActivate : function() {
-				$('[data-toggle="tooltip"]').tooltip();
-			},
-			
 			collapseBtnFocusMove : function() {
 				jqObj.collapseBtn.click(function() {
 					//<![CDATA[
@@ -1195,13 +1196,51 @@ body {
 				});
 			},
 			
-			focusBackToChatInput : function() {
+			chatInputKeyEvent : function() {
+				
+				// for CTRL + SHIFT
+				var isCtrl = false;
+				
 				// Focus back to chatInput on pressing enter key on chatInput
-				jqObj.chatInput.keypress(function(event) {
-					if (event.keyCode === 13) {
+				jqObj.chatInput.keydown(function(event) {
+					
+					// ENTER
+					if (event.which === 13) {
 						utils.verifyChatInput();
+						
+					// CTRL
+					} else if (event.which == 17) {
+						// notify.notify('CTRL clicked!');
+						isCtrl = true;
+						// notify.notify('keyDown! : ' + isCtrl);
+					}
+					
+					// CTRL + SHIFT
+					//<![CDATA[
+					if (event.which == 16 && isCtrl) {
+					// ]]>
+						notify.notify('CTRL + SHIFT clicked! (chatInput)');
+						
+						// Focus to basic editor
+						if(matchMedia("screen and (min-width: 768px)").matches) {
+							basicEditor.focus();
+							
+						// Focus to mobile editor
+						} else {
+							mobileEditor.focus();
+						}
+						
 					}
 				});
+				
+				// Toggle isCtrl false
+				jqObj.chatInput.keyup(function(event) {
+					if(event.which == 17) {
+						isCtrl=false;
+						// notify.notify('keyUp! : ' + isCtrl)
+					}
+				});
+				
 				// Focus back to chatInput on clicking chatInputBtn
 				jqObj.chatInputBtn.click(function() {
 					utils.verifyChatInput();
@@ -1228,6 +1267,7 @@ body {
 			toggleChatNotifyEvent : function() {
 				jqObj.chatNotifyToggleBtn.click(function() {
 					notify.toggleChatNotify();
+					this.blur();
 				});
 			},
 			
@@ -1325,16 +1365,35 @@ body {
 			},
 			
 			editorKeyEvent : function() {
+				
 				basicEditor.on('key', function(event){
-					//<![CDATA[
-					if(event.data.keyCode == 1114125) {
-					//]]>
-						notify.notify('enter clicked!');
-						jqObj.editorInputBtn.trigger('click'); 
-					}
+					editorKeyEventAssistant(event);
 				});
 				
+				mobileEditor.on('key', function(event){
+					editorKeyEventAssistant(event);
+				});
 				
+				function editorKeyEventAssistant(event) {
+					var keyCode = event.data.keyCode; 
+
+					// CTRL + SHIFT
+					if(keyCode == 3342352) {
+						notify.notify('CTRL + SHIFT clicked! (editor)');
+						jqObj.chatInput.focus();
+						
+					// ENTER
+					} else if(keyCode == 1114125) {
+						notify.notify('ENTER clicked! (editor)');
+						jqObj.editorInputBtn.trigger('click'); 
+					}
+					keyCode = null;
+				};
+				
+				//<![CDATA[
+				//]]>
+
+				// 예비 함수
 				
 				/*
 				basicEditor.on('contentDom', function() {
@@ -1387,13 +1446,12 @@ body {
 			
 			
 			addAllEvents() {
-				this.focusBackToChatInput();
+				this.chatInputKeyEvent();
 				this.badgeEvent();
 				this.toggleJoinEvent();
 				this.toggleToolbarEvent();
 				this.windowOutEvent();
 				this.showHeights();
-				this.tooltipActivate();
 				this.toggleChatNotifyEvent();
 				modalFunc.addAllEventsAndInitSet();
 				calendarFunc.addAllEventsAndInitSet();
@@ -1403,6 +1461,9 @@ body {
 				BCModalFunc.addAllEventsAndInitSet();
 				BCEventViewerModalFunc.addAllEventsAndInitSet();
 				YCModalFunc.addAllEventsAndInitSet();
+				// this.tooltipActivate();
+				tooltipFunc.addAllEventsAndInitSet();
+				
 				this.editorInputSend();
 				this.editorKeyEvent();
 				this.collapseBtnFocusMove();
@@ -1536,6 +1597,56 @@ body {
 			addAllEventsAndInitSet : function() {
 				// X-editable initial setting
 				this.joinTableSet();
+			}
+		};
+		
+		var tooltipFunc = {
+
+			tooltipApply : function() {
+				// $('#example').tooltip(options)
+				jqObj.joinToggleBtn.tooltip({
+					title : "Type your name and Join",
+					placement : "bottom",
+					container : "body"
+				});
+
+				
+				jqObj.basicStatus.tooltip({
+					title : "Hide toolbar!",
+					placement : "bottom"
+				});
+				
+				jqObj.mobileStatus.tooltip({
+					title : "Hide toolbar!", 
+					placement : "bottom"
+				});
+				
+				jqObj.editorInputBtn.tooltip({
+					title : '"CTRL + ENTER" or "CTRL + SHIFT"',
+					placement : "top",
+					container : "body"
+				});
+				
+				jqObj.toolbarToggleBtn.tooltip({
+					title : "Hide toolbar!",
+					placement : "top",
+					container : "body"
+				});
+				
+				jqObj.chatNotifyToggleBtn.tooltip({
+					title : "Hide chat notification!",  
+					placement : "top",
+					container : "body"
+				});
+			},
+				
+			tooltipActivate : function() {
+				$('[data-toggle="tooltip"]').tooltip();
+			},
+			
+			addAllEventsAndInitSet : function() {
+				this.tooltipActivate();
+				this.tooltipApply();
 			}
 		};
 		
