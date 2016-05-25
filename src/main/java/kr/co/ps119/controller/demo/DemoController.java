@@ -72,18 +72,20 @@ public class DemoController {
 		return "test";
 	}
 	
-	@RequestMapping(value = "login")
-	public String login() {
-		return "login";
-	}
-	
 	@RequestMapping(value = "index")
 	public String index() {
 		return "index";
 	}
 	
-	@RequestMapping(value = "itest")
-	public String itest() {
-		return "itest";
+
+	@RequestMapping(value = "login")
+	public String login() {
+		return "login";
 	}
+	
+	@RequestMapping(value = "account_creation")
+	public String accountCreation() {
+		return "account_creation";
+	}
+	
 }

@@ -10,11 +10,12 @@
 
 <style type="text/css">
 body {
-	padding-top: 60px;
+	padding-top : 60px;
 }
 
 hr {
-	margin: 8px;
+	margin : 2px;
+	border-color : #151515;
 }
 </style>
 <title>default_index</title>
@@ -23,7 +24,7 @@ hr {
 	<!-- Substitution of 'body' on upper layer -->
 	<div layout:fragment="body" id="" class="container-fluid">
 		<div class="row">
-			<nav id="" class="navbar navbar-default navbar-fixed-top">
+			<nav id="" class="navbar navbar-default navbar-fixed-top navbar-inverse">
 				<div id="" class="container-fluid">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colla-collapse-index">
@@ -40,40 +41,57 @@ hr {
 							<li class="dropdown visible-sm-block"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									<li><a id="">test1</a></li>
+									<li class="divider"></li>
 									<li><a id="">test2</a></li>
+									<li class="divider"></li>
 									<li><a id="">test3</a></li>
 									<li class="divider"></li>
 									<li><a id="">test4</a></li>
+									<li class="divider"></li>
 									<li><a id="">test5</a></li>
+									<li class="divider"></li>
 									<li><a id="">test6</a></li>
+									<li class="divider"></li>
+									<li><a id="">test7</a></li>
+									<li class="divider"></li>
+									<li><a id="">test8</a></li>
+									<li class="divider"></li>
+									<li><a id="">test9</a></li>
 								</ul></li>
 							<li><a id="" name="" class="hidden-sm" href="">test1</a></li>
 							<hr class="visible-xs-block" />
 							<li><a id="" name="" class="hidden-sm" href="">test2</a></li>
 							<hr class="visible-xs-block" />
 							<li><a id="" name="" class="hidden-sm" href="">test3</a></li>
+							<hr class="visible-xs-block" />
+							<li><a id="" name="" class="hidden-sm" href="">test4</a></li>
+							<hr class="visible-xs-block" />
+							<li><a id="" name="" class="hidden-sm" href="">test5</a></li>
+							<hr class="visible-xs-block" />
+							<li><a id="" name="" class="hidden-sm" href="">test6</a></li>
+							<hr class="visible-xs-block" />
+							<li><a id="" name="" class="hidden-sm" href="">test7</a></li>
+							<hr class="visible-xs-block" />
+							<li><a id="" name="" class="hidden-sm" href="">test8</a></li>
 						</ul>
 
 						<div id="" class="navbar-form navbar-right" role="join">
 							<div class="form-group">
 								<input id="" type="text" class="form-control" placeholder="Search IMColla" />
 							</div>
-							<a class="btn btn-default hidden-xs" href="login.html" type="button">Sign in</a> <a class="btn btn-success hidden-xs" href="" type="button">Sign up</a>
+							<a class="btn btn-default hidden-xs" href="login" type="button">Sign in</a> <a class="btn btn-success hidden-xs" href="account_creation" type="button">Sign up</a>
 							<div id="signBtnsDiv" class="row visible-xs-block">
 								<div class="col-xs-6">
-									<a class="btn btn-default btn-block" href="login.html" type="button">Sign in</a>
+									<a class="btn btn-default btn-block" href="login" type="button">Sign in</a>
 								</div>
 								<div class="col-xs-6">
-									<a class="btn btn-success btn-block" href="" type="button">Sign up</a>
+									<a class="btn btn-success btn-block" href="account_creation" type="button">Sign up</a>
 								</div>
 							</div>
 						</div>
 
 						<!-- navbar right -->
 						<ul class="nav navbar-nav navbar-right">
-							<li><a id="" name="" class="hidden-sm hidden-xs" href="">test4</a></li>
-							<li><a id="" name="" class="hidden-sm hidden-xs" href="">test5</a></li>
-							<li><a id="" name="" class="hidden-sm hidden-xs" href="">test6</a></li>
 						</ul>
 					</div>
 					<!-- /.navbar-collapse -->
@@ -93,10 +111,14 @@ hr {
 
 	<!-- Substitution of 'customScript' -->
 	<script layout:fragment="customScript" type="text/javascript">
+	
 		var jqObj = {
+			
+			mainCarouselContainer : $('#mainCarouselContainer'),
+			mainCarouselDiv : $('#mainCarouselDiv'),
+			restWell : $('#restWell'),
 			chatArea : $('#chatArea'),
-			registerForm : $('#registerForm'),
-
+			
 			signBtnsDiv : $('#signBtnsDiv')
 
 		};
@@ -123,11 +145,18 @@ hr {
 			}
 		};
 
+		var carouselFunc = {
+			
+			
+		};
+		
 		var resizeFuncs = {
 
 			setBasicHeight : function() {
 				jqObj.chatArea.height($(window).height() - 140);
-				jqObj.registerForm.height(jqObj.chatArea.height() + 60);
+				jqObj.restWell.height(jqObj.chatArea.height() + 60);
+				jqObj.mainCarouselContainer.height(jqObj.chatArea.height() + 60);
+				$('#contest').height(jqObj.mainCarouselContainer.height());
 			},
 
 			setMobileHeight : function() {
@@ -143,8 +172,10 @@ hr {
 				resizeFuncs.setBasicHeight();
 			} else {
 				resizeFuncs.setMobileHeight();
+				jqObj.mainCarouselDiv.toggleClass('row');
 			}
 
+			// Responsive resizing
 			$(window).resize(function() {
 
 				// To basic from mobile
@@ -154,16 +185,19 @@ hr {
 					resizeFuncs.setBasicHeight();
 
 					// Applied only once after mode has been changed
-					if (true) {
+					if (!(jqObj.mainCarouselDiv.hasClass('row'))) {
+						jqObj.mainCarouselDiv.toggleClass('row');
 					}
-					// To mobile from basic
+					
+				// To mobile from basic
 				} else {
 
 					// resize chatArea
 					resizeFuncs.setMobileHeight();
 
 					// Applied only once after mode has been changed
-					if (true) {
+					if (jqObj.mainCarouselDvi.hasClass('row')) {
+						jqObj.mainCarouselDiv.toggleClass('row');
 					}
 				}
 			}).resize();
