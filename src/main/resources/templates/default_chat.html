@@ -113,7 +113,7 @@ body {
 	<!-- Substitution of 'customScript' -->
 	<script layout:fragment="customScript" type="text/javascript">
 		
-	var jqObj = {
+		var jqObj = {
 			
 			editorContainer : $('#editorContainer'),
 			chatContainer : $('#chatContainer'),
@@ -957,9 +957,14 @@ body {
 				};
 				
 				this.editorContentSocket.onmessage = function(event) {
+					var ranges = basicEditor.getSelection().getRanges();
+					
 					basicEditor.setData(event.data);
 					mobileEditor.setData(event.data);
-					notify.notify('컨텐츠 갱신');
+					// notify.notify('컨텐츠 갱신');
+					
+					
+					basicEditor.getSelection().selectRanges( ranges );
 				};
 				
 				this.socket.onerror = function(event) {
@@ -1015,8 +1020,21 @@ body {
 						this.editorContentSocket.send(mobileEditor.getData());
 						mobileEditor.focus();
 					}
+					
+					this.socket.send('컨텐츠 갱신 by ' + this.nickname);
+					
 				} else {
 					jqObj.editorInputBtn.blur();
+				}
+			},
+			
+			sendJoinCheckMsg : function() {
+				//<![CDATA[
+				if(this.socket && this.nickname) {
+					//]]>
+					this.socket.send(this.nickname + ' 님이 입장했습니다.');
+				} else {
+					notify.notify('Sending join check msg has failed');
 				}
 			}
 		};
@@ -1098,10 +1116,10 @@ body {
 			checkStr : function(str) {
 				//<![CDATA[
 				if (((typeof str != "undefined") && (typeof str.valueOf() == "string")) && (str.length > 0))
+				//]]>
 					return true;
 				else
 					return false;
-				//]]>
 			},
 			
 			// veryfy chat input
@@ -1130,12 +1148,35 @@ body {
 						jqObj.nicknameInput.attr('placeholder', 'Login is successful!');
 						session.connect();
 						
-						// Hide navbar content (in effect only in mobile mode)
+						setTimeout(function(){
+							session.sendJoinCheckMsg();	
+						}, 100);
+
+						// Hide navbar collapsible menus in mobile
 						if (!(matchMedia("screen and (min-width: 768px)").matches)) {
 							if($('.navbar-toggle').css('display') !='none'){
 								$(".navbar-toggle").trigger( "click" );
 							}
 				        }
+						
+						// AJAX
+						// Send nickname to server to save in DB
+						$.ajax({
+							url : 'ajaxTest2',
+							type : 'GET',
+							data : {'nickname' : session.nickname},
+							contentType: "application/json; charset=utf-8",
+							// dataType : 'json',
+							// cache: false,
+							// processData: false,
+							success : function(data, status) {
+								notify.notify('성공\ndata : ' + data + '\nstatus : ' + status);
+							}
+						});
+						
+						// AJAX
+						// Refresh participants table by ajax
+						jqAjax.RefreshJoinTable();
 						
 						// Focus back to chat input
 						jqObj.chatInput.focus();
@@ -1547,6 +1588,69 @@ body {
 			test2 : jqObj.joinTable.find('td span[name="test2"]'),
 			
 			joinTableSet : function() {
+				var userNumbers = jqObj.joinTable.find('td span[name="userNumber"]');
+				var userNames = jqObj.joinTable.find('td span[name="userName"]');
+				var userEmails = jqObj.joinTable.find('td span[name="userEmail"]');
+				var userAuths = jqObj.joinTable.find('td span[name="userAuth"]');
+				var userParts = jqObj.joinTable.find('td span[name="userPart"]');
+				var test1 = jqObj.joinTable.find('td span[name="test1"]');
+				var test2 = jqObj.joinTable.find('td span[name="test2"]');
+				
+				userNumbers.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'test',
+				});
+				userNames.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'test',
+				});
+				userEmails.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'test',
+				    placement : 'right'
+				});
+				userAuths.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'test',
+				    placement : 'left'
+				});
+				userParts.editable({
+				    type : 'text',
+				    url : '/post',
+				    title : 'test',
+				    placement : 'left'
+				});
+				test1.editable({
+			        type : 'textarea',
+					url: '/post',
+			        title: 'test',
+			        rows: 6,
+			        placement : 'left'
+				});
+				test2.editable({
+			        type : 'date',
+			        title : 'test',
+					format: 'yyyy-mm-dd',    
+			        viewformat: 'dd/mm/yyyy',    
+			        datepicker: {
+			                weekStart: 1
+			       	},
+			       	placement : 'left'
+				});
+				
+				userNumbers = null;
+				userNames = null;
+				userEmails = null;
+				userAuths = null;
+				userParts = null;
+				test1 = null;
+				test2 = null;
+				
+				/*
 				this.userNumbers.editable({
 				    type : 'text',
 				    url : '/post',
@@ -1592,6 +1696,7 @@ body {
 			       	},
 			       	placement : 'left'
 				});
+				*/
 			},
 				
 			addAllEventsAndInitSet : function() {
@@ -1712,7 +1817,45 @@ body {
 			
 		};
 		
-// ===================================================================================================
+// AJAX ===================================================================================================
+		
+		var jqAjax = {
+		
+			RefreshJoinTable : function() {
+				$.ajax({
+					url : 'ajaxTest1',
+					dataType : 'json',
+					// type : 'POST',
+					// cache: false,
+					// processData: false,
+					// contentType: "application/json; charset=utf-8",
+					success : function(data, status) {
+						notify.notify('성공\ndata : ' + data + '\nstatus : ' + status + '\ndata.size : ' + data.size + '\ndata.list : ' + data.list);
+						
+						var content = '';
+						//<![CDATA[
+						$.each(data.list, function(index, value) {
+							//]]>
+							content += '<tr>';
+							content += '<td><span name="userNumber">' + value.id + '</span></td>';
+						    content += '<td><span name="userName">' + value.username + '</span></td>';
+						    content += '<td><span name="userEmail">' + value.email + '</span></td>';
+						    content += '<td><span name="userAuth">' + '*' + '</span></td>';
+						    content += '<td><span name="userPart">' + '*' + '</span></td>';
+						    content += '<td><span name="test1">' + '*' + '</span></td>';
+						    content += '<td><span name="test1">' + '*' + '</span></td>';
+						    content += '</tr>';
+						});
+						$('#memberListTBody').append(content);
+					},
+					error : function(request, status, error) {
+						notify.notify('code : ' + request.status + '\n error : ' + error);
+					}
+				});
+			}
+		};
+		
+// $(document).ready ======================================================================================
 		
 		// $(function() {
 		$(document).ready(function() {

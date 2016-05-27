@@ -52,6 +52,10 @@
 	overflow: auto;
 	white-space: nowrap;
 }
+
+#joinTable td span {
+	cursor: pointer;
+}
 </style>
 <title>test</title>
 </head>
@@ -214,13 +218,16 @@
 														<div class="panel panel-default">
 															<!-- panel-heading -->
 															<div id="memoListHeading1" class="panel-heading" role="tab">
-																<h4 class="panel-title"><a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent1" aria-expanded="true" aria-controls="collapseOne">Memo title 1</a>
+																<h4 class="panel-title">
+																	<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent1" aria-expanded="true" aria-controls="collapseOne">Memo title 1</a>
 																	<button type="button" class="close" aria-label="Close">
 																		<span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
-																	</button> <span class="close">&nbsp;</span>
+																	</button>
+																	<span class="close">&nbsp;</span>
 																	<button type="button" class="close" aria-label="Close">
 																		<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-																	</button></h4>
+																	</button>
+																</h4>
 															</div>
 															<!-- /.panel-heading -->
 															<!-- panel-collapse -->
@@ -234,13 +241,16 @@
 														<div class="panel panel-default">
 															<!-- panel-heading -->
 															<div id="memoListHeading2" class="panel-heading" role="tab">
-																<h4 class="panel-title"><a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent2" aria-expanded="false" aria-controls="collapseTwo">Memo title 2 (table)</a>
+																<h4 class="panel-title">
+																	<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent2" aria-expanded="false" aria-controls="collapseTwo">Memo title 2 (table)</a>
 																	<button type="button" class="close" aria-label="Close">
 																		<span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span>
-																	</button> <span class="close">&nbsp;</span>
+																	</button>
+																	<span class="close">&nbsp;</span>
 																	<button type="button" class="close" aria-label="Close">
 																		<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-																	</button></h4>
+																	</button>
+																</h4>
 															</div>
 															<!-- /.panel-heading -->
 															<!-- panel-collapse -->
@@ -284,13 +294,16 @@
 														<div class="panel panel-default">
 															<!-- panel-heading -->
 															<div id="memoListHeading3" class="panel-heading" role="tab">
-																<h4 class="panel-title"><a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent3" aria-expanded="false" aria-controls="collapseThree">Memo title 3 (URL)</a>
+																<h4 class="panel-title">
+																	<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent3" aria-expanded="false" aria-controls="collapseThree">Memo title 3 (URL)</a>
 																	<button type="button" class="close" aria-label="Close">
 																		<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
-																	</button> <span class="close">&nbsp;</span>
+																	</button>
+																	<span class="close">&nbsp;</span>
 																	<button type="button" class="close" aria-label="Close">
 																		<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-																	</button></h4>
+																	</button>
+																</h4>
 															</div>
 															<!-- /.panel-heading -->
 															<!-- panel-collapse -->
@@ -313,13 +326,16 @@
 														<div class="panel panel-default">
 															<!-- panel-heading -->
 															<div id="memoListHeading4" class="panel-heading" role="tab">
-																<h4 class="panel-title"><a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent4" aria-expanded="false" aria-controls="collapseFoure">Memo title 4 (URL)</a>
+																<h4 class="panel-title">
+																	<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoListContent4" aria-expanded="false" aria-controls="collapseFoure">Memo title 4 (URL)</a>
 																	<button type="button" class="close" aria-label="Close">
 																		<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-																	</button> <span class="close">&nbsp;</span>
+																	</button>
+																	<span class="close">&nbsp;</span>
 																	<button type="button" class="close" aria-label="Close">
 																		<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-																	</button></h4>
+																	</button>
+																</h4>
 															</div>
 															<!-- /.panel-heading -->
 															<!-- panel-collapse -->
@@ -375,7 +391,9 @@
 								<div class="container-fluid">
 									<div class="panel panel-info">
 										<div class="panel-heading">
-											<h4><span class="label label-primary"><span class="glyphicon glyphicon-user"></span></span>&nbsp;<strong>참여자 목록</strong></h4>
+											<h4>
+												<span class="label label-primary"><span class="glyphicon glyphicon-user"></span></span>&nbsp;<strong>참여자 목록</strong>
+											</h4>
 										</div>
 										<div class="panel-body">
 											<div class="container-fluid">
@@ -384,38 +402,94 @@
 														<table id="joinTable" class="table table-hover table-striped">
 															<thead>
 																<tr>
-																	<td><strong><span>#</span></strong></td>
-																	<td><strong><span>Name</span></strong></td>
-																	<td><strong><span>Email</span></strong></td>
-																	<td><strong><span>Authority</span></strong></td>
-																	<td><strong><span>Part</span></strong></td>
-																	<td><strong><span>test</span></strong></td>
+																	<td>
+																		<strong><span>#</span></strong>
+																	</td>
+																	<td>
+																		<strong><span>Name</span></strong>
+																	</td>
+																	<td>
+																		<strong><span>Email</span></strong>
+																	</td>
+																	<td>
+																		<strong><span>Authority</span></strong>
+																	</td>
+																	<td>
+																		<strong><span>Part</span></strong>
+																	</td>
+																	<td>
+																		<strong><span>test1</span></strong>
+																	</td>
+																	<td>
+																		<strong><span>test2</span></strong>
+																	</td>
 																</tr>
 															</thead>
-															<tbody>
+															<tbody id="memberListTBody">
 																<tr>
-																	<td><span name="userNumber">1</span></td>
-																	<td><span name="userName">Park</span></td>
-																	<td><span name="userEmail">email1@email.com</span></td>
-																	<td><span name="userAuth">Host</span></td>
-																	<td><span name="userPart">Managing</span></td>
-																	<td><span name="test1">test1</span></td>
+																	<td>
+																		<span name="userNumber">1</span>
+																	</td>
+																	<td>
+																		<span name="userName">Park</span>
+																	</td>
+																	<td>
+																		<span name="userEmail">email1@email.com</span>
+																	</td>
+																	<td>
+																		<span name="userAuth">Host</span>
+																	</td>
+																	<td>
+																		<span name="userPart">Managing</span>
+																	</td>
+																	<td>
+																		<span name="test1">test1</span>
+																	</td>
+																	<td>
+																		<span name="test2">test1</span>
+																	</td>
 																</tr>
-																<tr>
-																	<td><span name="userNumber">2</span></td>
-																	<td><span name="userName">Kim</span></td>
-																	<td><span name="userEmail">email2@email.com</span></td>
-																	<td><span name="userAuth">Guest</span></td>
-																	<td><span name="userPart">Watch</span></td>
-																	<td><span name="test2">test2</span></td>
-																</tr>
-																<!-- 
+																
+																<!--
 																<tr th:each="user : ${list}">
-																	<td th:text="${user.name}"><span name="username">Kim</span></td>
-																	<td th:text="${user.email}">good@email.com</td>
-																	<td th:text="${user.authority}">host</td>
-																	<td th:text="${user.responsibility}">Refactoring</td>
+																	<td th:text="${user.id}">1</td>
+																	<td th:text="${user.name}">Kim</td>
+																	<td th:text="${user.age}">23</td>
+																	<td>
+																	 
+																		<form th:action="@{control}" method="post">
+																			<input type="submit" name="update" value="update" />
+																			<input type="hidden" name="modId" th:value="${user.id}" />
+																		</form>
+																	</td>
+																	<td>
+																		<form th:action="@{control}" method="post">
+																			<input type="submit" name="delete" value="delete" />
+																			<input type="hidden" name="modId" th:value="${user.id}" />
+																		</form>
+
+																	</td>
 																</tr>
+																<tfoot>
+																	<tr class="success">
+																		<form th:action="@{control}" method="post">
+																		<td></td>
+																		<td>
+																			<label for="name">name&nbsp;</label>
+																			<input type="text" id="name" name="name" size="20" th:if="${memberUserForm}" th:value="${memberUserForm.name}" th:errorclass="error-input" class="form-control" placeholder="이름을 입력하세요" value="kim" />
+																			<span th:if="${memberUserForm} and ${#fields.hasErrors('name')}" th:errors="${memberUserForm.name}" class="error-messages">error!</span>
+																		</td>
+																		<td>
+																			<label for="age">age&nbsp;</label>
+																			<input type="text" id="age" name="age" size="3" th:if="${memberUserForm}" th:value="${memberUserForm.age}" th:errorclass="error-input" placeholder="나이를 입력하세요" value="23" />
+																			<span th:if="${memberUserForm} and ${#fields.hasErrors('age')}" th:errors="${memberUserForm.age}" class="error-messages">error!</span>
+																		</td>
+																		<td>
+																			<input type="submit" name="insert" value="insert" />
+																		</td>
+																		</form>
+																	</tr>
+																</tfoot>
 																 -->
 															</tbody>
 														</table>
@@ -428,7 +502,9 @@
 										<!-- /.panel-body -->
 										<div class="panel-footer">
 											<div class="form-group">
-												<button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-send"></span>&nbsp;To All</button>
+												<button type="button" class="btn btn-primary">
+													<span class="glyphicon glyphicon-send"></span>&nbsp;기능1
+												</button>
 												<button type="button" class="btn btn-danger">기능 2</button>
 											</div>
 											<div id="collapse1"></div>

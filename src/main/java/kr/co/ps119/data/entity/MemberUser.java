@@ -25,26 +25,25 @@ public class MemberUser implements Serializable {
 	private Long id;
 
 	@NotBlank
-	@Column(name = "name", nullable = false)
-	private String name;
+	@Column(name = "email", nullable = false)
+	private String email;
 
-	@NotNull
-	@Range
-	@Column(name = "age", nullable = false)
-	private Integer age;
+	@NotBlank
+	@Column(name = "username", nullable = false)
+	private String username;
 
 	public MemberUser() {
 	}
 
-	public MemberUser(String name, Integer age) {
-		this.name = name;
-		this.age = age;
+	public MemberUser(String email, String username) {
+		this.email = email;
+		this.username = username;
 	}
 
-	public MemberUser(Long id, String name, Integer age) {
+	public MemberUser(Long id, String email, String username) {
 		this.id = id;
-		this.name = name;
-		this.age = age;
+		this.email = email;
+		this.username = username;
 	}
 
 	public Long getId() {
@@ -55,19 +54,19 @@ public class MemberUser implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public Integer getAge() {
-		return age;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setAge(Integer age) {
-		this.age = age;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }
