@@ -907,8 +907,9 @@ body {
 		var session = {
 			
 			socket : null,
-			nickname : null,
 			editorContentSocket : null,
+			nickname : null,
+			id : null,
 			
 			connect : function() {
 				var URL = location.protocol + '//' + location.host;
@@ -926,6 +927,7 @@ body {
 						jqObj.joinToggleBtn.html('Join');
 						jqObj.joinToggleBtn.removeClass('btn-danger');
 						jqObj.joinToggleBtn.addClass('btn-success');
+						jqAjax.deleteRefresh();
 					}
 				};
 				
@@ -1159,24 +1161,10 @@ body {
 							}
 				        }
 						
-						// AJAX
-						// Send nickname to server to save in DB
-						$.ajax({
-							url : 'ajaxTest2',
-							type : 'GET',
-							data : {'nickname' : session.nickname},
-							contentType: "application/json; charset=utf-8",
-							// dataType : 'json',
-							// cache: false,
-							// processData: false,
-							success : function(data, status) {
-								notify.notify('성공\ndata : ' + data + '\nstatus : ' + status);
-							}
-						});
 						
 						// AJAX
-						// Refresh participants table by ajax
-						jqAjax.RefreshJoinTable();
+						// Send nickname to server to save in DB and refersh table
+						jqAjax.insertRefresh();
 						
 						// Focus back to chat input
 						jqObj.chatInput.focus();
@@ -1199,6 +1187,8 @@ body {
 							$(".navbar-toggle").trigger( "click" );
 						}
 			        }
+					
+					jqAjax.deleteRefresh();
 					
 					// Focus back to nickname input
 					jqObj.nicknameInput.focus();
@@ -1821,21 +1811,30 @@ body {
 		
 		var jqAjax = {
 		
-			RefreshJoinTable : function() {
+			insertRefresh : function() {
 				$.ajax({
 					url : 'ajaxTest1',
+					type : 'GET',
+					data : {'nickname' : session.nickname},
+					contentType: "application/json; charset=utf-8",
 					dataType : 'json',
-					// type : 'POST',
 					// cache: false,
 					// processData: false,
-					// contentType: "application/json; charset=utf-8",
 					success : function(data, status) {
-						notify.notify('성공\ndata : ' + data + '\nstatus : ' + status + '\ndata.size : ' + data.size + '\ndata.list : ' + data.list);
+						notify.notify('성공\n');
+						notify.notify('status : ' + status + '\n');
+						notify.notify('data : ' + data + '\n');
+						notify.notify('list : ' + data.list + '\n');
+						notify.notify('size : ' + data.size + '\n');
+						notify.notify('id : ' + data.id + '\n');
 						
-						var content = '';
-						//<![CDATA[
+						session.id = data.id;
+						
+						// remove tr
+						$('#memberListTBody').find('tr').remove();
+						
+						// refresh tr
 						$.each(data.list, function(index, value) {
-							//]]>
 							content += '<tr>';
 							content += '<td><span name="userNumber">' + value.id + '</span></td>';
 						    content += '<td><span name="userName">' + value.username + '</span></td>';
@@ -1849,7 +1848,48 @@ body {
 						$('#memberListTBody').append(content);
 					},
 					error : function(request, status, error) {
-						notify.notify('code : ' + request.status + '\n error : ' + error);
+						notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
+					}
+				});
+			},
+		
+			deleteRefresh : function() {
+				$.ajax({
+					url : 'ajaxTest2',
+					type : 'GET',
+					data : {'id' : session.id},
+					contentType: "application/json; charset=utf-8",
+					dataType : 'json',
+					// cache: false,
+					// processData: false,
+					success : function(data, status) {
+						notify.notify('성공\n');
+						notify.notify('status : ' + status + '\n');
+						notify.notify('data : ' + data + '\n');
+						notify.notify('list : ' + data.list + '\n');
+						notify.notify('size : ' + data.size + '\n');
+						
+						session.id = null;
+						
+						// remove tr
+						$('#memberListTBody').find('tr').remove();
+						
+						// refresh tr
+						$.each(data.list, function(index, value) {
+							content += '<tr>';
+							content += '<td><span name="userNumber">' + value.id + '</span></td>';
+						    content += '<td><span name="userName">' + value.username + '</span></td>';
+						    content += '<td><span name="userEmail">' + value.email + '</span></td>';
+						    content += '<td><span name="userAuth">' + '*' + '</span></td>';
+						    content += '<td><span name="userPart">' + '*' + '</span></td>';
+						    content += '<td><span name="test1">' + '*' + '</span></td>';
+						    content += '<td><span name="test1">' + '*' + '</span></td>';
+						    content += '</tr>';
+						});
+						$('#memberListTBody').append(content);
+					},
+					error : function(request, status, error) {
+						notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
 					}
 				});
 			}
