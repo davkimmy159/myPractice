@@ -30,6 +30,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 @Configuration
 public class ConfigMain extends WebMvcConfigurerAdapter {
+	
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/etc/**").addResourceLocations("classpath:/etc/");
 	}

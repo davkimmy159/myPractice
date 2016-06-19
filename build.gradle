@@ -63,6 +63,8 @@ dependencies {
 //	compile 'io.vertx:vertx-core:3.2.1'
 //	compile 'io.vertx:vertx-platform:2.1.6'
 
+//	compile 'org.apache.commons:commons-dbcp2'
+//	compile 'org.apache.commons:commons-pool2'
 	
 }
 
