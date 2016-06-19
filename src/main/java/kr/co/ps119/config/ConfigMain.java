@@ -66,7 +66,6 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 		templateEngine.addDialect(new LayoutDialect());
 		return templateEngine;
 	}
-
 	
 	@Bean
 	public ViewResolver viewResolver() {
@@ -75,6 +74,7 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 		viewResolver.setOrder(1);
 		return viewResolver;
 	}
+	
 */
 	
 }
