@@ -33,6 +33,7 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 	
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/etc/**").addResourceLocations("classpath:/etc/");
+		registry.addResourceHandler("/bower_components/**").addResourceLocations("classpath:/bower_components/");
 		registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/");
 	}
 

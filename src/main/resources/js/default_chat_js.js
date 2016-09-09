@@ -56,6 +56,7 @@ var jqObj = {
 var basicEditor = CKEDITOR.replace('basicEditor', {
 	contentsCss  : 'body {white-space: nowrap;}'
 });
+
 basicEditor.config.resize_enabled = false;
 basicEditor.config.removePlugins = 'elementspath';
 
@@ -1284,7 +1285,7 @@ var eventFunc = {
 	},
 	
 	
-	addAllEvents() {
+	addAllEvents : function() {
 		this.chatInputKeyEvent();
 		this.badgeEvent();
 		this.toggleJoinEvent();
