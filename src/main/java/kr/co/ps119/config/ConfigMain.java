@@ -1,7 +1,5 @@
 package kr.co.ps119.config;
 
-import kr.co.ps119.controller.demo.*;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -23,6 +21,9 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
+import kr.co.ps119.controller.*;
+
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.dialect.IDialect;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
@@ -31,12 +32,14 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 @Configuration
 public class ConfigMain extends WebMvcConfigurerAdapter {
 	
+	// Project resources access
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/etc/**").addResourceLocations("classpath:/etc/");
 		registry.addResourceHandler("/bower_components/**").addResourceLocations("classpath:/bower_components/");
 		registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/");
 	}
 
+	// Character encoding (UTF-8)
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	@Bean
 	CharacterEncodingFilter characterEncodingFilter() {

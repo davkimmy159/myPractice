@@ -1,7 +1,7 @@
 spring:
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # file:~/tmp/testdb
+    url: jdbc:h2:tcp://localhost/~/test
     username: sa
     password:
     initialize: true
@@ -12,6 +12,11 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+      use-new-id-generator-mappings: true
+      naming:
+        physical-strategy: kr.co.ps119.data.CustomPhysicalNamingStrategyImpl
   thymeleaf: 
     cache: false
+  session:
+    store-type: none
 server.context-path: /myPractice

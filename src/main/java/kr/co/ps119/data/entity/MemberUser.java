@@ -3,7 +3,6 @@ package kr.co.ps119.data.entity;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,15 +12,14 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
 @Entity
-@Table(name = "member_user")
 public class MemberUser implements Serializable {
 
 	private static final long serialVersionUID = -104618268484385033L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	// @NotNull
-	@Column(name = "id", unique = true, nullable = false)
+	@Column
 	private Long id;
 
 	@NotBlank
@@ -50,9 +48,11 @@ public class MemberUser implements Serializable {
 		return id;
 	}
 
+	/*
 	public void setId(Long id) {
 		this.id = id;
 	}
+	*/
 
 	public String getEmail() {
 		return email;

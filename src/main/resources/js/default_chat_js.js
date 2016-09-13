@@ -54,7 +54,22 @@ var jqObj = {
 
 // basicEditor settings (CKEditor)
 var basicEditor = CKEDITOR.replace('basicEditor', {
-	contentsCss  : 'body {white-space: nowrap;}'
+	contentsCss  : 'body {white-space: nowrap;}',
+	customConfig : 'config2.js'
+	/*
+	,
+	qtRows: 20, // Count of rows
+    qtColumns: 20, // Count of columns
+    qtBorder: '1', // Border of inserted table
+    qtWidth: '90%', // Width of inserted table
+    qtStyle: { 'border-collapse' : 'collapse' },
+    qtClass: 'test', // Class of table
+    qtCellPadding: '0', // Cell padding table
+    qtCellSpacing: '0', // Cell spacing table
+    qtPreviewBorder: '4px double black', // preview table border 
+    qtPreviewSize: '4px', // Preview table cell size 
+    qtPreviewBackground: '#c8def4' // preview table background (hover)
+    */
 });
 
 basicEditor.config.resize_enabled = false;
@@ -746,14 +761,14 @@ var session = {
 		this.socket.onclose = function(event) {
 			notify.notify('메신저 연결 종료', 'success');
 			
-			// Unespected disconnection
+			// Unexpected disconnection
 			if (jqObj.joinToggleBtn.html() == ('Exit')) {
 				notify.notify('Chatting is disconnected accidentaly!', 'error');
 				notify.notify('Join again please!', 'error');
 				jqObj.joinToggleBtn.html('Join');
 				jqObj.joinToggleBtn.removeClass('btn-danger');
 				jqObj.joinToggleBtn.addClass('btn-success');
-				jqAjax.deleteRefresh();
+				// jqAjax.deleteRefresh();
 			}
 		};
 		
@@ -896,9 +911,25 @@ var notify = {
 	
 	notify : function(msg, type) {
 		if(!type)
-			type = 'info'; 
+			type = 'info';
 		if (this.toggle)
-			$.notify(msg, type);				
+			new PNotify({
+	            title: 'title',
+	            text: msg,
+	            type: type
+	        });
+			// $.notify(msg, type);
+	},
+	
+	notify : function(title, msg, type) {
+		if(!type)
+			type = 'info';
+		if (this.toggle)
+			new PNotify({
+	            title: title,
+	            text: msg,
+	            type: type
+	        });
 	},
 	
 	toggleChatNotify : function() {
@@ -979,14 +1010,13 @@ var utils = {
 				setTimeout(function(){
 					session.sendJoinCheckMsg();	
 				}, 100);
-
+				
 				// Hide navbar collapsible menus in mobile
 				if (!(matchMedia("screen and (min-width: 768px)").matches)) {
 					if($('.navbar-toggle').css('display') !='none'){
 						$(".navbar-toggle").trigger( "click" );
 					}
 		        }
-				
 				
 				// AJAX
 				// Send nickname to server to save in DB and refersh
@@ -1015,7 +1045,7 @@ var utils = {
 				}
 	        }
 			
-			jqAjax.deleteRefresh();
+			// jqAjax.deleteRefresh();
 			
 			// Focus back to nickname input
 			jqObj.nicknameInput.focus();

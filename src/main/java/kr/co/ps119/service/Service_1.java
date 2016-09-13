@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
-public class DemoService {
+public class Service_1 {
 
 	@Autowired
 	MemberUserRepository mRepo;

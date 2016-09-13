@@ -1,4 +1,4 @@
-package kr.co.ps119.controller.demo;
+package kr.co.ps119.controller;
 
 import kr.co.ps119.data.entity.*;
 import kr.co.ps119.service.*;
@@ -28,10 +28,10 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/")
-public class DemoController {
+public class Controller_1 {
 
 	@Autowired
-	DemoService demoService;
+	Service_1 demoService;
 
 	@RequestMapping(value = "ajaxTest1", method = RequestMethod.GET)
 	@ResponseBody
