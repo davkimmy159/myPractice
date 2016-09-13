@@ -51,10 +51,13 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 		return filter;
 	}
 
+	// Layout dialect for thymeleaf-layout-dialect
 	@Bean
 	IDialect layoutDialect() {
 		return new LayoutDialect();
 	}
+	
+	
 	
 /*
 	@Bean

@@ -6,9 +6,11 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
 	}
 }
+
+
 
 apply plugin: 'java'
 apply plugin: 'war'
@@ -57,6 +59,9 @@ dependencies {
 	runtime 'com.h2database:h2'
 //	runtime 'org.flywaydb:flyway-core'
 	
+	compile 'org.springframework:springloaded'
+	
+	
 //	runtime 'commons-dbcp:commons-dbcp'
 	
 	compile 'org.projectlombok:lombok:1.16.8'
@@ -79,5 +84,5 @@ eclipse {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.12'
+	gradleVersion = '3.0'
 }
