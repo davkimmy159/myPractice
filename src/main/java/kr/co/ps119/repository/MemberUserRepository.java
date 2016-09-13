@@ -1,8 +1,8 @@
-package kr.co.ps119.data.repository;
-
-import kr.co.ps119.data.entity.MemberUser;
+package kr.co.ps119.repository;
 
 import org.springframework.stereotype.Repository;
+
+import kr.co.ps119.entity.MemberUser;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

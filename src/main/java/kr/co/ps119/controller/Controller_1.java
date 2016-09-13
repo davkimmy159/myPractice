@@ -1,6 +1,6 @@
 package kr.co.ps119.controller;
 
-import kr.co.ps119.data.entity.*;
+import kr.co.ps119.entity.*;
 import kr.co.ps119.service.*;
 
 import org.springframework.stereotype.Controller;
@@ -28,7 +28,7 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/")
-public class Controller_1 {
+public class Controller_1 implements InterfaceController_1{
 
 	@Autowired
 	Service_1 demoService;

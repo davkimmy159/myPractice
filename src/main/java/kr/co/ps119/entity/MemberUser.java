@@ -1,4 +1,4 @@
-package kr.co.ps119.data.entity;
+package kr.co.ps119.entity;
 
 import java.io.Serializable;
 

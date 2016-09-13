@@ -1,20 +1,27 @@
 spring:
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/test
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # jdbc:h2:tcp://localhost/~/test
     username: sa
     password:
     initialize: true
     schema: classpath:/testData/schema.sql
     data: classpath:/testData/data.sql
   jpa:
-    generate-ddl: true
+    database: h2
     show-sql: true
+    generate-ddl: true
     hibernate:
-      ddl-auto: update
       use-new-id-generator-mappings: true
+      ddl-auto: update
       naming:
-        physical-strategy: kr.co.ps119.data.CustomPhysicalNamingStrategyImpl
+        physical-strategy: kr.co.ps119.entity.CustomPhysicalNamingStrategyImpl
+  h2:
+    console:
+      enabled: true
+      path: /h2/
+      settings:
+        web-allow-others: true
   thymeleaf: 
     cache: false
   session:
