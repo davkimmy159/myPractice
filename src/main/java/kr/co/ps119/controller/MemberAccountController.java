@@ -45,6 +45,6 @@ public class MemberAccountController {
 		memberService.createAccount(memberForm);
 		
 		System.out.println("success!!!!!!!!!!!!!!!!");
-		return "redirect:/index";
+		return "redirect:/index"; 
 	}
 }
