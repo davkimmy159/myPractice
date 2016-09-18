@@ -315,10 +315,10 @@ var BCModalFunc = {
 					
 					jqObj.basicCalendarModal.modal('hide');
 				} else {
-					notify.notify('input content!', 'error');
+					notify.notify('title', 'input content!', 'error');
 				}
 			} else {
-				notify.notify('input title!', 'error');
+				notify.notify('title', 'input title!', 'error');
 			}
 		});
 	},
@@ -756,15 +756,15 @@ var session = {
 		var URL = location.protocol + '//' + location.host;
 		this.socket = new SockJS(URL + '/myPractice/socket');
 		this.socket.onopen = function(event) {
-			notify.notify('메신저 연결 성공', 'success');
+			notify.notify('title', '메신저 연결 성공', 'success');
 		};
 		this.socket.onclose = function(event) {
-			notify.notify('메신저 연결 종료', 'success');
+			notify.notify('title', '메신저 연결 종료', 'success');
 			
 			// Unexpected disconnection
 			if (jqObj.joinToggleBtn.html() == ('Exit')) {
-				notify.notify('Chatting is disconnected accidentaly!', 'error');
-				notify.notify('Join again please!', 'error');
+				notify.notify('title', 'Chatting is disconnected accidentaly!', 'error');
+				notify.notify('title', 'Join again please!', 'error');
 				jqObj.joinToggleBtn.html('Join');
 				jqObj.joinToggleBtn.removeClass('btn-danger');
 				jqObj.joinToggleBtn.addClass('btn-success');
@@ -787,15 +787,15 @@ var session = {
 		this.editorContentSocket = new SockJS(URL + '/myPractice/editorContentSocket');
 		
 		this.editorContentSocket.onopen = function(event) {
-			notify.notify('에디터 연결 성공', 'success');
+			notify.notify('title', '에디터 연결 성공', 'success');
 		};
 		this.editorContentSocket.onclose = function(event) {
-			notify.notify('에디터 연결 종료', 'success');
+			notify.notify('title', '에디터 연결 종료', 'success');
 			
-			// Unespected disconnection
+			// Unexpected disconnection
 			if (jqObj.joinToggleBtn.html() == ('Exit')) {
-				notify.notify('Editor is disconnected accidentaly!', 'error');
-				notify.notify('Reconnect please!', 'error');
+				notify.notify('title', 'Editor is disconnected accidentaly!', 'error');
+				notify.notify('title', 'Reconnect please!', 'error');
 			}
 		};
 		
@@ -804,7 +804,7 @@ var session = {
 			
 			basicEditor.setData(event.data);
 			mobileEditor.setData(event.data);
-			// notify.notify('컨텐츠 갱신');
+			// notify.notify('title', '컨텐츠 갱신');
 			
 			
 			basicEditor.getSelection().selectRanges( ranges );
@@ -877,7 +877,7 @@ var session = {
 			// ]]>
 			this.socket.send(this.nickname + ' 님이 입장했습니다.');
 		} else {
-			notify.notify('Sending join check msg has failed');
+			notify.notify('title', 'Sending join check msg has failed');
 		}
 	}
 };
@@ -903,49 +903,6 @@ var badge = {
 		utils.addClassFunc(this.badgeBtnArray, 'btn-primary');
 	}
 	
-};
-
-var notify = {
-		
-	toggle : true,
-	
-	notify : function(msg, type) {
-		if(!type)
-			type = 'info';
-		if (this.toggle)
-			new PNotify({
-	            title: 'title',
-	            text: msg,
-	            type: type
-	        });
-			// $.notify(msg, type);
-	},
-	
-	notify : function(title, msg, type) {
-		if(!type)
-			type = 'info';
-		if (this.toggle)
-			new PNotify({
-	            title: title,
-	            text: msg,
-	            type: type
-	        });
-	},
-	
-	toggleChatNotify : function() {
-		
-		var str = 'data-original-title';
-		
-		this.toggle = !this.toggle;
-		jqObj.chatNotifyToggle.toggleClass('glyphicon-eye-close');
-		jqObj.chatNotifyToggle.toggleClass('glyphicon-eye-open');
-		if(this.toggle) {
-			jqObj.chatNotifyToggleBtn.attr(str, 'Hide chat notification!').tooltip('hide');			        
-		}
-		else {
-			jqObj.chatNotifyToggleBtn.attr(str, 'Show chat notification!').tooltip('hide');
-		}
-	}
 };
 
 var utils = {
@@ -984,7 +941,7 @@ var utils = {
 	// veryfy chat input
 	verifyChatInput : function() {
 		if (!session.socket) {
-			notify.notify('You need to join first!');
+			notify.notify('title', 'You need to join first!');
 			jqObj.nicknameInput.focus();
 		} else if (!(this.checkStr(jqObj.chatInput.val()))) {
 			jqObj.chatInput.focus();
@@ -1019,8 +976,7 @@ var utils = {
 		        }
 				
 				// AJAX
-				// Send nickname to server to save in DB and refersh
-				// table
+				// Sends nickname to server to save in DB and refresh member table
 				jqAjax.insertRefresh();
 				
 				// Focus back to chat input
@@ -1098,16 +1054,16 @@ var eventFunc = {
 				
 			// CTRL
 			} else if (event.which == 17) {
-				// notify.notify('CTRL clicked!');
+				// notify.notify('title', 'CTRL clicked!');
 				isCtrl = true;
-				// notify.notify('keyDown! : ' + isCtrl);
+				// notify.notify('title', 'keyDown! : ' + isCtrl);
 			}
 			
 			// CTRL + SHIFT
 			// <![CDATA[
 			if (event.which == 16 && isCtrl) {
 			// ]]>
-				notify.notify('CTRL + SHIFT clicked! (chatInput)');
+				notify.notify('title', 'CTRL + SHIFT clicked! (chatInput)');
 				
 				// Focus to basic editor
 				if(matchMedia("screen and (min-width: 768px)").matches) {
@@ -1125,7 +1081,7 @@ var eventFunc = {
 		jqObj.chatInput.keyup(function(event) {
 			if(event.which == 17) {
 				isCtrl=false;
-				// notify.notify('keyUp! : ' + isCtrl)
+				// notify.notify('title', 'keyUp! : ' + isCtrl)
 			}
 		});
 		
@@ -1154,7 +1110,7 @@ var eventFunc = {
 	// Toggle chat notification
 	toggleChatNotifyEvent : function() {
 		jqObj.chatNotifyToggleBtn.click(function() {
-			notify.toggleChatNotify();
+			notifyFunc.toggleChatNotify();
 			this.blur();
 		});
 	},
@@ -1267,12 +1223,12 @@ var eventFunc = {
 
 			// CTRL + SHIFT
 			if(keyCode == 3342352) {
-				notify.notify('CTRL + SHIFT clicked! (editor)');
+				notify.notify('title', 'CTRL + SHIFT clicked! (editor)');
 				jqObj.chatInput.focus();
 				
 			// ENTER
 			} else if(keyCode == 1114125) {
-				notify.notify('ENTER clicked! (editor)');
+				notify.notify('title', 'ENTER clicked! (editor)');
 				jqObj.editorInputBtn.trigger('click'); 
 			}
 			keyCode = null;
@@ -1314,6 +1270,9 @@ var eventFunc = {
 		 */
 	},
 	
+	test : function() {
+		$('#test1');
+	},
 	
 	addAllEvents : function() {
 		this.chatInputKeyEvent();
@@ -1326,7 +1285,6 @@ var eventFunc = {
 		modalFunc.addAllEventsAndInitSet();
 		calendarFunc.addAllEventsAndInitSet();
 		datetimepickerFunc.addAllEventsAndInitSet();
-		pnotifyFunc.addAllEventsAndInitSet();
 		xeditableFunc.addAllEventsAndInitSet();
 		BCModalFunc.addAllEventsAndInitSet();
 		BCEventViewerModalFunc.addAllEventsAndInitSet();
@@ -1389,21 +1347,21 @@ var datetimepickerFunc = {
 };
 
 var pnotifyFunc = {
-	
-	stack_modal : {
-		"dir1": "top",
-		"dir2": "left",
-		"push": "top",
-		"modal": true,
-		"overlay_close": true
-	},
 		
-	addAllEventsAndInitSet : function() {
-		// PNotify initial setting
-		PNotify.prototype.options.styling = "bootstrap3";
+	toggleChatNotify : function() {
 		
+		var str = 'data-original-title';
+		
+		notify.toggle = !notify.toggle;
+		jqObj.chatNotifyToggle.toggleClass('glyphicon-eye-close');
+		jqObj.chatNotifyToggle.toggleClass('glyphicon-eye-open');
+		if(notify.toggle) {
+			jqObj.chatNotifyToggleBtn.attr(str, 'Hide chat notification!').tooltip('hide');			        
+		}
+		else {
+			jqObj.chatNotifyToggleBtn.attr(str, 'Show chat notification!').tooltip('hide');
+		}
 	}
-	
 };
 
 var xeditableFunc = {
@@ -1617,94 +1575,10 @@ var resizeFuncs = {
 	
 };
 
-// AJAX
-// ===================================================================================================
-
-var jqAjax = {
-
-	insertRefresh : function() {
-		$.ajax({
-			url : 'ajaxTest1',
-			type : 'GET',
-			data : {'nickname' : session.nickname},
-			contentType: "application/json; charset=utf-8",
-			dataType : 'json',
-			// cache: false,
-			// processData: false,
-			success : function(data, status) {
-				notify.notify('성공\n');
-				notify.notify('status : ' + status + '\n');
-				notify.notify('data : ' + data + '\n');
-				notify.notify('list : ' + data.list + '\n');
-				notify.notify('size : ' + data.size + '\n');
-				notify.notify('id : ' + data.id + '\n');
-				
-				session.id = data.id;
-				
-				// remove tr
-				$('#memberListTBody').find('tr').remove();
-				
-				// refresh tr
-				$.each(data.list, function(index, value) {
-					content += '<tr>';
-					content += '<td><span name="userNumber">' + value.id + '</span></td>';
-				    content += '<td><span name="userName">' + value.username + '</span></td>';
-				    content += '<td><span name="userEmail">' + value.email + '</span></td>';
-				    content += '<td><span name="userAuth">' + '*' + '</span></td>';
-				    content += '<td><span name="userPart">' + '*' + '</span></td>';
-				    content += '<td><span name="test1">' + '*' + '</span></td>';
-				    content += '<td><span name="test1">' + '*' + '</span></td>';
-				    content += '</tr>';
-				});
-				$('#memberListTBody').append(content);
-			},
-			error : function(request, status, error) {
-				notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
-			}
-		});
-	},
-
-	deleteRefresh : function() {
-		$.ajax({
-			url : 'ajaxTest2',
-			type : 'GET',
-			data : {'id' : session.id},
-			contentType: "application/json; charset=utf-8",
-			dataType : 'json',
-			// cache: false,
-			// processData: false,
-			success : function(data, status) {
-				notify.notify('성공\n');
-				notify.notify('status : ' + status + '\n');
-				notify.notify('data : ' + data + '\n');
-				notify.notify('list : ' + data.list + '\n');
-				notify.notify('size : ' + data.size + '\n');
-				
-				session.id = null;
-				
-				// remove tr
-				$('#memberListTBody').find('tr').remove();
-				
-				// refresh tr
-				$.each(data.list, function(index, value) {
-					content += '<tr>';
-					content += '<td><span name="userNumber">' + value.id + '</span></td>';
-				    content += '<td><span name="userName">' + value.username + '</span></td>';
-				    content += '<td><span name="userEmail">' + value.email + '</span></td>';
-				    content += '<td><span name="userAuth">' + '*' + '</span></td>';
-				    content += '<td><span name="userPart">' + '*' + '</span></td>';
-				    content += '<td><span name="test1">' + '*' + '</span></td>';
-				    content += '<td><span name="test1">' + '*' + '</span></td>';
-				    content += '</tr>';
-				});
-				$('#memberListTBody').append(content);
-			},
-			error : function(request, status, error) {
-				notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
-			}
-		});
-	}
-};
+//test block
+$('#test1').click(function() {
+	jqAjax.test1();
+});
 
 // $(document).ready
 // ======================================================================================

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="default">
 <head>
 
-<!-- common js and css are loaded here by upper layer -->
+<!-- common css are loaded here by upper layer -->
 
 <!-- custom elements in <head> tag -->
 <style type="text/css">
@@ -48,39 +48,55 @@ span {
 				<h3>
 					<strong>Create personal account</strong>
 				</h3>
-				<form>
-					<div class="form-group">
-						<label class="control-label" for="createEmailId">Email&nbsp;(ID)</label>
+				
+				<form action="#" th:action="@{/member/account/create}" th:object="${memberForm}" method="post">
+				
+					<div th:if="${#fields.hasErrors('*')}">
+						<ul>
+							<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+						</ul>
+					</div>
+				
+					<div class="form-group has-feedback">
+						<label class="control-label" for="emailInput">Email&nbsp;(ID)</label>
 						<div class="">
-							<input id="createEmailId" class="form-control" type="email" placeholder="Email" />
-							<span>You don't have to create new account name. Just use email.</span>
+							<input id="emailInput" name="email" class="form-control" type="email" placeholder="email" required="required" data-error="Email address is invalid" />
+							<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+							<div class="help-block with-errors"></div>
+							<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect data</p>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="control-label" for="createUsername">Username</label>
+					
+					<div class="form-group has-feedback">
+						<label class="control-label" for="usernameInput">Username</label>
 						<div class="">
-							<input id="createUsername" class="form-control" placeholder="Username" />
-							<span>We don't care whatever you use for your username.</span>
+							<input id="usernameInput" name="username" class="form-control" placeholder="username" required="required" data-error="Name is invalid" />
+							<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+							<div class="help-block with-errors"></div>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="control-label" for="createPassword">Password</label>
+					
+					<div class="form-group has-feedback">
+						<label class="control-label" for="passwordInput">Password</label>
 						<div class="">
-							<input id="createPassword" class="form-control" type="password" placeholder="Password" />
-							<span>No 1234, qwerty</span>
+							<input id="passwordInput" name="password" class="form-control" type="password" placeholder="password" required="required" data-error="password is invalid" />
+							<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+							<div class="help-block with-errors"></div>
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="control-label" for="createPasswordCheck">Password check</label>
+					
+					<div class="form-group has-feedback">
+						<label class="control-label" for="passwordCheckInput">Password check</label>
 						<div class="">
-							<input id="createPasswordCheck" class="form-control" type="password" placeholder="No 1234 or qwer" />
-							<span>I hate qwerty</span>
+							<input id="passwordCheckInput" name="passwordCheck" class="form-control" type="password" placeholder="confirm" required="required" data-error="password is empty" data-match="#passwordInput" data-match-error="password doesn't match"/>
+							<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+							<div class="help-block with-errors"></div>
 						</div>
 					</div>
 
 					<div class="form-group">
 						<div class="">
-							<button class="btn btn-success btn-block" type="submit">Create an account</button>
+							<button id="createAccount" class="btn btn-success btn-block" type="submit">Create an account</button>
 						</div>
 					</div>
 				</form>
@@ -91,30 +107,10 @@ span {
 	<!-- /.container-fluid -->
 
 
-	<!-- jQuery & bootstrap JS is loaded here by upper layer -->
-
-	<!-- Substitution of 'customScript' -->
-	<script layout:fragment="customScript" type="text/javascript">
-		$.notify('test1');
-
-		var jqObj = {
-			createEmailId : $('#createEmailId'),
-			createUsername : $('#createUsername'),
-			createPassword : $('#createPassword'),
-			createPasswordCheck : $('#createPasswordCheck')
-		};
-
-		var validationFunc = {
-
-			validationActivate : function() {
-			}
-		};
-
-		$(document).ready(function() {
-			validationFunc.validationActivate();
-		});
-
-		$.notify('test2');
-	</script>
+	<!-- Custom Javascript -->
+	<div layout:fragment="customScript">
+		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
+		<script src="../js/create_account.js" th:src="@{/js/create_account.js}" type="text/javascript"></script>
+	</div>
 </body>
 </html>

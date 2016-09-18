@@ -18,7 +18,6 @@ public class MemberUser implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	// @NotNull
 	@Column
 	private Long id;
 

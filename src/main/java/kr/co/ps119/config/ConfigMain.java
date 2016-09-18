@@ -4,12 +4,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -23,6 +27,9 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+
 import kr.co.ps119.controller.*;
 
 import org.thymeleaf.spring4.SpringTemplateEngine;
@@ -35,10 +42,11 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 public class ConfigMain extends WebMvcConfigurerAdapter {
 	
 	// Project resources access
+	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/etc/**").addResourceLocations("classpath:/etc/");
 		registry.addResourceHandler("/bower_components/**").addResourceLocations("classpath:/bower_components/");
 		registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/");
+		registry.addResourceHandler("/images/**").addResourceLocations("classpath:/images/");
 	}
 
 	// Character encoding (UTF-8)
@@ -57,7 +65,31 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 		return new LayoutDialect();
 	}
 	
-	
+	public MappingJackson2HttpMessageConverter jacksonMessageConverter(){
+        MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
+
+        ObjectMapper mapper = new ObjectMapper();
+        //Registering Hibernate4Module to support lazy objects
+        mapper.registerModule(new Hibernate5Module());
+
+        messageConverter.setObjectMapper(mapper);
+        return messageConverter;
+    }
+
+	@Bean
+	public HttpMessageConverters customConverters() {
+		HttpMessageConverter<?> hibernate5ModuleJacksonMessageConverter = jacksonMessageConverter();
+		return new HttpMessageConverters(hibernate5ModuleJacksonMessageConverter);
+	}
+    
+	/*
+	@Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        //Here we add our custom-configured HttpMessageConverter
+        converters.add(jacksonMessageConverter());
+        super.configureMessageConverters(converters);
+    }
+    */
 	
 /*
 	@Bean

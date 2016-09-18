@@ -1,21 +1,36 @@
 spring:
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: true
+      naming:
+        physical-strategy: kr.co.ps119.entity.CustomPhysicalNamingStrategyImpl
+  http:
+    multipart:
+      enabled: true
+  devtools:
+    restart:
+      enabled: false
+
+---
+
+spring:
+  profiles: dev
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # jdbc:h2:tcp://localhost/~/test
     username: sa
     password:
     initialize: true
-    schema: classpath:/testData/schema.sql
+    schema: classpath:/testData/schema.sql  
     data: classpath:/testData/data.sql
   jpa:
     database: h2
     show-sql: true
     generate-ddl: true
     hibernate:
-      use-new-id-generator-mappings: true
       ddl-auto: update
-      naming:
-        physical-strategy: kr.co.ps119.entity.CustomPhysicalNamingStrategyImpl
   h2:
     console:
       enabled: true
@@ -26,4 +41,17 @@ spring:
     cache: false
   session:
     store-type: none
-server.context-path: /myPractice
+server:
+  context-path: /myPractice
+
+#jdbc:h2:~/test
+
+---
+
+spring:
+  profiles: test
+
+---
+
+spring:
+  profiles: prod

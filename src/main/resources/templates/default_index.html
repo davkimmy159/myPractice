@@ -82,10 +82,10 @@ hr {
 							<a class="btn btn-default hidden-xs" href="login" type="button">Sign in</a> <a class="btn btn-success hidden-xs" href="account_creation" type="button">Sign up</a>
 							<div id="signBtnsDiv" class="row visible-xs-block">
 								<div class="col-xs-6">
-									<a class="btn btn-default btn-block" href="login" type="button">Sign in</a>
+									<a class="btn btn-default btn-block" href="login" th:href="@{/login}" type="button">Sign in</a>
 								</div>
 								<div class="col-xs-6">
-									<a class="btn btn-success btn-block" href="account_creation" type="button">Sign up</a>
+									<a class="btn btn-success btn-block" href="accountCreation" th:href="@{/member/account/accountCreation}" type="button">Sign up</a>
 								</div>
 							</div>
 						</div>

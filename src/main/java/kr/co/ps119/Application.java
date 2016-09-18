@@ -20,7 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 
 @SpringBootApplication
-//@Import(value = kr.co.ps119.config.ConfigWebsocket.class)
+// @Import(value = kr.co.ps119.config.ConfigMain.class)
 public class Application {
 
 	public static void main(String[] args) {

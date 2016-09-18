@@ -17,19 +17,19 @@ import kr.co.ps119.entity.MemberUser;
 @Aspect
 public class AspectTest_1 {
 	
-	@Pointcut("execution(* kr.co.ps119.controller.Controller_1.test())")
+	@Pointcut("execution(* kr.co.ps119.controller.Controller_2.test())")
 	public void pointcut_1() {
 	}
 	
-	@Pointcut("execution(* kr.co.ps119.service.Service_1.save(kr.co.ps119.entity.MemberUser)) && args(newMemberUser)")
+	@Pointcut("execution(* kr.co.ps119.service.MemberService.save(kr.co.ps119.entity.MemberUser)) && args(newMemberUser)")
 	public void pointcut_2(MemberUser newMemberUser) {
 	}
 	
-	@Pointcut("execution(* kr.co.ps119.service.Service_1.delete(..)) && args(id)")
+	@Pointcut("execution(* kr.co.ps119.service.MemberService.delete(..)) && args(id)")
 	public void pointcut_3(Long id) {
 	}
 	
-	@Pointcut("execution(* kr.co.ps119.service.Service_1.findAll())")
+	@Pointcut("execution(* kr.co.ps119.service.MemberService.findAll())")
 	public void pointcut_4() {
 	}
 	

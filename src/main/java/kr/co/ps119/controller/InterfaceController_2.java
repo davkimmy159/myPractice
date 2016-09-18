@@ -13,16 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.ps119.entity.MemberUser;
 
-public interface InterfaceController_1 {
+public interface InterfaceController_2 {
 	public Map<String, Object> ajaxTest1(@RequestParam(value = "nickname") String nickname, HttpSession session);
 	
 	public Map<String, Object> ajaxTest2(@RequestParam(value = "id") Long id);
-	
-	public String test();
-
-	public String index();
-	
-	public String login();
-
-	public String accountCreation();
 }

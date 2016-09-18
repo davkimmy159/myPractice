@@ -1,4 +1,7 @@
 DROP TABLE member IF EXISTS;
+DROP TABLE board IF EXISTS;
+DROP TABLE comment IF EXISTS;
+
 DROP TABLE member_user IF EXISTS;
 DROP TABLE item IF EXISTS;
 
@@ -11,9 +14,31 @@ CREATE TABLE IF NOT EXISTS member (
 	member_id BIGINT AUTO_INCREMENT NOT NULL,
 	email VARCHAR(100) NOT NULL,
 	username VARCHAR(100) NOT NULL,
-	CONSTRAINT member_member_id_pk PRIMARY KEY (member_id),
-	CONSTRAINT member_email_uk UNIQUE KEY (email),
-	CONSTRAINT member_username_uk UNIQUE KEY (username)
+	password VARCHAR(200) NOT NULL,
+	CONSTRAINT member_member_id_pk PRIMARY KEY(member_id),
+	/*
+	CONSTRAINT member_email_uk UNIQUE KEY(email),
+	CONSTRAINT member_username_uk UNIQUE KEY(username)
+	*/
+);
+
+CREATE TABLE IF NOT EXISTS board (
+	board_id BIGINT AUTO_INCREMENT NOT NULL,
+	title VARCHAR(100) NOT NULL,
+	content CLOB NOT NULL,
+	create_date TIMESTAMP NOT NULL,
+	member_id BIGINT NOT NULL,
+	CONSTRAINT board_board_id_pk PRIMARY KEY(board_id),
+	CONSTRAINT board_member_id_fk FOREIGN KEY(member_id) REFERENCES member(member_id)
+);
+
+CREATE TABLE IF NOT EXISTS comment (
+	comment_id BIGINT AUTO_INCREMENT NOT NULL,
+	content VARCHAR(2000) NOT NULL,
+	create_date TIMESTAMP NOT NULL,
+	board_id BIGINT NOT NULL,
+	CONSTRAINT comment_comment_id_pk PRIMARY KEY(comment_id),
+	CONSTRAINT comment_board_id_fk FOREIGN KEY(board_id) REFERENCES board(board_id)
 );
 
 CREATE TABLE IF NOT EXISTS member_user (
