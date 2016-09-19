@@ -30,20 +30,22 @@ public class Member implements Serializable {
 	private Long id;
 	
 	@Column
-	@NotBlank(message = "email is emity")
+	@NotBlank(message = "email is empty")
 	@Email(message = "email is invalid")
 	private String email;
 	
 	@Column
-	@NotBlank(message = "username is emity")
+	@NotBlank(message = "username is empty")
 	@Length(min = 8,
-			max = 40)
+			max = 40,
+			message = "must have value between 8 and 40 included")
 	private String username;
 	
 	@Column
-	@NotBlank(message = "passwrod is emity")
+	@NotBlank(message = "passwrod is empty")
 	@Length(min = 8,
-			max = 40)
+			max = 40,
+			message = "must have value between 8 and 40 included")
 	private String password;
 	
 	@OneToMany(mappedBy = "member",

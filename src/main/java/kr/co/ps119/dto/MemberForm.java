@@ -13,12 +13,14 @@ public class MemberForm {
 	
 	@NotBlank(message = "username is empty")
 	@Length(min = 8,
-			max = 40)
+			max = 40,
+			message = "must have value between 8 and 40 included")
 	private String username;
 	
 	@NotBlank(message = "password is empty")
 	@Length(min = 8,
-			max = 40)
+			max = 40,
+			message = "must have value between 8 and 40 included")
 	private String password;
 	
 	public MemberForm() {
