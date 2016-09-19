@@ -60,7 +60,7 @@ span {
 					<div class="form-group has-feedback">
 						<label class="control-label" for="emailInput">Email&nbsp;(ID)</label>
 						<div class="">
-							<input id="emailInput" name="email" class="form-control" type="email" placeholder="email" required="required" data-error="Email address is invalid" />
+							<input id="email" name="email" class="form-control" type="email" th:value="*{email}" required="required" placeholder="email" data-error="Email address is invalid" />
 							<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							<div class="help-block with-errors"></div>
 							<p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Incorrect data</p>
@@ -70,7 +70,7 @@ span {
 					<div class="form-group has-feedback">
 						<label class="control-label" for="usernameInput">Username</label>
 						<div class="">
-							<input id="usernameInput" name="username" class="form-control" placeholder="username" required="required" data-error="Name is invalid" />
+							<input id="username" name="username" class="form-control" th:value="*{username}" required="required" placeholder="username" data-error="Name is invalid" />
 							<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							<div class="help-block with-errors"></div>
 						</div>
@@ -79,7 +79,7 @@ span {
 					<div class="form-group has-feedback">
 						<label class="control-label" for="passwordInput">Password</label>
 						<div class="">
-							<input id="passwordInput" name="password" class="form-control" type="password" placeholder="password" required="required" data-error="password is invalid" />
+							<input id="password" name="password" class="form-control" type="password" th:value="*{password}" placeholder="password" required="required" data-error="password is invalid" />
 							<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							<div class="help-block with-errors"></div>
 						</div>
@@ -88,7 +88,7 @@ span {
 					<div class="form-group has-feedback">
 						<label class="control-label" for="passwordCheckInput">Password check</label>
 						<div class="">
-							<input id="passwordCheckInput" name="passwordCheck" class="form-control" type="password" placeholder="confirm" required="required" data-error="password is empty" data-match="#passwordInput" data-match-error="password doesn't match"/>
+							<input id="passwordCheck" name="passwordCheck" class="form-control" type="password" th:value="*{passwordCheck}" required="required" placeholder="confirm" data-error="password is empty" data-match="#passwordInput" data-match-error="password doesn't match"/>
 							<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
 							<div class="help-block with-errors"></div>
 						</div>

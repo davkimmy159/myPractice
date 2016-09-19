@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,10 @@ import kr.co.ps119.dto.MemberForm;
 import kr.co.ps119.service.MemberService;
 
 @Controller
-@RequestMapping(value = "member/account", method = { RequestMethod.GET, RequestMethod.POST })
+@RequestMapping(
+		value = "member/account",
+		method = { RequestMethod.GET, RequestMethod.POST }
+)
 public class MemberAccountController {
 	
 	@Autowired
@@ -34,8 +38,9 @@ public class MemberAccountController {
 	
 	@PostMapping(value = "create")
 	public String createAccount(
-			@Valid MemberForm memberForm,
-			Errors errors) {
+			@Valid @ModelAttribute MemberForm memberForm,
+			Errors errors,
+			Model model) {
 		
 		if(errors.hasErrors()) {
 			System.out.println("error!!!!!!!!!!!!!!!!");

@@ -1,4 +1,4 @@
-package kr.co.ps119.entity;
+package kr.co.ps119.config;
 
 import java.io.Serializable;
 import java.util.Locale;
