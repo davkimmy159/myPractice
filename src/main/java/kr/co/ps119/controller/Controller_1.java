@@ -35,7 +35,7 @@ public class Controller_1 {
 	@Autowired
 	Service_1 service1;
 
-	@GetMapping(value = "main")
+	@GetMapping(value = "test")
 	public String main() {
 		return "room_body";
 	}

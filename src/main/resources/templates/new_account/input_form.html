@@ -73,7 +73,7 @@
 					<strong>Create personal account</strong>
 				</h3>
 				
-				<form action="#" th:action="" th:object="${memberForm}" method="post">
+				<form action="#" th:action="@{/new_account/validate_input_form}" th:object="${memberForm}" method="post">
 					<div class="error_list_container" th:if="${#fields.hasErrors('*')}">
 						<div class="error_list_title">
 							<span>Unexpected error</span>
@@ -140,7 +140,7 @@
 	<!-- Custom Javascript -->
 	<div layout:fragment="customScript">
 		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
-		<script src="../js/create_account.js" th:src="@{/js/create_account.js}" type="text/javascript"></script>
+		<script src="../js/new_account/input_form.js" th:src="@{/js/new_account/input_form.js}" type="text/javascript"></script>
 	</div>
 </body>
 </html>
