@@ -73,7 +73,7 @@
 					<strong>Create personal account</strong>
 				</h3>
 				
-				<form action="#" th:action="@{/member/account/create}" th:object="${memberForm}" method="post">
+				<form action="#" th:action="" th:object="${memberForm}" method="post">
 					<div class="error_list_container" th:if="${#fields.hasErrors('*')}">
 						<div class="error_list_title">
 							<span>Unexpected error</span>

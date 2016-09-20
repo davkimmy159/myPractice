@@ -35,21 +35,24 @@ public class Controller_1 {
 	@Autowired
 	Service_1 service1;
 
-	@GetMapping(value = "test")
-	public String test() {
-		return "test";
+	@GetMapping(value = "main")
+	public String main() {
+		return "room_body";
 	}
 
+	@GetMapping(value = "user_main")
+	public String user_main() {
+		return "user_main_body";
+	}
+	
 	@GetMapping(value = "index")
-	public String index() {
-		return "index";
+	public String user_index() {
+		return "index_body";
 	}
+	
+	
 
-	@GetMapping(value = "login")
-	public String login() {
-		return "login";
-	}
-
+	
 	/*
 	@GetMapping(value = "account_creation")
 	public String accountCreation() {

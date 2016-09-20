@@ -18,25 +18,31 @@ import kr.co.ps119.service.MemberService;
 
 @Controller
 @RequestMapping(
-		value = "member/account",
+		value = "login",
 		method = { RequestMethod.GET, RequestMethod.POST }
 )
-public class MemberAccountController {
+public class LoginController {
 	
 	@Autowired
 	MemberService memberService;
 	
+	// Empty instance
 	@ModelAttribute("memberForm")
 	public MemberForm emptyMemberForm() {
 		return new MemberForm();
 	}
 	
-	@GetMapping(value = "accountCreation")
+	@GetMapping
+	public String login() {
+		return "login";
+	}
+	
+	@GetMapping(value = "account_creation")
 	public String accountCreation() {
 		return "account_creation";
 	}
 	
-	@PostMapping(value = "create")
+	@PostMapping(value = "account/create")
 	public String createAccount(
 			@Valid @ModelAttribute MemberForm memberForm,
 			Errors errors,
@@ -50,6 +56,6 @@ public class MemberAccountController {
 		memberService.createAccount(memberForm);
 		
 		System.out.println("success!!!!!!!!!!!!!!!!");
-		return "redirect:/index"; 
+		return "redirect:/user_main"; 
 	}
 }
