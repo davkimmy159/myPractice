@@ -1,11 +1,8 @@
-notify.notify('title', 'test1');
+notify.notify('회원가입 폼', '회원가입 페이지입니다.');
 
 $('#createAccount').click(function() {
 	notify.notify('title', 'createAccount button is clicked');
 });
-
-
-notify.notify('title', 'test2');
 
 $(document).ready(function() {
 	$('form').validator();

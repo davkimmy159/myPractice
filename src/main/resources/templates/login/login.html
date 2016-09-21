@@ -75,7 +75,7 @@
 				<div class="well well-sm">
 					<div class="text-center">
 						<h5>
-							New to IMColla? <a href="../new_account/input_form" th:href="@{/new_account/input_form}">Create an account.</a>
+							New to IMColla? <a href="../new_account/registration_input_form" th:href="@{/new_account/registration_input_form}">Create an account.</a>
 						</h5>
 					</div>
 				</div>
@@ -90,9 +90,8 @@
 
 	<!-- jQuery & bootstrap JS is loaded here by upper layer -->
 
-	<!-- Substitution of 'customScript' -->
-	<script layout:fragment="customScript" type="text/javascript">
-	$.notify('test');
+	<script>
+		$.notify('test');
 	
 	</script>
 </body>

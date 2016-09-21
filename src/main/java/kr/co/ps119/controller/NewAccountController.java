@@ -31,9 +31,9 @@ public class NewAccountController {
 		return new MemberForm();
 	}
 
-	@GetMapping(value = "input_form")
+	@GetMapping(value = "registration_input_form")
 	public String newAccount() {
-		return "new_account/input_form";
+		return "new_account/registration_input_form";
 	}
 
 	@PostMapping(value = "validate_input_form")
@@ -44,7 +44,7 @@ public class NewAccountController {
 
 		if (errors.hasErrors()) {
 			System.out.println("error!!!!!!!!!!!!!!!!");
-			return "new_account/input_form";
+			return "new_account/registration_input_form";
 		}
 
 		memberService.createAccount(memberForm);

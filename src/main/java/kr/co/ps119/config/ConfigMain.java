@@ -2,6 +2,8 @@ package kr.co.ps119.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -38,8 +40,13 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 @Configuration
-// @EnableAspectJAutoProxy
+// @PropertySource("classpath:properties/resource_path")
 public class ConfigMain extends WebMvcConfigurerAdapter {
+	
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+	    return new PropertySourcesPlaceholderConfigurer();
+	}
 	
 	// Project resources access
 	@Override
