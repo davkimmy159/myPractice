@@ -1463,13 +1463,13 @@ var tooltipFunc = {
 
 	tooltipApply : function() {
 		// $('#example').tooltip(options)
+		/*
 		jqObj.joinToggleBtn.tooltip({
 			title : "Type your name and Join",
 			placement : "bottom",
 			container : "body"
 		});
 
-		
 		jqObj.basicStatus.tooltip({
 			title : "Hide toolbar!",
 			placement : "bottom"
@@ -1497,6 +1497,7 @@ var tooltipFunc = {
 			placement : "top",
 			container : "body"
 		});
+		*/
 	},
 		
 	tooltipActivate : function() {

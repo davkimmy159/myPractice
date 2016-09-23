@@ -23,7 +23,7 @@ spring:
     username: sa
     password:
     initialize: true
-    schema: classpath:/testData/schema.sql  
+    schema: classpath:/testData/schema.sql
     data: classpath:/testData/data.sql
   jpa:
     database: h2
@@ -49,9 +49,9 @@ server:
 ---
 
 spring:
-  profiles: test
-
----
-
-spring:
   profiles: prod
+  
+---
+  
+spring:
+  profiles: test  

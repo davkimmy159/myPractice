@@ -79,16 +79,20 @@ body {
 					<!-- navbar left -->
 					<ul class="nav navbar-nav">
 						<!-- dropdown -->
-						<li class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown<span class="caret"></span></a>
+						<li class="dropdown">
+							<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown<span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a id="login" href="login/login" th:href="@{/login/login}">login</a></li>
 								<li><a id="test1">test 1</a></li>
 								<li><a id="test2">test 2</a></li>
 								<li><a id="test3">test 3</a></li>
 								<li class="divider"></li>
 								<li><a id="showHeights">show heights</a></li>
-							</ul></li>
+							</ul>
+						</li>
+						<!-- /.dropdown -->
+						<li><a id="login" href="login/login" th:href="@{/login/login}">login</a></li>
 					</ul>
+					<!-- /.navbar-left -->
 
 					<!-- navbar right -->
 					<ul class="nav navbar-nav navbar-right">
@@ -98,6 +102,7 @@ body {
 							</button>
 						</li>
 					</ul>
+					<!-- /.navbar-right -->
 				</div>
 				<!-- /.navbar-collapse -->
 			</div>
