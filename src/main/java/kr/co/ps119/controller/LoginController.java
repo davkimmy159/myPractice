@@ -34,6 +34,7 @@ public class LoginController {
 		
 		System.out.println("wow!!!");
 		System.out.println("wow!!!");
+		System.out.println("wow!!!");
 		
 		return "forward:/user_main";
 	}
