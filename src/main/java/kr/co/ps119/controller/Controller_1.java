@@ -29,7 +29,10 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping(
+		value = "/",
+		method = { RequestMethod.GET, RequestMethod.POST }
+)
 public class Controller_1 {
 
 	@Autowired
