@@ -32,6 +32,8 @@ public class LoginController {
 		
 		System.out.println(targetEmailId + ", " + targetPassword);
 		
+		System.out.println("wow!!!");
+		
 		return "forward:/user_main";
 	}
 	
