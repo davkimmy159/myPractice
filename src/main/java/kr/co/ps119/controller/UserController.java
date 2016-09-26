@@ -19,7 +19,7 @@ public class UserController {
 	public String userMain(Model model, HttpServletRequest request) {
 		
 		System.out.println(request.getAttribute("loginEmailId"));
-		System.out.println("test");
+
 		return "user/user_main_body";
 	}
 }
