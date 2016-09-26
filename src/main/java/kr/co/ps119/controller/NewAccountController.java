@@ -49,7 +49,9 @@ public class NewAccountController {
 
 		memberService.createAccount(memberForm);
 
+		model.addAttribute("loginEmailId", memberForm.getEmail());
+		
 		System.out.println("success!!!!!!!!!!!!!!!!");
-		return "redirect:/user_main";
+		return "forward:/user/user_main";
 	}
 }

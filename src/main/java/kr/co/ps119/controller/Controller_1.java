@@ -43,11 +43,6 @@ public class Controller_1 {
 		return "room_body";
 	}
 
-	@GetMapping(value = "user_main")
-	public String user_main() {
-		return "user_main_body";
-	}
-	
 	@GetMapping(value = "index")
 	public String user_index() {
 		return "index_body";

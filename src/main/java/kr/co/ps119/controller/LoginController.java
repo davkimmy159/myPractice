@@ -1,7 +1,5 @@
 package kr.co.ps119.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,18 +23,17 @@ public class LoginController {
 	@PostMapping(value = "validate")
 	public String loginValidate(
 			@RequestParam String loginEmailId,
-			@RequestParam String loginPassword) {
+			@RequestParam String loginPassword,
+			Model model) {
 		
 		String targetEmailId = loginEmailId;
 		String targetPassword = loginPassword;
 		
-		System.out.println(targetEmailId + ", " + targetPassword);
+		model.addAttribute("loginEmailId", loginEmailId);
 		
-		System.out.println("wow!!!");
-		System.out.println("wow!!!");
-		System.out.println("wow!!!");
+		System.out.println("id : " + targetEmailId + ", password : " + targetPassword);
 		
-		return "forward:/user_main";
+		return "forward:/user/user_main";
 	}
 	
 }
