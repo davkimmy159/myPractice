@@ -109,98 +109,11 @@ hr {
 	<!-- jQuery & bootstrap JS is loaded here by upper layer -->
 
 	<!-- Substitution of 'customScript' -->
-	<script layout:fragment="customScript" type="text/javascript">
-	
-		var jqObj = {
-			
-			mainCarouselContainer : $('#mainCarouselContainer'),
-			mainCarouselDiv : $('#mainCarouselDiv'),
-			restWell : $('#restWell'),
-			chatArea : $('#chatArea'),
-			
-			signBtnsDiv : $('#signBtnsDiv')
-
-		};
-
-		var utils = {
-
-			// chatArea append function
-			chatAppend : function(str) {
-			},
-
-			toggleClassArrayFunc : function(array, str) {
-				for ( var ctr in array)
-					array[ctr].toggleClass(str);
-			},
-
-			addClassFunc : function(array, str) {
-				for ( var ctr in array)
-					array[ctr].addClass(str);
-			},
-
-			removeClassFunc : function(array, str) {
-				for ( var ctr in array)
-					array[ctr].removeClass(str);
-			}
-		};
-
-		var carouselFunc = {
-			
-			
-		};
+	<div layout:fragment="customScript">
+		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
+		<script>
 		
-		var resizeFuncs = {
-
-			setBasicHeight : function() {
-				jqObj.chatArea.height($(window).height() - 140);
-				jqObj.restWell.height(jqObj.chatArea.height() + 60);
-				jqObj.mainCarouselContainer.height(jqObj.chatArea.height() + 60);
-				$('#contest').height(jqObj.mainCarouselContainer.height());
-			},
-
-			setMobileHeight : function() {
-				jqObj.chatArea.height($(window).height() - 175);
-			}
-		};
-
-		// $(function() {
-		$(document).ready(function() {
-
-			// Initial setting
-			if (matchMedia("screen and (min-width: 768px)").matches) {
-				resizeFuncs.setBasicHeight();
-			} else {
-				resizeFuncs.setMobileHeight();
-				jqObj.mainCarouselDiv.toggleClass('row');
-			}
-
-			// Responsive resizing
-			$(window).resize(function() {
-
-				// To basic from mobile
-				if (matchMedia("screen and (min-width: 768px)").matches) {
-
-					// resize chatArea
-					resizeFuncs.setBasicHeight();
-
-					// Applied only once after mode has been changed
-					if (!(jqObj.mainCarouselDiv.hasClass('row'))) {
-						jqObj.mainCarouselDiv.toggleClass('row');
-					}
-					
-				// To mobile from basic
-				} else {
-
-					// resize chatArea
-					resizeFuncs.setMobileHeight();
-
-					// Applied only once after mode has been changed
-					if (jqObj.mainCarouselDvi.hasClass('row')) {
-						jqObj.mainCarouselDiv.toggleClass('row');
-					}
-				}
-			}).resize();
-		});
-	</script>
+		</script>
+	</div>
 </body>
 </html>

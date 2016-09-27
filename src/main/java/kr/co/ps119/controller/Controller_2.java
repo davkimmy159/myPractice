@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.co.ps119.entity.Board;
 import kr.co.ps119.entity.Comment;
 import kr.co.ps119.entity.Member;
-import kr.co.ps119.entity.MemberUser;
 import kr.co.ps119.service.Service_1;
 import kr.co.ps119.service.MemberService;
 
 @Controller
 @RequestMapping("/test")
-public class Controller_2 implements InterfaceController_2 {
+public class Controller_2 {
 
 	@Autowired
 	Service_1 service1;
@@ -44,6 +43,7 @@ public class Controller_2 implements InterfaceController_2 {
 		return jsonObject;
 	}
 	
+	/*
 	@GetMapping(value = "test2")
 	@ResponseBody
 	public Map<String, Object> test2() {
@@ -57,7 +57,9 @@ public class Controller_2 implements InterfaceController_2 {
 
 		return jsonObject;
 	}
+	*/
 	
+	/*
 	@GetMapping(value = "ajaxTest1")
 	@ResponseBody
 	public Map<String, Object> ajaxTest1(@RequestParam(value = "nickname") String nickname, HttpSession session) {
@@ -76,7 +78,9 @@ public class Controller_2 implements InterfaceController_2 {
 		System.out.println(session);
 		return jsonObject;
 	}
+	*/
 
+	/*
 	@GetMapping(value = "ajaxTest2")
 	@ResponseBody
 	public Map<String, Object> ajaxTest2(@RequestParam(value = "id") Long id) {
@@ -91,4 +95,5 @@ public class Controller_2 implements InterfaceController_2 {
 
 		return jsonObject;
 	}
+	*/
 }

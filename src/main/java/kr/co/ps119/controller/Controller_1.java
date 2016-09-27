@@ -40,7 +40,7 @@ public class Controller_1 {
 
 	@GetMapping(value = "test")
 	public String main() {
-		return "room_body";
+		return "board/board_body";
 	}
 
 	@GetMapping(value = "index")

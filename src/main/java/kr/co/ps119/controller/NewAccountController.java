@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kr.co.ps119.dto.MemberForm;
 import kr.co.ps119.service.MemberService;
+import kr.co.ps119.vo.MemberForm;
 
 @Controller
 @RequestMapping(

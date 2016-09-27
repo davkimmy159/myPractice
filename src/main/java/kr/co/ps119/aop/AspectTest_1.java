@@ -11,11 +11,11 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import kr.co.ps119.entity.MemberUser;
-
 @Component
 @Aspect
 public class AspectTest_1 {
+	
+	/*
 	
 	@Pointcut("execution(* kr.co.ps119.controller.Controller_2.test())")
 	public void pointcut_1() {
@@ -81,4 +81,5 @@ public class AspectTest_1 {
 	public void before_4() {
 		System.out.println("Aspect(pointcut_4) : before");
 	}
+	*/
 }

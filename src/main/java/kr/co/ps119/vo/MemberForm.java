@@ -1,4 +1,4 @@
-package kr.co.ps119.dto;
+package kr.co.ps119.vo;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;

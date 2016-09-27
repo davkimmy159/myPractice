@@ -1,8 +1,5 @@
 package kr.co.ps119.service;
 
-import kr.co.ps119.entity.MemberUser;
-import kr.co.ps119.repository.MemberUserRepository;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,8 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
-public class Service_1 implements InterfaceService_1{
-
+public class Service_1 {
+	/*
 	@Autowired
 	MemberUserRepository mRepo;
 
@@ -26,4 +23,5 @@ public class Service_1 implements InterfaceService_1{
 	public void delete(Long id) {
 		mRepo.delete(id);
 	}
+	*/
 }

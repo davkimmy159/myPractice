@@ -1,8 +1,3 @@
-INSERT INTO member_user(email, username) VALUES('mail.com', 'user_1');
-INSERT INTO member_user(email, username) VALUES('mail.com', 'user_2');
-INSERT INTO member_user(email, username) VALUES('mail.com', 'user_3');
-INSERT INTO member_user(email, username) VALUES('mail.com', 'user_4');
-
 INSERT INTO member(email, username, password) VALUES('mail_1.com', 'user_1', 'password');
 INSERT INTO member(email, username, password) VALUES('mail_2.com', 'user_2', 'password');
 INSERT INTO member(email, username, password) VALUES('mail_3.com', 'user_3', 'password');
