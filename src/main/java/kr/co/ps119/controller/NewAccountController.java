@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.ps119.service.MemberService;
 import kr.co.ps119.vo.MemberForm;
@@ -40,7 +41,7 @@ public class NewAccountController {
 	public String createAccount(
 			@Valid @ModelAttribute MemberForm memberForm,
 			Errors errors,
-			Model model) {
+			RedirectAttributes redirectAttrs) {
 
 		if (errors.hasErrors()) {
 			System.out.println("error!!!!!!!!!!!!!!!!");
@@ -49,9 +50,9 @@ public class NewAccountController {
 
 		memberService.createAccount(memberForm);
 
-		model.addAttribute("loginEmailId", memberForm.getEmail());
+		redirectAttrs.addFlashAttribute("loginEmailId", memberForm.getEmail());
 		
 		System.out.println("success!!!!!!!!!!!!!!!!");
-		return "forward:/user/user_main";
+		return "redirect:/user/user_main";
 	}
 }

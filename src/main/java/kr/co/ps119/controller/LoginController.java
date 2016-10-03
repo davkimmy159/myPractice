@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(
@@ -24,16 +25,16 @@ public class LoginController {
 	public String loginValidate(
 			@RequestParam String loginEmailId,
 			@RequestParam String loginPassword,
-			Model model) {
+			RedirectAttributes redirectAttrs) {
 		
 		String targetEmailId = loginEmailId;
 		String targetPassword = loginPassword;
 		
-		model.addAttribute("loginEmailId", loginEmailId);
+		redirectAttrs.addFlashAttribute("loginEmailId", loginEmailId);
 		
 		System.out.println("id : " + targetEmailId + ", password : " + targetPassword);
 		
-		return "forward:/user/user_main";
+		return "redirect:/user/user_main";
 	}
 	
 }

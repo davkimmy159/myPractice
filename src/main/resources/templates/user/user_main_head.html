@@ -90,7 +90,7 @@ hr {
 											-&nbsp;<span class="caret"></span>
 										</a>
 										<ul class="dropdown-menu">
-											<li class="dropdown-header">Signed in as <br /><strong th:text="${loginEmailId}">username</strong></li>
+											<li class="dropdown-header">Signed in as <br /><strong id="emailId" th:text="${loginEmailId}">username</strong></li>
 											<li class="divider"></li>
 											<li><a id="">test1</a></li>
 											<li><a id="">test2</a></li>
@@ -148,7 +148,7 @@ hr {
 	<div layout:fragment="customScript">
 		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
 		<script>
-			notify.notify('Main 화면', '로그인 성공 후의 메인 화면입니다.');
+			notify.notify('Main 화면', 'ID: ' + $('#emailId').html());
 			// notify.notify("로그인 ID", "id : " + $('strong').val());
 			
 			$(function() {

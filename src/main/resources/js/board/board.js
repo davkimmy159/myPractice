@@ -70,9 +70,10 @@ var session = {
 		
 		this.socket.onmessage = function(event) {
 			utils.chatAppend(event.data);
-			notify.notify(event.data);
+			notify.notify('title', event.data);
 			badge.add();
 		};
+		
 		this.socket.onerror = function(event) {
 			alert('메신저 에러 발생 : ' + event.data);
 		};
