@@ -35,7 +35,9 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-websocket'
 
 	compile 'org.springframework.boot:spring-boot-starter-validation'
-
+	compile 'org.springframework.boot:spring-boot-starter-security'
+	compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4'
+	
 	compile 'org.springframework.boot:spring-boot-starter-aop'
 	
 	compile 'org.springframework.boot:spring-boot-starter-thymeleaf'

@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -48,6 +49,10 @@ public class Member implements Serializable {
 			message = "must have value between 8 and 40 included")
 	private String password;
 	
+	@Column
+	@NotNull
+	private boolean enabled;
+	
 	@OneToMany(mappedBy = "member",
 			   fetch = FetchType.LAZY,
 			   cascade = CascadeType.ALL,
@@ -59,9 +64,14 @@ public class Member implements Serializable {
 	}
 	
 	public Member(String email, String username, String password) {
+		this(email, username, password, true);
+	}
+	
+	public Member(String email, String username, String password, boolean enabled) {
 		this.email = email;
 		this.username = username;
 		this.password = password;
+		this.enabled = enabled;
 	}
 	
 	public Long getId() {
@@ -98,6 +108,14 @@ public class Member implements Serializable {
 		this.password = password;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public List<Board> getBoards() {
 		return boards;
 	}
@@ -115,8 +133,9 @@ public class Member implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -126,25 +145,26 @@ public class Member implements Serializable {
 			return true;
 		if (obj == null)
 			return false;
-		if(this.getClass() != obj.getClass())
+		if (!(obj instanceof Member))
 			return false;
 		Member other = (Member) obj;
-		if (email == null) {
+		if (getEmail() == null) {
 			if (other.email != null)
 				return false;
-		} else if (!email.equals(other.email))
+		} else if (!getEmail().equals(other.email))
 			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
+		if (isEnabled() != other.enabled)
 			return false;
-		if (password == null) {
+		if (getPassword() == null) {
 			if (other.password != null)
 				return false;
-		} else if (!password.equals(other.password))
+		} else if (!getPassword().equals(other.password))
 			return false;
-	
+		if (getUsername() == null) {
+			if (other.username != null)
+				return false;
+		} else if (!getUsername().equals(other.username))
+			return false;
 		return true;
 	}
 }

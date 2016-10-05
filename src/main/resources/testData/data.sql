@@ -1,7 +1,7 @@
-INSERT INTO member(email, username, password) VALUES('mail_1.com', 'user_1', 'password');
-INSERT INTO member(email, username, password) VALUES('mail_2.com', 'user_2', 'password');
-INSERT INTO member(email, username, password) VALUES('mail_3.com', 'user_3', 'password');
-INSERT INTO member(email, username, password) VALUES('mail_4.com', 'user_4', 'password');
+INSERT INTO member(email, username, password) VALUES('1@mail.com', 'user_1', 'password');
+INSERT INTO member(email, username, password) VALUES('2@mail.com', 'user_2', 'password');
+INSERT INTO member(email, username, password) VALUES('3@mail.com', 'user_3', 'password');
+INSERT INTO member(email, username, password) VALUES('4@mail.com', 'user_4', 'password');
 
 INSERT INTO board(title, content, create_date, member_id) VALUES('title_1', 'content', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 1);
 INSERT INTO board(title, content, create_date, member_id) VALUES('title_2', 'content', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 2);

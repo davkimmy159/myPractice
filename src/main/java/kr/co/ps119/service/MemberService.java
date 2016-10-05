@@ -2,6 +2,7 @@ package kr.co.ps119.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,25 +22,31 @@ import kr.co.ps119.vo.MemberForm;
 public class MemberService {
 
 	@PersistenceContext
-	EntityManager em;
+	private EntityManager em;
 	
 	@Autowired
-	MemberRepository memberRepo;
+	private MemberRepository memberRepo;
 	
 	@Autowired
-	BoardRepository boardRepo;
+	private BoardRepository boardRepo;
 	
 	@Autowired
-	CommentRepository commentRepo;
+	private CommentRepository commentRepo;
 	
-	public List<Member> test1() {
-		Member member = new Member("email.com_temp", "username_temp", "password_temp");
+	private int loginTryCnt = 0;
+	
+	public boolean getMember(String targetEmailId) {
+		boolean confirmed = false;
+		Member loginMember = memberRepo.findByEmail(targetEmailId);
 		
-		memberRepo.save(member);
-		
-		List<Member> list = memberRepo.findAll();
-		
-		return list;
+		if(loginMember == null) {
+			loginTryCnt++;
+		} else {
+			
+			confirmed = true;
+		}
+
+		return confirmed;
 	}
 	
 	public boolean createAccount(MemberForm memberForm) {
@@ -50,5 +57,15 @@ public class MemberService {
 		
 		memberRepo.save(member);
 		return true;
+	}
+	
+	public List<Member> test1() {
+		Member member = new Member("email.com_temp", "username_temp", "password_temp");
+		
+		memberRepo.save(member);
+		
+		List<Member> list = memberRepo.findAll();
+		
+		return list;
 	}
 }
