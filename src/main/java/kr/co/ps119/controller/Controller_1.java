@@ -34,12 +34,13 @@ import javax.validation.Valid;
 		method = { RequestMethod.GET, RequestMethod.POST }
 )
 public class Controller_1 {
-
+	
 	@Autowired
-	Service_1 service1;
-
+	MemberService memberService;
+	
 	@GetMapping(value = "test")
 	public String main() {
+		System.out.println(memberService.passwordEncodingString);
 		return "board/board_body";
 	}
 
@@ -48,8 +49,6 @@ public class Controller_1 {
 		return "index_body";
 	}
 	
-	
-
 	
 	/*
 	@GetMapping(value = "account_creation")

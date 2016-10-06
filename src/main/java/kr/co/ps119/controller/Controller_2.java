@@ -17,16 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.co.ps119.entity.Board;
 import kr.co.ps119.entity.Comment;
 import kr.co.ps119.entity.Member;
-import kr.co.ps119.service.Service_1;
 import kr.co.ps119.service.MemberService;
 
 @Controller
 @RequestMapping("/test")
 public class Controller_2 {
 
-	@Autowired
-	Service_1 service1;
-	
 	@Autowired
 	MemberService service2;
 	

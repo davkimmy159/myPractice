@@ -1,11 +1,8 @@
 DROP TABLE member IF EXISTS;
 DROP TABLE board IF EXISTS;
 DROP TABLE comment IF EXISTS;
-
-/*
-DROP SEQUENCE seq_1 IF EXISTS;
-DROP SEQUENCE seq_2 IF EXISTS;
-*/
+DROP TABLE authority IF EXISTS;
+DROP TABLE member_authority IF EXISTS;
 
 CREATE TABLE IF NOT EXISTS member (
 	member_id BIGINT AUTO_INCREMENT NOT NULL,
@@ -14,10 +11,24 @@ CREATE TABLE IF NOT EXISTS member (
 	password VARCHAR(200) NOT NULL,
 	enabled BOOLEAN NOT NULL DEFAULT true,
 	CONSTRAINT member_member_id_pk PRIMARY KEY(member_id),
-	/*
 	CONSTRAINT member_email_uk UNIQUE KEY(email),
 	CONSTRAINT member_username_uk UNIQUE KEY(username)
-	*/
+);
+
+CREATE TABLE IF NOT EXISTS authority (
+	authority_id INT AUTO_INCREMENT NOT NULL,
+	authority VARCHAR(50) NOT NULL,
+	CONSTRAINT authority_authority_id_pk PRIMARY KEY(authority_id),
+	CONSTRAINT authority_authority_uk UNIQUE KEY(authority)
+);
+
+CREATE TABLE IF NOT EXISTS member_authority (
+	member_authority_id BIGINT AUTO_INCREMENT NOT NULL,
+	member_id BIGINT NOT NULL,
+	authority_id INT NOT NULL,
+	CONSTRAINT member_authority_member_id_authority_id_uk UNIQUE KEY(member_id, authority_id),
+	CONSTRAINT member_authority_member_id_fk FOREIGN KEY(member_id) REFERENCES member(member_id),
+	CONSTRAINT member_authority_authority_id_fk FOREIGN KEY(authority_id) REFERENCES authority(authority_id)
 );
 
 CREATE TABLE IF NOT EXISTS board (
@@ -38,10 +49,3 @@ CREATE TABLE IF NOT EXISTS comment (
 	CONSTRAINT comment_comment_id_pk PRIMARY KEY(comment_id),
 	CONSTRAINT comment_board_id_fk FOREIGN KEY(board_id) REFERENCES board(board_id)
 );
-
-
-/*
-SEQUENCE for PK
-CREATE SEQUENCE IF NOT EXISTS seq_1 START WITH 5 INCREMENT BY 1;
-CREATE SEQUENCE IF NOT EXISTS seq_2 START WITH 1 INCREMENT BY 1;
-*/

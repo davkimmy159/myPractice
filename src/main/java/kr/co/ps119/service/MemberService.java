@@ -10,6 +10,9 @@ import javax.persistence.PersistenceContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.co.ps119.entity.Member;
@@ -33,6 +36,13 @@ public class MemberService {
 	@Autowired
 	private CommentRepository commentRepo;
 	
+//	@Value("#{etc['password.EncodingString']}")
+	@Value("${password.EncodingString}")
+	public String passwordEncodingString;
+	
+	private PasswordEncoder pwdEncoder = new StandardPasswordEncoder(passwordEncodingString);
+//	private PasswordEncoder pwdEncoder = new StandardPasswordEncoder("secret");
+	
 	private int loginTryCnt = 0;
 	
 	public boolean getMember(String targetEmailId) {
@@ -50,13 +60,24 @@ public class MemberService {
 	}
 	
 	public boolean createAccount(MemberForm memberForm) {
-		MemberForm tmpMemberForm = memberForm;
-		Member member = new Member();
+		MemberForm targetMemberForm = memberForm;
+		Member saveEntity = new Member();
+		boolean successFlag = false;
 		
-		BeanUtils.copyProperties(tmpMemberForm, member);
+		String rawPassword = memberForm.getPassword();
+		String encodedPassword = pwdEncoder.encode(rawPassword);
+		memberForm.setPassword(encodedPassword);
 		
-		memberRepo.save(member);
-		return true;
+		BeanUtils.copyProperties(targetMemberForm, saveEntity);
+		
+		Member resultEntity = memberRepo.save(saveEntity);
+		
+		// Check whether unexpected save error is occurred
+		if(resultEntity != null) {
+			successFlag = true;
+		}
+		
+		return successFlag;
 	}
 	
 	public List<Member> test1() {

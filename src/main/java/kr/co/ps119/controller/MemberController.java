@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(
-		value = "user",
+		value = "member",
 		method = { RequestMethod.GET, RequestMethod.POST }
 )
-public class UserController {
+public class MemberController {
 
-	@PostMapping(value = "user_main")
+	@PostMapping(value = "member_main")
 	public String userMain() {
 
-		return "user/user_main_body";
+		return "member/member_main_body";
 	}
 }

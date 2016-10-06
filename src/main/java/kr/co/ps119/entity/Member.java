@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Email;
@@ -22,6 +23,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Member implements Serializable {
+
+	// Sets 'enabled' as true before persist(save in DB)
+	@PrePersist
+	void setEnabledTrue() {
+		enabled = true;
+	}
 	
 	private static final long serialVersionUID = 3443687366576503018L;
 
@@ -39,20 +46,27 @@ public class Member implements Serializable {
 	@NotBlank(message = "username is empty")
 	@Length(min = 8,
 			max = 40,
-			message = "must have value between 8 and 40 included")
+			message = "username must have value between 8 and 40 included")
 	private String username;
 	
 	@Column
-	@NotBlank(message = "passwrod is empty")
+	@NotBlank(message = "password is empty")
 	@Length(min = 8,
-			max = 40,
-			message = "must have value between 8 and 40 included")
+			max = 100,
+			message = "password must have value between 8 and 180 included")
 	private String password;
 	
 	@Column
 	@NotNull
 	private boolean enabled;
 	
+	@OneToMany(mappedBy = "member",
+			   fetch = FetchType.LAZY,
+			   cascade = CascadeType.ALL,
+			   orphanRemoval = true)
+	@JsonBackReference
+	private List<MemberAuthority> authorities = new ArrayList<>();
+
 	@OneToMany(mappedBy = "member",
 			   fetch = FetchType.LAZY,
 			   cascade = CascadeType.ALL,
@@ -128,6 +142,23 @@ public class Member implements Serializable {
 		}
 	}
 	
+	public List<MemberAuthority> getAuthorities() {
+		return authorities;
+	}
+	
+	public void addAuthority(MemberAuthority memberAuthority) {
+		authorities.add(memberAuthority);
+		
+		if(memberAuthority.getMember() != this) {
+			memberAuthority.setMember(this);
+		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Member [ id=" + id + ", email=" + email + ", username=" + username + " ]";
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -141,20 +172,24 @@ public class Member implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Member))
+		}
+		if (!(obj instanceof Member)) {
 			return false;
+		}
 		Member other = (Member) obj;
 		if (getEmail() == null) {
 			if (other.email != null)
 				return false;
 		} else if (!getEmail().equals(other.email))
 			return false;
-		if (isEnabled() != other.enabled)
+		if (isEnabled() != other.enabled) {
 			return false;
+		}
 		if (getPassword() == null) {
 			if (other.password != null)
 				return false;

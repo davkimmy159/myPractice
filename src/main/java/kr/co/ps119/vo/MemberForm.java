@@ -13,14 +13,16 @@ public class MemberForm {
 	@NotBlank(message = "username is empty")
 	@Length(min = 8,
 			max = 40,
-			message = "must have value between 8 and 40 included")
+			message = "username must have value between 8 and 40 included")
 	private String username;
 	
 	@NotBlank(message = "password is empty")
 	@Length(min = 8,
-			max = 40,
-			message = "must have value between 8 and 40 included")
+			max = 400,
+			message = "password must have value between 8 and 40 included")
 	private String password;
+	
+	private boolean enabled;
 	
 	public MemberForm() {
 	}
@@ -55,41 +57,65 @@ public class MemberForm {
 		this.password = password;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	@Override
+	public String toString() {
+		return "MemberForm [email=" + email + ", username=" + username + ", password=" + password + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if(this.getClass() != obj.getClass())
+		}
+		if (!(obj instanceof MemberForm)) {
 			return false;
+		}
 		MemberForm other = (MemberForm) obj;
 		if (email == null) {
-			if (other.email != null)
+			if (other.email != null) {
 				return false;
-		} else if (!email.equals(other.email))
+			}
+		} else if (!email.equals(other.email)) {
 			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
+		}
+		if (enabled != other.enabled) {
 			return false;
+		}
 		if (password == null) {
-			if (other.password != null)
+			if (other.password != null) {
 				return false;
-		} else if (!password.equals(other.password))
+			}
+		} else if (!password.equals(other.password)) {
 			return false;
-	
+		}
+		if (username == null) {
+			if (other.username != null) {
+				return false;
+			}
+		} else if (!username.equals(other.username)) {
+			return false;
+		}
 		return true;
 	}
 }

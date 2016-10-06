@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 
@@ -40,7 +41,7 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 @Configuration
-// @PropertySource("classpath:properties/resource_path")
+@PropertySource("classpath:properties/etc.properties")
 public class ConfigMain extends WebMvcConfigurerAdapter {
 	
 	@Bean

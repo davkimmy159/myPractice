@@ -5,7 +5,9 @@ import kr.co.ps119.config.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.annotation.Import;
-
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -20,13 +22,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping;
 
 @SpringBootApplication
+@ImportResource("classpath:/xml_config/propertySource.xml")
 // @Import(value = kr.co.ps119.config.ConfigMain.class)
+//@PropertySource(name = "etc", value = "classpath:/properties/etc.properties")
 public class Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
+	/*
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+	    return new PropertySourcesPlaceholderConfigurer();
+	}
+	*/
+	
 /*	
 	@Bean
 	public Validator localValidatorFactoryBean() {

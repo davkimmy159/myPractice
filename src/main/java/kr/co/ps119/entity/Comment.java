@@ -41,7 +41,7 @@ public class Comment implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
 	
-	// parent
+	// foreign key 1
 	@ManyToOne(fetch = FetchType.LAZY,
 			   cascade = CascadeType.ALL,
 			   optional = false)

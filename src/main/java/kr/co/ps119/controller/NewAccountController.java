@@ -26,7 +26,7 @@ public class NewAccountController {
 	@Autowired
 	MemberService memberService;
 
-	// Empty instance for validation tags in thymeleafs
+	// Empty instance for validation tags in thymeleaf
 	@ModelAttribute("memberForm")
 	public MemberForm emptyMemberForm() {
 		return new MemberForm();
@@ -42,17 +42,24 @@ public class NewAccountController {
 			@Valid @ModelAttribute MemberForm memberForm,
 			Errors errors,
 			RedirectAttributes redirectAttrs) {
-
+		
+		boolean successFlag = false;
+		
+		// JSR-303 check
 		if (errors.hasErrors()) {
-			System.out.println("error!!!!!!!!!!!!!!!!");
 			return "new_account/registration_input_form";
 		}
 
-		memberService.createAccount(memberForm);
+		successFlag = memberService.createAccount(memberForm);
 
+		// Unexpected entity save error check
+		if(!successFlag) {
+			redirectAttrs.addFlashAttribute("serverError", "Unexpected server error has occurred!\nPlease try again");
+			return "new_account/registration_input_form";
+		}
+		
 		redirectAttrs.addFlashAttribute("loginEmailId", memberForm.getEmail());
 		
-		System.out.println("success!!!!!!!!!!!!!!!!");
-		return "redirect:/user/user_main";
+		return "redirect:/member/member_main";
 	}
 }

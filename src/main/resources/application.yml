@@ -20,8 +20,8 @@ spring:
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # jdbc:h2:tcp://localhost/~/test
-    username: sa
-    password:
+    username: admin
+    password: thisisadmin
     initialize: true
     schema: classpath:/testData/schema.sql
     data: classpath:/testData/data.sql
@@ -42,7 +42,7 @@ spring:
   session:
     store-type: none
 server:
-  context-path: /myPractice
+  context-path: /imcolla
 
 #jdbc:h2:~/test
 

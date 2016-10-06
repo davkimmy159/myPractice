@@ -49,14 +49,14 @@ public class Board implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
 
-	// parent
+	// foreign key 1
 	@ManyToOne(fetch = FetchType.LAZY,
 			   cascade = CascadeType.ALL,
 			   optional = false)
 	@JoinColumn(name = "member_id",
 				nullable = true)
 	@JsonManagedReference
-	public Member member;
+	private Member member;
 	
 	// child
 	@OneToMany(mappedBy = "board",
@@ -131,6 +131,11 @@ public class Board implements Serializable {
 		if(comment.getBoard() != this) {
 			comment.setBoard(this);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Board [id=" + id + ", title=" + title + ", content=" + content + ", createDate=" + createDate + "]";
 	}
 
 	@Override

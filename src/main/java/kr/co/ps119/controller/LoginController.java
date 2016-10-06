@@ -43,6 +43,6 @@ public class LoginController {
 		
 		System.out.println("id : " + targetEmailId + ", password : " + targetPassword);
 		
-		return "redirect:/user/user_main";
+		return "redirect:/member/member_main";
 	}	
 }
