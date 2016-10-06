@@ -31,7 +31,7 @@
 	padding-top: 0px;
 }
 
-#error-title h3 {
+h3 {
 	margin-top: 15px;
 }
 </style>
@@ -80,7 +80,24 @@
 					<span><strong>password</strong> is invalid</span><br />
 					<span th:text="${errorMsg}"></span>
 				</div>
+				
+				<!-- for test
+				<div id="error-title" class="alert alert-warning alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<h3><span><Strong>Unexpected server error</Strong></span></h3>
+					<span th:text="${serverError}"></span>
+				</div>
+				-->
 			</div>
+			
+			<div class="error_container" th:if="${serverError}">
+				<div id="error-title" class="alert alert-warning alert-dismissible">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<h3><span><Strong>Unexpected server error</Strong></span></h3>
+					<span th:text="${serverError}"></span>
+				</div>
+			</div>
+			
 
 			<div class="well">
 				<h3>

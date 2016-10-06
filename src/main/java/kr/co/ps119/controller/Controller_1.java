@@ -1,12 +1,10 @@
 package kr.co.ps119.controller;
 
-import kr.co.ps119.entity.*;
 import kr.co.ps119.service.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,7 +38,6 @@ public class Controller_1 {
 	
 	@GetMapping(value = "test")
 	public String main() {
-		System.out.println(memberService.passwordEncodingString);
 		return "board/board_body";
 	}
 

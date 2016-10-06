@@ -41,6 +41,7 @@ public class NewAccountController {
 	public String createAccount(
 			@Valid @ModelAttribute MemberForm memberForm,
 			Errors errors,
+			Model model,
 			RedirectAttributes redirectAttrs) {
 		
 		boolean successFlag = false;
@@ -54,7 +55,7 @@ public class NewAccountController {
 
 		// Unexpected entity save error check
 		if(!successFlag) {
-			redirectAttrs.addFlashAttribute("serverError", "Unexpected server error has occurred!\nPlease try again");
+			model.addAttribute("serverError", "Unexpected server error has occurred!Please try again");
 			return "new_account/registration_input_form";
 		}
 		

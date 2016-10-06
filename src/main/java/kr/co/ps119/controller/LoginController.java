@@ -34,14 +34,14 @@ public class LoginController {
 			@RequestParam String loginPassword,
 			RedirectAttributes redirectAttrs) {
 	
+		boolean exist = false;
+		
 		String targetEmailId = loginEmailId;
 		String targetPassword = loginPassword;
 
-		memberService.getMember(targetEmailId);
+		exist = memberService.getLoginMember(targetEmailId);
 		
 		redirectAttrs.addFlashAttribute("loginEmailId", loginEmailId);
-		
-		System.out.println("id : " + targetEmailId + ", password : " + targetPassword);
 		
 		return "redirect:/member/member_main";
 	}	

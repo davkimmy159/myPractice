@@ -3,11 +3,13 @@ package kr.co.ps119.config;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 @Configuration
@@ -42,17 +44,18 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// http.authorizeRequests().antMatchers("/h2/**").permitAll();
+		// h2 db console setting
 		http.csrf().ignoringAntMatchers("/h2/**/");
 		http.headers().frameOptions().disable();
 		
-		/*
-		http.authorizeRequests()
-			.anyRequest().authenticated()
-			.and()
-			.formLogin().and()
-			.httpBasic();
-		*/
+		http.authorizeRequests().antMatchers("/test.html", "/h2/**", "/index.html", "/login/login", "new_account/registration_input_form").anonymous()
+			.antMatchers("member/member_main").hasRole("role_member")
+			.anyRequest().authenticated();
 	}
-	
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new StandardPasswordEncoder("secret");
+    }   
+
 }

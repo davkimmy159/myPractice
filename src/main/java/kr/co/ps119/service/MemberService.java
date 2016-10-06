@@ -35,28 +35,30 @@ public class MemberService {
 	
 	@Autowired
 	private CommentRepository commentRepo;
-	
-//	@Value("#{etc['password.EncodingString']}")
-	@Value("${password.EncodingString}")
+
+	/*
+	@Value("#{etc['password.encodingString']}")
+	@Value("${password}")
 	public String passwordEncodingString;
+	*/
 	
-	private PasswordEncoder pwdEncoder = new StandardPasswordEncoder(passwordEncodingString);
-//	private PasswordEncoder pwdEncoder = new StandardPasswordEncoder("secret");
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	private int loginTryCnt = 0;
 	
-	public boolean getMember(String targetEmailId) {
-		boolean confirmed = false;
+	public boolean getLoginMember(String targetEmailId) {
+		boolean exist = false;
 		Member loginMember = memberRepo.findByEmail(targetEmailId);
 		
 		if(loginMember == null) {
 			loginTryCnt++;
 		} else {
 			
-			confirmed = true;
+			exist = true;
 		}
 
-		return confirmed;
+		return exist;
 	}
 	
 	public boolean createAccount(MemberForm memberForm) {
@@ -65,7 +67,7 @@ public class MemberService {
 		boolean successFlag = false;
 		
 		String rawPassword = memberForm.getPassword();
-		String encodedPassword = pwdEncoder.encode(rawPassword);
+		String encodedPassword = passwordEncoder.encode(rawPassword);
 		memberForm.setPassword(encodedPassword);
 		
 		BeanUtils.copyProperties(targetMemberForm, saveEntity);

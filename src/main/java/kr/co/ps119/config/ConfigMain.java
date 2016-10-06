@@ -8,6 +8,8 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Set;
@@ -41,13 +43,15 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 @Configuration
-@PropertySource("classpath:properties/etc.properties")
+//@PropertySource("classpath:properties/etc.properties")
 public class ConfigMain extends WebMvcConfigurerAdapter {
 	
+	/*
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 	    return new PropertySourcesPlaceholderConfigurer();
 	}
+	*/
 	
 	// Project resources access
 	@Override
