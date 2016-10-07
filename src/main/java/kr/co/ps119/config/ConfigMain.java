@@ -46,7 +46,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 //@PropertySource("classpath:properties/etc.properties")
 public class ConfigMain extends WebMvcConfigurerAdapter {
 	
-	/*
+	/*f
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 	    return new PropertySourcesPlaceholderConfigurer();

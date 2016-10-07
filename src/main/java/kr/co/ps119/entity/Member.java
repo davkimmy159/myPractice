@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -40,19 +41,22 @@ public class Member implements Serializable {
 	@Column
 	@NotBlank(message = "email is empty")
 	@Email(message = "email is invalid")
+	@Size(min = 5,
+		  max = 100,
+		  message = "email length is too long")
 	private String email;
 	
 	@Column
 	@NotBlank(message = "username is empty")
 	@Length(min = 8,
-			max = 40,
-			message = "username must have value between 8 and 40 included")
+			max = 60,
+			message = "username must have value between 8 and 60 included")
 	private String username;
 	
 	@Column
 	@NotBlank(message = "password is empty")
 	@Length(min = 8,
-			max = 100,
+			max = 180,
 			message = "password must have value between 8 and 180 included")
 	private String password;
 	

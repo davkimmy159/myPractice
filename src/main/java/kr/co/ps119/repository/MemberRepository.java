@@ -7,4 +7,5 @@ import kr.co.ps119.entity.Member;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	public Member findByEmail(String email);
+	public Member findByUsername(String username);
 }

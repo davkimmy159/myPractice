@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.co.ps119.entity.Member;
+import kr.co.ps119.flag.NewAccount;
 import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.repository.CommentRepository;
 import kr.co.ps119.repository.MemberRepository;
@@ -46,6 +48,40 @@ public class MemberService {
 	private PasswordEncoder passwordEncoder;
 	
 	private int loginTryCnt = 0;
+
+	public NewAccount createAccount(MemberForm memberForm) {
+		MemberForm targetMemberForm = memberForm;
+
+		Member checkMember;
+		// Checks email duplication
+		checkMember = memberRepo.findByEmail(targetMemberForm.getEmail());
+		if (checkMember != null) {
+			return NewAccount.DUPLICATE_EMAIL;
+		}
+
+		// Checks username duplication
+		checkMember = memberRepo.findByUsername(targetMemberForm.getUsername());
+		if(checkMember != null) {
+			return NewAccount.DUPLICATE_USERNAME;
+		}
+		
+		Member saveEntity = new Member();
+		
+		String rawPassword = targetMemberForm.getPassword();
+		String encodedPassword = passwordEncoder.encode(rawPassword);
+		targetMemberForm.setPassword(encodedPassword);
+		
+		BeanUtils.copyProperties(targetMemberForm, saveEntity);
+		
+		Member resultEntity = memberRepo.save(saveEntity);
+		
+		// Checks whether unexpected save error has been occurred
+		if(resultEntity == null) {
+			return NewAccount.UNEXPECTED_SERVER_ERROR;
+		}
+		
+		return NewAccount.SUCCESSFUL;
+	}
 	
 	public boolean getLoginMember(String targetEmailId) {
 		boolean exist = false;
@@ -59,27 +95,6 @@ public class MemberService {
 		}
 
 		return exist;
-	}
-	
-	public boolean createAccount(MemberForm memberForm) {
-		MemberForm targetMemberForm = memberForm;
-		Member saveEntity = new Member();
-		boolean successFlag = false;
-		
-		String rawPassword = memberForm.getPassword();
-		String encodedPassword = passwordEncoder.encode(rawPassword);
-		memberForm.setPassword(encodedPassword);
-		
-		BeanUtils.copyProperties(targetMemberForm, saveEntity);
-		
-		Member resultEntity = memberRepo.save(saveEntity);
-		
-		// Check whether unexpected save error is occurred
-		if(resultEntity != null) {
-			successFlag = true;
-		}
-		
-		return successFlag;
 	}
 	
 	public List<Member> test1() {

@@ -32,8 +32,7 @@ configurations {
 
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-web'
-	compile 'org.springframework.boot:spring-boot-starter-websocket'
-
+	
 	compile 'org.springframework.boot:spring-boot-starter-validation'
 	compile 'org.springframework.boot:spring-boot-starter-security'
 	compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4'
@@ -47,6 +46,18 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	
 	compile 'org.springframework.session:spring-session'
+	
+	compile 'org.springframework.boot:spring-boot-starter-websocket'
+	compile 'org.springframework.security:spring-security-messaging'
+	compile 'org.springframework.boot:spring-boot-starter-activemq'
+//	compile 'io.projectreactor:reactor-core'
+//	compile 'io.projectreactor:reactor-net'
+//	compile group: 'io.netty', name: 'netty-all', version: '4.0.41.Final'
+	
+//	compile 'org.springframework:spring-jms'
+//	compile 'org.springframework.boot:spring-boot-starter-integration'
+//	compile 'org.springframework.integration:spring-integration-jms'
+//	compile 'org.apache.activemq:activemq-broker'
 
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'		
@@ -68,7 +79,7 @@ dependencies {
 	
 //	runtime 'commons-dbcp:commons-dbcp'
 	
-	compile 'org.projectlombok:lombok:1.16.8'
+//	compile 'org.projectlombok:lombok:1.16.8'
 //	compile 'net.sf.dozer:dozer-spring:5.5.1'
 	
 //	compile 'io.vertx:vertx-core:3.2.1'

@@ -12,7 +12,12 @@ spring:
   devtools:
     restart:
       enabled: false
-
+#  activemq:
+#    in-memory: true
+#    pool:
+#      enabled: false
+#    broker-url: tcp://localhost:61616
+      
 ---
 
 spring:

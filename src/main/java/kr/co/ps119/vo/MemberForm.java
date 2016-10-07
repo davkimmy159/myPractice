@@ -1,5 +1,7 @@
 package kr.co.ps119.vo;
 
+import javax.validation.constraints.Size;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -8,18 +10,21 @@ public class MemberForm {
 	
 	@NotBlank(message = "email is empty")
 	@Email(message = "email is invalid")
+	@Size(min = 5,
+		  max = 100,
+	 	  message = "email length is too long")
 	private String email;
 	
 	@NotBlank(message = "username is empty")
 	@Length(min = 8,
-			max = 40,
-			message = "username must have value between 8 and 40 included")
+			max = 60,
+			message = "username must have value between 8 and 60 included")
 	private String username;
 	
 	@NotBlank(message = "password is empty")
 	@Length(min = 8,
-			max = 400,
-			message = "password must have value between 8 and 40 included")
+			max = 60,
+			message = "password must have value between 8 and 60 included")
 	private String password;
 	
 	private boolean enabled;

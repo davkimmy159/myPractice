@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.ps119.flag.NewAccount;
 import kr.co.ps119.service.MemberService;
 import kr.co.ps119.vo.MemberForm;
 
@@ -44,23 +45,42 @@ public class NewAccountController {
 			Model model,
 			RedirectAttributes redirectAttrs) {
 		
-		boolean successFlag = false;
+		String returnPage = "new_account/registration_input_form";
 		
 		// JSR-303 check
 		if (errors.hasErrors()) {
-			return "new_account/registration_input_form";
+			return returnPage;
 		}
 
-		successFlag = memberService.createAccount(memberForm);
-
-		// Unexpected entity save error check
-		if(!successFlag) {
-			model.addAttribute("serverError", "Unexpected server error has occurred!Please try again");
-			return "new_account/registration_input_form";
-		}
+		NewAccount saveStatus = memberService.createAccount(memberForm);
+		String duplicationCheckMsg;
 		
-		redirectAttrs.addFlashAttribute("loginEmailId", memberForm.getEmail());
+		switch(saveStatus) {
+			case DUPLICATE_EMAIL :
+				duplicationCheckMsg = NewAccount.DUPLICATE_EMAIL.getMessage();
+				model.addAttribute("duplicationInput", memberForm.getEmail());
+				model.addAttribute("duplicationError", duplicationCheckMsg);
+				break;
+			case DUPLICATE_USERNAME :
+				duplicationCheckMsg = NewAccount.DUPLICATE_USERNAME.getMessage();
+				model.addAttribute("duplicationInput", memberForm.getUsername());
+				model.addAttribute("duplicationError", duplicationCheckMsg);
+				break;
+			// Checks unexpected error while saving entity into DB
+			case UNEXPECTED_SERVER_ERROR :
+				model.addAttribute("serverSideError", NewAccount.UNEXPECTED_SERVER_ERROR.getMessage());	
+				break;
+			case SUCCESSFUL :
+				returnPage = "redirect:/member/member_main";
+				break;
+			// Checks special unexpected error 
+			default :
+				model.addAttribute("serverSideError", NewAccount.UNEXPECTED_SERVER_ERROR.getMessage());	
+				break;
+		}		
 		
-		return "redirect:/member/member_main";
+//		redirectAttrs.addFlashAttribute("loginEmailId", memberForm.getEmail());
+		
+		return returnPage;
 	}
 }

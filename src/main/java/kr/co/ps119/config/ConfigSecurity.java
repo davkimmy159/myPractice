@@ -41,16 +41,18 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 			.authoritiesByUsernameQuery(authoritiesByUsernameQuery)
 			.passwordEncoder(new StandardPasswordEncoder("1l4faqd32"));
 	}
-
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// h2 db console setting
 		http.csrf().ignoringAntMatchers("/h2/**/");
 		http.headers().frameOptions().disable();
 		
+		/*
 		http.authorizeRequests().antMatchers("/test.html", "/h2/**", "/index.html", "/login/login", "new_account/registration_input_form").anonymous()
 			.antMatchers("member/member_main").hasRole("role_member")
 			.anyRequest().authenticated();
+		*/
 	}
 
     @Bean
