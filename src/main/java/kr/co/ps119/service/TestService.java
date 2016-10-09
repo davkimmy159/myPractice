@@ -49,7 +49,13 @@ public class TestService {
 	private int titleCnt = 1;
 	private Random random = new Random();
 	
-	public List<Board> getList(String editorContent) {
+	public List<Board> getList() {
+		List<Board> boardList = boardRepo.findAll();
+		boardList.forEach(eachBoard -> eachBoard.getMember().getUsername());
+		return boardList;
+	}
+	
+	public int saveContent(String editorContent) {
 		Board board = new Board();
 		board.setTitle("Title " + titleCnt++);
 		board.setContent(editorContent);
@@ -57,9 +63,7 @@ public class TestService {
 		board.setMember(memberRepo.findOne((long)(random.nextInt(3) + 1)));
 		boardRepo.save(board);
 		
-		List<Board> boardList = boardRepo.findAll();
-		boardList.forEach(eachBoard -> eachBoard.getMember().getUsername());
-		return boardList;
+		return boardRepo.findAll().size();
 	}
 	
 	public List<Board> deleteList() {

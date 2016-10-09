@@ -1,16 +1,15 @@
 var jqAjax = {
 
-	saveBoard : function(editorContent) {
+	updateList : function() {
 		$.ajax({
-			url : 'test/boardSaveAjaxTest',
+			url : 'test/boardUpdateAjaxTest',
 			type : 'GET',
-			data : {'editorContent' : editorContent},
 			contentType : "application/json; charset=utf-8",
 			dataType : 'json',
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify('저장 성공 : ' + status, '리스트 수 : ' + data.boardList.length);
+				notify.notify('업데이트 성공 : ' + status, '리스트 수 : ' + data.boardList.length);
 				
 				var boardList = data.boardList;
 				var content = "";
@@ -37,6 +36,24 @@ var jqAjax = {
 				
 				$('#listAccordion').children('.panel').remove();
 				$('#listAccordion').append(content);
+			},
+			error : function(request, status, error) {
+				notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
+			}
+		});
+	},
+	
+	saveBoard : function(editorContent) {
+		$.ajax({
+			url : 'test/boardSaveAjaxTest',
+			type : 'GET',
+			data : {'editorContent' : editorContent},
+			contentType : "application/json; charset=utf-8",
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify('저장 성공 : ' + status, '리스트 수 : ' + data.listSize);
 			},
 			error : function(request, status, error) {
 				notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);

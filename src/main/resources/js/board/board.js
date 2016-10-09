@@ -62,6 +62,7 @@ var session = {
 			function(frame) {
 				notify.notify("Stomp chat connection", frame);
 				
+				// chat subscribe 1
 				session.stompChat.subscribe('/subscribe/chat', function(message) {
 					var msgBody = JSON.parse(message.body);
 					
@@ -80,10 +81,13 @@ var session = {
 					}
 				});
 				
+				// chat subscribe 2
 				session.stompChat.subscribe('/subscribe/chat/update_alarm', function(alarmMsg) {
 					var msgBody = JSON.parse(alarmMsg.body);
-					utils.chatAppend("*** Content update by " + msgBody.username);
+					utils.chatAppend("*** DB content changed by " + msgBody.username);
 					notify.notify(msgBody.message, ' by \'' + msgBody.username + '\'');
+					
+					jqAjax.updateList();
 				});
 				
 				var tmpMsg = JSON.stringify({
@@ -560,6 +564,14 @@ var eventObj = {
 	editorDelEvent : function() {
 		$('#listDelBtn').click(function() {
 			jqAjax.deleteAllBoards();
+			
+			var alarmMsg = JSON.stringify({
+				username : session.nickname,
+				message : "All contents have been deleted"
+			});
+			
+			session.stompChat.send("/dest/chat/update_alarm", {}, alarmMsg);
+			
 		});
 	},
 	
