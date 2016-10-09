@@ -50,7 +50,7 @@ var session = {
 	
 	connect : function() {
 		var URL = location.protocol + '//' + location.host;
-		this.socket = new SockJS(URL + '/myPractice/websocket/chat');
+		this.socket = new SockJS(URL + '/myPractice/socket/chat');
 		this.socket.onopen = function(event) {
 			notify.notify('title', '메신저 연결 성공', 'success');
 		};
@@ -81,7 +81,7 @@ var session = {
 		// URL = null;
 		
 		// Editor content socket
-		this.editorContentSocket = new SockJS(URL + '/myPractice/websocket/editor');
+		this.editorContentSocket = new SockJS(URL + '/myPractice/socket/editor');
 		
 		this.editorContentSocket.onopen = function(event) {
 			notify.notify('title', '에디터 연결 성공', 'success');

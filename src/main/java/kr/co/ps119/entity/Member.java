@@ -2,6 +2,7 @@ package kr.co.ps119.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,11 +20,14 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-public class Member implements Serializable {
+public class Member implements UserDetails, Serializable {
 
 	// Sets 'enabled' as true before persist(save in DB)
 	@PrePersist
@@ -69,7 +73,7 @@ public class Member implements Serializable {
 			   cascade = CascadeType.ALL,
 			   orphanRemoval = true)
 	@JsonBackReference
-	private List<MemberAuthority> authorities = new ArrayList<>();
+	private List<MemberAuthority> memberAuthorities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "member",
 			   fetch = FetchType.LAZY,
@@ -110,6 +114,7 @@ public class Member implements Serializable {
 		this.email = email;
 	}
 
+	@Override
 	public String getUsername() {
 		return username;
 	}
@@ -118,6 +123,7 @@ public class Member implements Serializable {
 		this.username = username;
 	}
 
+	@Override
 	public String getPassword() {
 		return password;
 	}
@@ -146,12 +152,12 @@ public class Member implements Serializable {
 		}
 	}
 	
-	public List<MemberAuthority> getAuthorities() {
-		return authorities;
+	public List<MemberAuthority> getMemberAuthorities() {
+		return memberAuthorities;
 	}
 	
-	public void addAuthority(MemberAuthority memberAuthority) {
-		authorities.add(memberAuthority);
+	public void addMemberAuthority(MemberAuthority memberAuthority) {
+		memberAuthorities.add(memberAuthority);
 		
 		if(memberAuthority.getMember() != this) {
 			memberAuthority.setMember(this);
@@ -205,5 +211,31 @@ public class Member implements Serializable {
 		} else if (!getUsername().equals(other.username))
 			return false;
 		return true;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		memberAuthorities.stream()
+						 .forEach((auth) -> authorities.add(new SimpleGrantedAuthority(auth.getAuthority().getAuthority())));
+        return authorities;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

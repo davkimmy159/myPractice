@@ -9,8 +9,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
+
+import kr.co.ps119.config.handler.CustomAuthenticationFailureHandler;
+import kr.co.ps119.config.handler.CustomAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -29,17 +32,17 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 		String authoritiesByUsernameQuery =
 				"SELECT username, authority " +
 				"FROM authority auth " +
-				"INNER JOIN member_authority mem_auth" +
-				"ON auth.athority_id = mem_auth.authority_id " +
-					"INNER JOIN member mem" +
-					"ON mem_auth.member_id = mem.member_id" +
+				"INNER JOIN member_authority mem_auth " +
+				"ON auth.authority_id = mem_auth.authority_id " +
+					"INNER JOIN member mem " +
+					"ON mem_auth.member_id = mem.member_id " +
 				"WHERE username = ?";
 		
 		auth.jdbcAuthentication()
+			.passwordEncoder(passwordEncoder())
 			.dataSource(dataSource)
-			.usersByUsernameQuery(usersByUsernameQuery )
-			.authoritiesByUsernameQuery(authoritiesByUsernameQuery)
-			.passwordEncoder(new StandardPasswordEncoder("1l4faqd32"));
+			.usersByUsernameQuery(usersByUsernameQuery)
+			.authoritiesByUsernameQuery(authoritiesByUsernameQuery);
 	}
 	
 	@Override
@@ -48,16 +51,53 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 		http.csrf().ignoringAntMatchers("/h2/**/");
 		http.headers().frameOptions().disable();
 		
-		/*
-		http.authorizeRequests().antMatchers("/test.html", "/h2/**", "/index.html", "/login/login", "new_account/registration_input_form").anonymous()
-			.antMatchers("member/member_main").hasRole("role_member")
-			.anyRequest().authenticated();
-		*/
+		http.authorizeRequests()
+			.antMatchers("/login/login").permitAll()	//anonymous()
+			.antMatchers("/new_account/registration_input_form").anonymous()
+			.antMatchers("/index").permitAll()
+			.antMatchers("/member/**").hasAnyAuthority("role_member", "role_admin")
+			.anyRequest().permitAll()
+			.and()
+			.formLogin()
+			.usernameParameter("loginId")
+			.passwordParameter("loginPassword")
+			.loginPage("/login/login")
+			.loginProcessingUrl("/login/validator")
+			.defaultSuccessUrl("/member/member_main")
+			.failureUrl("/login/login?fail=true")
+//			.successHandler(customAuthenticationSuccessHandler())
+//			.failureHandler(customAuthenticationFailureHandler())
+			.and()
+			.logout().permitAll();
+			/*
+			.and()
+			.requiresChannel()
+			.antMatchers("/new_account/**").requiresSecure();
+			*/
 	}
 
-    @Bean
+	@Bean
     public PasswordEncoder passwordEncoder() {
-        return new StandardPasswordEncoder("secret");
-    }   
-
+        return new BCryptPasswordEncoder(11);
+    }
+	
+	@Bean
+	public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+		CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler();
+		customAuthenticationSuccessHandler.setTargetUrlParameter("loginRedirect");
+		customAuthenticationSuccessHandler.setUseReferer(false);
+		customAuthenticationSuccessHandler.setDefaultUrl("member/member_main");
+		return customAuthenticationSuccessHandler;
+	};
+	
+	@Bean
+	public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
+		 CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
+		 customAuthenticationFailureHandler.setLoginId("loginId");
+		 customAuthenticationFailureHandler.setLoginPassword("loginPassword");
+		 customAuthenticationFailureHandler.setLoginRedirect("loginRedirect");
+		 customAuthenticationFailureHandler.setsecurityExceptionMsg("securityExceptionMsg");
+		 customAuthenticationFailureHandler.setDefaultFailureUrl("/login/login?fail=true");
+		 return customAuthenticationFailureHandler;
+	}
 }

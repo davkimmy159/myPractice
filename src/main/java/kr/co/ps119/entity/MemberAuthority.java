@@ -62,8 +62,8 @@ public class MemberAuthority implements Serializable {
 	public void setMember(Member member) {
 		this.member = member;
 		
-		if(!(member.getAuthorities().contains(this))) {
-			member.getAuthorities().add(this);
+		if(!(member.getMemberAuthorities().contains(this))) {
+			member.getMemberAuthorities().add(this);
 		}
 	}
 
@@ -74,8 +74,8 @@ public class MemberAuthority implements Serializable {
 	public void setAuthority(Authority authority) {
 		this.authority = authority;
 		
-		if(!(authority.getAuthorities().contains(this))) {
-			authority.getAuthorities().add(this);
+		if(!(authority.getMemberAuthorities().contains(this))) {
+			authority.getMemberAuthorities().add(this);
 		}
 	}
 	

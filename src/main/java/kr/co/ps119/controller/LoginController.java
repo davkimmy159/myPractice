@@ -21,7 +21,7 @@ import kr.co.ps119.service.MemberService;
 public class LoginController {
 	
 	@Autowired
-	private MemberService memberService;
+	private LoginService loginService;
 	
 	@GetMapping(value = "login")
 	public String login() {
@@ -34,12 +34,11 @@ public class LoginController {
 			@RequestParam String loginPassword,
 			RedirectAttributes redirectAttrs) {
 	
-		boolean exist = false;
-		
 		String targetEmailId = loginEmailId;
 		String targetPassword = loginPassword;
-
-		exist = memberService.getLoginMember(targetEmailId);
+		boolean exist = false;
+		
+		exist = loginService.getLoginMemberInfo(targetEmailId);
 		
 		redirectAttrs.addFlashAttribute("loginEmailId", loginEmailId);
 		

@@ -23,7 +23,7 @@ public class Authority implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "authority_id")
-	private Long id;
+	private Integer id;
 
 	@Column
 	private String authority;
@@ -33,7 +33,7 @@ public class Authority implements Serializable {
 			   cascade = CascadeType.ALL,
 			   orphanRemoval = true)
 	@JsonBackReference
-	private List<MemberAuthority> authorities = new ArrayList<>();
+	private List<MemberAuthority> memberAuthorities = new ArrayList<>();
 	
 	public Authority() {
 	}
@@ -42,7 +42,7 @@ public class Authority implements Serializable {
 		this.authority = authority;
 	}
 	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
@@ -60,12 +60,12 @@ public class Authority implements Serializable {
 		this.authority = authority;
 	}
 
-	public List<MemberAuthority> getAuthorities() {
-		return authorities;
+	public List<MemberAuthority> getMemberAuthorities() {
+		return memberAuthorities;
 	}
 	
-	public void addAuthority(MemberAuthority memberAuthority) {
-		authorities.add(memberAuthority);
+	public void addMemberAuthority(MemberAuthority memberAuthority) {
+		memberAuthorities.add(memberAuthority);
 		
 		if(memberAuthority.getAuthority() != this) {
 			memberAuthority.setAuthority(this);

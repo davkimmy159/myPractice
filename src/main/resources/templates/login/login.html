@@ -16,6 +16,14 @@
 	padding-top : 1px;
 	margin-top : 1px;
 }
+
+#error-title {
+	padding-top: 0px;
+}
+
+h3 {
+	margin-top: 15px;
+}
 </style>
 <title>Login</title>
 </head>
@@ -38,12 +46,22 @@
 
 		<div id="loginContainer" class="container-fluid col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
 			<div class="row">
+			
+				<div class="error_container" th:if="${securityExceptionMsg}">
+					<div id="error-title" class="alert alert-warning alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<h3><span><Strong>Error input</Strong></span></h3>
+						<span>Fail : </span><br />
+						<span th:text="${securityExceptionMsg}"></span>
+					</div>
+				</div>
+			
 				<div class="well">
-					<form action="#" th:action="@{/login/validate}" method="post">
+					<form action="#" th:action="@{/login/validator}" method="post">
 						<div class="form-group">
-							<label class="control-label" for="loginEmailId">ID&nbsp;(e-mail)</label>
+							<label class="control-label" for="loginId">ID&nbsp;(username)</label>
 							<div class="">
-								<input id="loginEmailId" name="loginEmailId" class="form-control" placeholder="Email" />
+								<input id="loginId" name="loginId" class="form-control" placeholder="Username" th:if="#{loginId ?: request.loginId}" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -62,6 +80,7 @@
 								<button class="btn btn-success btn-block" type="submit">Sign in</button>
 							</div>
 						</div>
+						<input type="hidden" name="loginRedirect" th:value="#{loginRedirect ?: request.loginRedirect}" />
 					</form>
 				</div>
 				<!-- /.well -->

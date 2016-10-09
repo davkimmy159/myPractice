@@ -39,6 +39,8 @@ import kr.co.ps119.controller.*;
 
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.dialect.IDialect;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
+
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
@@ -46,7 +48,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 //@PropertySource("classpath:properties/etc.properties")
 public class ConfigMain extends WebMvcConfigurerAdapter {
 	
-	/*f
+	/*
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 	    return new PropertySourcesPlaceholderConfigurer();
@@ -117,6 +119,11 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 	SpringTemplateEngine templateEngine() {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver());
+		
+		Set<IDialect> dialectSet = new HashSet<>();
+		dialectSet.add(new SpringSecurityDialect());
+		
+		templateEngine.setAdditionalDialects(dialectSet);
 		templateEngine.addDialect(new LayoutDialect());
 		return templateEngine;
 	}

@@ -39,13 +39,11 @@ public class TestService {
 	
 	@PostConstruct
 	public void test1() {
-		memberRepo.save(new Member("mail_3@mail.com", "encrypted_user_3", passwordEncoder.encode("password")));
-		memberRepo.save(new Member("mail_4@mail.com", "encrypted_user_4", passwordEncoder.encode("password")));
 	}
 	
 	public void test2() {
 		Member member1 = memberRepo.findOne(1L);
-		List<MemberAuthority> memAuthList = member1.getAuthorities();
+		List<MemberAuthority> memAuthList = member1.getMemberAuthorities();
 		List<Authority> authList = new ArrayList<>();
 		
 		for(MemberAuthority one : memAuthList) {

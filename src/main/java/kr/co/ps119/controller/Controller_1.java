@@ -46,6 +46,10 @@ public class Controller_1 {
 		return "index_body";
 	}
 	
+	@GetMapping(value = "/test2")
+	public String test() {
+		return "board/board_body_stomp";
+	}
 	
 	/*
 	@GetMapping(value = "account_creation")
