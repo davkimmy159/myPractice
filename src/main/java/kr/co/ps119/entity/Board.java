@@ -50,9 +50,7 @@ public class Board implements Serializable {
 	private Date createDate;
 
 	// foreign key 1
-	@ManyToOne(fetch = FetchType.LAZY,
-			   cascade = CascadeType.ALL,
-			   optional = false)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id",
 				nullable = true)
 	@JsonManagedReference

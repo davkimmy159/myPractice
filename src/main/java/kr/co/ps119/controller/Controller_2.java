@@ -4,27 +4,55 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.ps119.entity.Board;
-import kr.co.ps119.entity.Comment;
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.service.MemberService;
+import kr.co.ps119.service.TestService;
 
 @Controller
 @RequestMapping("/test")
 public class Controller_2 {
 
 	@Autowired
-	MemberService service2;
+	private MemberService service2;
+
+	@Autowired
+	private TestService testService;
+	
+	@GetMapping(value = "boardSaveAjaxTest")
+	@ResponseBody
+	public Map<String, Object> ajaxTest1(@RequestParam(value = "editorContent") String editorContent) {
+
+		System.out.println("JSON data : " + editorContent);
+		
+		List<Board> boardList = testService.getList(editorContent);
+
+		Map<String, Object> jsonObject = new HashMap<>();
+
+		jsonObject.put("boardList", boardList);
+
+		return jsonObject;
+	}
+	
+	@GetMapping(value = "boardDeleteAjaxTest")
+	@ResponseBody
+	public Map<String, Object> ajaxTest2() {
+
+		List<Board> boardList = testService.deleteList();
+
+		Map<String, Object> jsonObject = new HashMap<>();
+
+		jsonObject.put("boardList", boardList);
+
+		return jsonObject;
+	}
 	
 	@GetMapping(value = "test1")
 	@ResponseBody

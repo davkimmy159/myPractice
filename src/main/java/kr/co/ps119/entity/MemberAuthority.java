@@ -25,18 +25,14 @@ public class MemberAuthority implements Serializable {
 	private Long id;
 	
 	// foreign key 1
-	@ManyToOne(fetch = FetchType.LAZY,
-			   cascade = CascadeType.ALL,
-			   optional = false)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id",
 				nullable = true)
 	@JsonManagedReference
 	private Member member;
 	
 	// foreign key 2
-	@ManyToOne(fetch = FetchType.LAZY,
-			   cascade = CascadeType.ALL,
-			   optional = false)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "authority_id",
 				nullable = true)
 	@JsonManagedReference

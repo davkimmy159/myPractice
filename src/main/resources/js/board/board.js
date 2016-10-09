@@ -11,7 +11,9 @@ var jqObj = {
 // basicEditor settings (CKEditor)
 var basicEditor = CKEDITOR.replace('basicEditor', {
 	contentsCss  : 'body {white-space: nowrap;}',
-	customConfig : 'config2.js'
+	customConfig : 'config2.js',
+	enterMode: CKEDITOR.ENTER_BR
+//	shiftEnterMode: CKEDITOR.ENTER_P
 	/*
 	,
 	qtRows: 20, // Count of rows
@@ -40,97 +42,127 @@ $('#memoEditor').height($(window).height() * 0.2);
 
 // ===================================================================================================
 
-// socket(SockJS)
 var session = {
 	
 	socket : null,
-	editorContentSocket : null,
+	stompChat : null,
+	stompEditor : null,
 	nickname : null,
 	id : null,
 	
 	connect : function() {
-		var URL = location.protocol + '//' + location.host;
-		this.socket = new SockJS(URL + '/myPractice/socket/chat');
-		this.socket.onopen = function(event) {
-			notify.notify('title', '메신저 연결 성공', 'success');
-		};
-		this.socket.onclose = function(event) {
-			notify.notify('title', '메신저 연결 종료', 'success');
-			
-			// Unexpected disconnection
-			if ($('#joinToggleBtn').html() == ('Exit')) {
-				notify.notify('title', 'Chatting is disconnected accidentaly!', 'error');
-				notify.notify('title', 'Join again please!', 'error');
-				$('#joinToggleBtn').html('Join');
-				$('#joinToggleBtn').removeClass('btn-danger');
-				$('#joinToggleBtn').addClass('btn-success');
-				// jqAjax.deleteRefresh();
+		var urlForChat = path.getFullContextPath() + '/websocket/chat';
+		var urlForEditor = path.getFullContextPath() + '/websocket/editor';
+		this.socket = new SockJS(urlForChat);
+		this.socket2 = new SockJS(urlForEditor);
+		this.stompChat = Stomp.over(this.socket);
+		this.stompEditor = Stomp.over(this.socket2);
+		
+		this.stompChat.connect({},
+			function(frame) {
+				notify.notify("Stomp chat connection", frame);
+				
+				session.stompChat.subscribe('/subscribe/chat', function(message) {
+					var msgBody = JSON.parse(message.body);
+					
+					if(msgBody.message) {
+						utils.chatAppend(msgBody.username + ' : ' + msgBody.message);
+						
+						if(session.nickname != msgBody.username) {
+							notify.notify(msgBody.username, msgBody.message);	
+						}
+					} else {
+						utils.chatAppend(msgBody.username);
+
+						if(session.nickname != msgBody.username) {
+							notify.notify(msgBody.username, '');
+						}
+					}
+				});
+				
+				var tmpMsg = JSON.stringify({
+					username : session.nickname + ' 님이 접속했습니다.'
+				});
+				
+				session.stompChat.send('/dest/chat', {}, tmpMsg);
+			},
+			function(error) {
+				notify.notify("Stomp chat connection failed", error);
+				session.disconnect();
 			}
-		};
+		);
 		
-		this.socket.onmessage = function(event) {
-			utils.chatAppend(event.data);
-			notify.notify('title', event.data);
-			badge.add();
-		};
-		
-		this.socket.onerror = function(event) {
-			alert('메신저 에러 발생 : ' + event.data);
-		};
-		
-		// URL = null;
-		
-		// Editor content socket
-		this.editorContentSocket = new SockJS(URL + '/myPractice/socket/editor');
-		
-		this.editorContentSocket.onopen = function(event) {
-			notify.notify('title', '에디터 연결 성공', 'success');
-		};
-		this.editorContentSocket.onclose = function(event) {
-			notify.notify('title', '에디터 연결 종료', 'success');
-			
-			// Unexpected disconnection
-			if ($('#joinToggleBtn').html() == ('Exit')) {
-				notify.notify('title', 'Editor is disconnected accidentaly!', 'error');
-				notify.notify('title', 'Reconnect please!', 'error');
+		this.stompEditor.connect({},
+			function(frame) {
+				notify.notify("Stomp editor connection successful", frame);
+				
+				session.stompEditor.subscribe('/subscribe/editor', function(content) {
+					var contentBody = JSON.parse(content.body);
+					
+					// desktop
+					if (matchMedia("screen and (min-width: 768px)").matches) {
+						var ranges = basicEditor.getSelection().getRanges();
+						basicEditor.setData(contentBody.content);
+						basicEditor.getSelection().selectRanges( ranges );
+					// mobile
+					} else {
+						mobileEditor.setData(contentBody.content);
+					}
+				});
+			},
+			function(error) {
+				notify.notify("Stomp editor connection failed", error);
 			}
-		};
+		);
 		
-		this.editorContentSocket.onmessage = function(event) {
-			var ranges = basicEditor.getSelection().getRanges();
-			
-			basicEditor.setData(event.data);
-			mobileEditor.setData(event.data);
-			// notify.notify('title', '컨텐츠 갱신');
-			
-			
-			basicEditor.getSelection().selectRanges( ranges );
-		};
-		
-		this.socket.onerror = function(event) {
-			alert('에디터 에러 발생 : ' + event.data);
-		};
-		
-		URL = null;
+		/*
+		// Unexpected disconnection
+		if ($('#joinToggleBtn').html() == ('Exit')) {
+			notify.notify('title', 'Chatting is disconnected accidentaly!', 'error');
+			notify.notify('title', 'Join again please!', 'error');
+			$('#joinToggleBtn').html('Join');
+			$('#joinToggleBtn').removeClass('btn-danger');
+			$('#joinToggleBtn').addClass('btn-success');
+			// jqAjax.deleteRefresh();
+		}
+		*/		
 	},
 	
 	disconnect : function() {
+		
+		var tmpMsg = JSON.stringify({
+			username : session.nickname + ' 님이 나갔습니다.'
+		});
+		
+		session.stompChat.send('/dest/chat', {}, tmpMsg);
+		
+		// Close chat stomp
+		if(this.stompChat) {
+			this.stompChat.disconnect(function() {
+				notify.notify("Disconnection", "Stomp chat disconnected");
+			});
+			this.stompChat = null;
+		};
+		
+		// Close editor stomp
+		if(this.stompEditor) {
+			this.stompEditor.disconnect(function() {
+				notify.notify("Disconnection", "Stomp editor disconnected");
+			});
+			this.stompEditor = null;
+		};
+		
 		// Close socket
 		if(this.socket) {
-			this.socket.send(this.nickname + ' 님이 퇴장했습니다.');
 			this.socket.close();
 			this.socket = null;
-		};
+		}
+		if(this.socket2) {
+			this.socket2.close();
+			this.socket2 = null;
+		}
 		
-		// Close editor content socket
-		if(this.editorContentSocket) {
-			this.editorContentSocket.close();
-			this.editorContentSocket = null;
-		};
-		
-		if(this.nickname) {
-			this.nickname = null;
-		};
+		notify.notify("Disconnection", "fully disconnected");
 	},
 	
 	reconnect : function() {
@@ -140,41 +172,46 @@ var session = {
 	
 	// Send data to socket
 	msgSend : function() {
-		var msg = $('#chatInput').val();
-		utils.chatAppend('[' + this.nickname + '] : ' + msg);
-		this.socket.send(this.nickname + ' : ' + msg);
+		var msg = JSON.stringify({
+			username : session.nickname,
+			message : $('#chatInput').val()
+		});
+		
+		this.stompChat.send('/dest/chat', {}, msg);
+		
 		$('#chatInput').val('');
 		msg = null;
 	},
 	
 	contentSend : function() {
 		// when editorContentSocket is connected
-		if (this.editorContentSocket) {
-			// basic size
+		if (this.stompEditor) {
+			// desktop
 			if (matchMedia("screen and (min-width: 768px)").matches) {
-				this.editorContentSocket.send(basicEditor.getData());
+				var basicEditorContent = JSON.stringify({
+					content : basicEditor.getData()
+				});
+				session.stompEditor.send('/dest/editor', {}, basicEditorContent);
 				basicEditor.focus();
 
-			// mobile size
+			// mobile
 			} else {
-				this.editorContentSocket.send(mobileEditor.getData());
+				var mobileEditorContent = JSON.stringify({
+					content : mobileEditor.getData()
+				});
+				session.stompEditor.send('/dest/editor', {}, mobileEditorContent);
+				
 				mobileEditor.focus();
 			}
 			
-			this.socket.send('컨텐츠 갱신 by ' + this.nickname);
+			var updateMsg = JSON.stringify({
+				username : '컨텐츠 갱신 by ' + session.nickname 
+			});
+			
+			this.stompChat.send('/dest/chat', {}, updateMsg);
 			
 		} else {
 			$('#editorInputBtn').blur();
-		}
-	},
-	
-	sendJoinCheckMsg : function() {
-		// <![CDATA[
-		if(this.socket && this.nickname) {
-			// ]]>
-			this.socket.send(this.nickname + ' 님이 입장했습니다.');
-		} else {
-			notify.notify('title', 'Sending join check msg has failed');
 		}
 	}
 };
@@ -199,7 +236,6 @@ var badge = {
 		utils.removeClassFunc(this.badgeBtnArray, 'btn-warning');
 		utils.addClassFunc(this.badgeBtnArray, 'btn-primary');
 	}
-	
 };
 
 var utils = {
@@ -252,18 +288,18 @@ var utils = {
 	verifyJoin : function() {
 		if (!session.socket) {
 			if (this.checkStr($('#nicknameInput').val())) {
-				// this.chatAppend('Join now!');
+				session.nickname = $('#nicknameInput').val();
+				$('#nicknameInput').val("");
+				
+				session.connect();
+				
 				$('#joinToggleBtn').html('Exit');
 				$('#joinToggleBtn').removeClass('btn-success');
 				$('#joinToggleBtn').addClass('btn-danger');
-				session.nickname = $('#nicknameInput').val();
-				$('#nicknameInput').val('');
-				$('#nicknameInput').attr('placeholder', 'Login is successful!');
-				session.connect();
 				
-				setTimeout(function(){
-					session.sendJoinCheckMsg();	
-				}, 100);
+				$('#nicknameInput').val('');
+				$('#nicknameInput').prop("disabled", true);
+				$('#nicknameInput').attr('placeholder', session.nickname);
 				
 				// Hide navbar collapsible menus in mobile
 				if (!(matchMedia("screen and (min-width: 768px)").matches)) {
@@ -283,13 +319,19 @@ var utils = {
 				$('#nicknameInput').focus();
 			}
 		} else {
-			// this.chatAppend('Exit now!');
+			if(this.nickname) {
+				this.nickname = null;
+			};
+			
+			session.disconnect();
+			
 			$('#joinToggleBtn').html('Join');
 			$('#joinToggleBtn').removeClass('btn-danger');
 			$('#joinToggleBtn').addClass('btn-success');
+			
 			$('#nicknameInput').val('');
+			$('#nicknameInput').prop("disabled", false);
 			$('#nicknameInput').attr('placeholder', 'Type nickname');
-			session.disconnect();
 			
 			// Hide navbar content (in effect only in mobile mode)
 			if (!(matchMedia("screen and (min-width: 768px)").matches)) {
@@ -358,9 +400,7 @@ var eventObj = {
 				
 			// CTRL
 			} else if (event.which == 17) {
-				// notify.notify('title', 'CTRL clicked!');
 				isCtrl = true;
-				// notify.notify('title', 'keyDown! : ' + isCtrl);
 			}
 			
 			// CTRL + SHIFT
@@ -385,7 +425,6 @@ var eventObj = {
 		$('#chatInput').keyup(function(event) {
 			if(event.which == 17) {
 				isCtrl=false;
-				// notify.notify('title', 'keyUp! : ' + isCtrl)
 			}
 		});
 		
@@ -414,7 +453,7 @@ var eventObj = {
 	// Toggle chat notification
 	toggleChatNotifyEvent : function() {
 		$('#chatNotifyToggleBtn').click(function() {
-			notifyFunc.toggleChatNotify();
+//			notify.toggle ? notify.toggle = false : notify.toggle = true;
 			this.blur();
 		});
 	},
@@ -482,6 +521,36 @@ var eventObj = {
 		});
 	},
 	
+	editorSaveEvent : function() {
+		$('#editorSaveBtn').click(function() {
+			// desktop
+			if (matchMedia("screen and (min-width: 768px)").matches) {
+//				jqAjax.saveBoard(basicEditor.document.getBody().getText());
+				jqAjax.saveBoard(basicEditor.getData());
+				
+				
+			// mobile
+			} else {
+				jqAjax.saveBoard(basicEditor.document.getBody().getText());
+			}
+			
+			/*
+			Array.prototype
+				 .map
+				 .call(basicEditor.document.getBody().$.childNodes, function(item) {
+					 return item.innerText;
+				 })
+				 .join("\n");
+			*/
+		});
+	},
+	
+	editorDelEvent : function() {
+		$('#listDelBtn').click(function() {
+			jqAjax.deleteAllBoards();
+		});
+	},
+	
 	editorKeyEvent : function() {
 		
 		basicEditor.on('key', function(event){
@@ -497,12 +566,12 @@ var eventObj = {
 
 			// CTRL + SHIFT
 			if(keyCode == 3342352) {
-				notify.notify('title', 'CTRL + SHIFT clicked! (editor)');
+//				notify.notify('title', 'CTRL + SHIFT clicked! (editor)');
 				$('#chatInput').focus();
 				
 			// ENTER
 			} else if(keyCode == 1114125) {
-				notify.notify('title', 'ENTER clicked! (editor)');
+//				notify.notify('title', 'ENTER clicked! (editor)');
 				$('#editorInputBtn').trigger('click'); 
 			}
 			keyCode = null;
@@ -569,9 +638,10 @@ var func = {
 	// Toggle toolbar function
 	toggleToolbarFunc : function() {
 		setTimeout(function() {
-			this.toggle = !this.toggle;
-			$('#cke_1_top').toggle();
-			$('#cke_2_top').toggle();
+//			this.toggle = !this.toggle;
+			
+//			$('#cke_3_top').toggle();
+//			$('#cke_4_top').toggle();
 			$('#toolbarToggle').toggleClass('glyphicon-ice-lolly-tasted');
 			$('#toolbarToggle').toggleClass('glyphicon-ice-lolly');
 			if (matchMedia("screen and (min-width: 768px)").matches) {
@@ -582,6 +652,7 @@ var func = {
 			}
 		}, 135);
 		
+		/*
 		setTimeout(function() {
 			
 			var str = 'data-original-title';
@@ -596,6 +667,7 @@ var func = {
 				$('#mobileStatus').attr(str, 'Show toolbar!').tooltip('hide');
 			}
 		}, 135);
+		*/
 	}
 };
 

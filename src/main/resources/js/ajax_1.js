@@ -1,5 +1,69 @@
 var jqAjax = {
 
+	saveBoard : function(editorContent) {
+		$.ajax({
+			url : 'test/boardSaveAjaxTest',
+			type : 'GET',
+			data : {'editorContent' : editorContent},
+			contentType : "application/json; charset=utf-8",
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify('저장 성공 : ' + status, '리스트 수 : ' + data.boardList.length);
+				
+				var boardList = data.boardList;
+				var content = "";
+				
+				$.each(boardList, function(index, value) {
+					content += '<div class="panel panel-default">';
+					content += '    <div id="heading' + (index + 1) + '" class="panel-heading">';
+					content += '        <h4 class="panel-title">';
+					content += '            <a class="collapsed" data-toggle="collapse" data-parent="#listAccordion" href="#content' + (index + 1) + '">' + value.title + ' (' + value.member.username + ')</a>';
+					content += '            <button type="button" class="close">';
+					content += '                <span class="glyphicon glyphicon-remove-sign"></span>';
+					content += '            </button>';
+					content += '            <span class="close">&nbsp;</span>';
+					content += '            <button type="button" class="close">';
+					content += '                <span class="glyphicon glyphicon-edit"></span>';
+					content += '            </button>';
+					content += '        </h4>';
+					content += '    </div>';
+					content += '    <div id="content' + (index + 1) + '" class="panel-collapse collapse">';
+					content += '	    <div class="panel-body">' + value.content + '</div>';
+					content += '    </div>';
+					content += '</div>';
+				});
+				
+				$('#listAccordion').children('.panel').remove();
+				$('#listAccordion').append(content);
+			},
+			error : function(request, status, error) {
+				notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
+			}
+		});
+	},
+	
+	deleteAllBoards : function() {
+		$.ajax({
+			url : 'test/boardDeleteAjaxTest',
+			type : 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify('삭제 성공', status);
+				notify.notify('리스트 수', data.boardList.length);
+				
+				$('#listAccordion').children('.panel').remove();
+			},
+			error : function(request, status, error) {
+				notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
+			}
+		});
+	},
+		
 	insertRefresh : function() {
 		$.ajax({
 			url : 'test/ajaxTest1',

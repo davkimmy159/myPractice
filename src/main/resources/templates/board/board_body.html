@@ -56,6 +56,12 @@
 #joinTable td span {
 	cursor: pointer;
 }
+
+#listAccordion > .panel > .panel-collapse {
+	overflow: scroll;
+	text-overflow: ellipsis;
+	max-height: 650px;
+}
 </style>
 <title>Board</title>
 </head>
@@ -95,7 +101,9 @@
 							</button>
 						</div>
 					</div>
+					<!-- /.btnGroup2 -->
 				</div>
+				<!-- /#editorBtnGroupDiv -->
 			</div>
 			<div id="chatContainer" class="col-sm-3 container-fluid">
 				<div id="formGroup2" class="form-group">
@@ -155,12 +163,16 @@
 														<div id="basicCalendar"></div>
 													</div>
 												</div>
+												<!-- /.calendar1 -->
+												
 												<div id="calendar2" class="tab-pane fade" role="tabpanel">
 													<div id="yearlyCalendarDiv" class="container-fluid">
 														<div id="yearlyCalendar"></div>
 													</div>
 												</div>
+												<!-- /.calendar2 -->
 											</div>
+											<!-- /.tab-content -->
 										</div>
 										<!-- /.panel-heading -->
 										<!-- panel-body -->
@@ -178,8 +190,40 @@
 								<div class="container-fluid">
 									<div class="panel panel-primary">
 										<div class="panel-heading">Panel content</div>
-										<div class="panel-body"></div>
-										<div class="panel-footer"></div>
+										<div class="panel-body">
+											<div id="listAccordion" class="panel-group">
+												<div class="panel panel-default">
+													<!-- panel-heading -->
+													<div id="heading1" class="panel-heading">
+														<h4 class="panel-title">
+															<a class="collapsed" data-toggle="collapse" data-parent="#listAccordion" href="#content1">title 1</a>
+															<button type="button" class="close">
+																<span class="glyphicon glyphicon-remove-sign"></span>
+															</button>
+															<span class="close">&nbsp;</span>
+															<button type="button" class="close">
+																<span class="glyphicon glyphicon-edit"></span>
+															</button>
+														</h4>
+													</div>
+													<!-- /.panel-heading -->
+													<!-- panel-collapse -->
+													<div id="content1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="memoListHeading1">
+														<div class="panel-body">Accordion test 1</div>
+													</div>
+													<!-- /.panel-collapse -->
+												</div>
+												<!-- /.panel -->
+											</div>
+											<!-- /.panel-body -->
+										</div>
+										<!-- /#ListAccordian -->
+										<div class="panel-footer">
+											<div class="panel-footer">
+												<button id="listDelBtn" class="btn btn-primary">Delete all</button>
+											</div>
+										</div>
+										<!-- /.panel-footer -->
 									</div>
 									<!-- /.panel -->
 								</div>

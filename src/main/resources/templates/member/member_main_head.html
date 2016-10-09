@@ -17,6 +17,10 @@ hr {
 	margin : 2px;
 	border-color : #151515;
 }
+
+li, #createRoom_desktop:hover, #createRoom_tablet:hover {
+	cursor: pointer;
+}
 </style>
 <title>default_index</title>
 </head>
@@ -52,7 +56,7 @@ hr {
 							<li class="dropdown visible-sm-block">
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown 1<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li><a id="">test1</a></li>
+									<li><a id="craeteRoom_tablet" data-toggle="modal" data-target="#createRoomModal">create room</a></li>
 									<li class="divider"></li>
 									<li><a id="">test2</a></li>
 									<li class="divider"></li>
@@ -61,7 +65,7 @@ hr {
 									<li><a id="">test4</a></li>
 								</ul>
 							</li>
-							<li><a id="" name="" class="hidden-sm" href="">test1</a></li>
+							<li><a id="craeteRoom_desktop" class="hidden-sm" data-toggle="modal" data-target="#createRoomModal">create room</a></li>
 							<hr class="visible-xs-block" />
 							<li><a id="" name="" class="hidden-sm" href="">test2</a></li>
 							<hr class="visible-xs-block" />

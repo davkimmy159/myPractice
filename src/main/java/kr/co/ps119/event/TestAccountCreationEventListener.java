@@ -10,10 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.ps119.entity.Authority;
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.entity.MemberAuthority;
 import kr.co.ps119.repository.AuthorityRepository;
+import kr.co.ps119.repository.BoardRepository;
+import kr.co.ps119.repository.CommentRepository;
 import kr.co.ps119.repository.MemberAuthorityRepository;
 import kr.co.ps119.repository.MemberRepository;
 
@@ -27,7 +28,7 @@ public class TestAccountCreationEventListener implements ApplicationListener<App
 	
 	@Autowired
 	private MemberRepository memberRepo;
-	
+
 	@Autowired
 	private MemberAuthorityRepository memAuthRepo;
 	
@@ -51,7 +52,6 @@ public class TestAccountCreationEventListener implements ApplicationListener<App
 		memAuth1B.setMember(entity1);
 		
 		memberRepo.save(entity1);
-
 		
 		Member entity2 = new Member("mail2@mail.com", "testUser2", passwordEncoder.encode("password"));
 		
@@ -78,5 +78,18 @@ public class TestAccountCreationEventListener implements ApplicationListener<App
 		memAuth4.setMember(entity4);
 		
 		memberRepo.save(entity4);
+		
+		
+		/*
+		INSERT INTO board(title, content, create_date, member_id) VALUES('title_1', 'content', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 1);
+		INSERT INTO board(title, content, create_date, member_id) VALUES('title_2', 'content', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 1);
+		INSERT INTO board(title, content, create_date, member_id) VALUES('title_3', 'content', {ts '2000-12-12 11:22:33'}, 2);
+		INSERT INTO board(title, content, create_date, member_id) VALUES('title_4', 'content', {ts '2000-12-12 11:22:33'}, 2);
+		
+		INSERT INTO comment(content, create_date, board_id) VALUES('content_1', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 1);
+		INSERT INTO comment(content, create_date, board_id) VALUES('content_2', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 1);
+		INSERT INTO comment(content, create_date, board_id) VALUES('content_3', {ts '2000-12-12 11:22:33'}, 2);
+		INSERT INTO comment(content, create_date, board_id) VALUES('content_4', {ts '2000-12-12 11:22:33'}, 2);
+		 */
 	}
 }
