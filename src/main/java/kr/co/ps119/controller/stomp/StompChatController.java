@@ -22,9 +22,11 @@ public class StompChatController {
 	@MessageMapping("/chat")
 	@SendTo("/subscribe/chat")
 	public StompChatMessage handler1(StompChatMessage msgFromChatClient) {
+		/*
 		logger.info("***********************   chat - subscribe/chat   ***********************");
 		logger.info("Received username : " + msgFromChatClient.getUsername());
 		logger.info("Received message : " + msgFromChatClient.getMessage());
+		*/
 		
 		return msgFromChatClient ;
 	}
@@ -32,10 +34,19 @@ public class StompChatController {
 	@MessageMapping("/editor")
 	@SendTo("/subscribe/editor")
 	public StompEditorContent handler2(StompEditorContent contentFromEditorClient) {
+		/*
 		logger.info("***********************   editor - subscribe/editor   ***********************");
 		logger.info("Received message : " + contentFromEditorClient.getContent());
+		*/
 		
 		return contentFromEditorClient;
+	}
+	
+	@MessageMapping("/chat/update_alarm")
+	@SendTo("/subscribe/chat/update_alarm")
+	public StompChatMessage handler3(StompChatMessage msgFromEditorClient) {
+		
+		return msgFromEditorClient;
 	}
     
     /*

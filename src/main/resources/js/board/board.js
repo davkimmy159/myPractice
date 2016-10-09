@@ -80,6 +80,12 @@ var session = {
 					}
 				});
 				
+				session.stompChat.subscribe('/subscribe/chat/update_alarm', function(alarmMsg) {
+					var msgBody = JSON.parse(alarmMsg.body);
+					utils.chatAppend("*** Content update by " + msgBody.username);
+					notify.notify(msgBody.message, ' by \'' + msgBody.username + '\'');
+				});
+				
 				var tmpMsg = JSON.stringify({
 					username : session.nickname + ' 님이 접속했습니다.'
 				});
@@ -417,7 +423,6 @@ var eventObj = {
 				} else {
 					mobileEditor.focus();
 				}
-				
 			}
 		});
 		
@@ -528,10 +533,17 @@ var eventObj = {
 //				jqAjax.saveBoard(basicEditor.document.getBody().getText());
 				jqAjax.saveBoard(basicEditor.getData());
 				
+				var alarmMsg = JSON.stringify({
+					username : session.nickname,
+					message : "Content update"
+				});
+				
+				session.stompChat.send("/dest/chat/update_alarm", {}, alarmMsg);
 				
 			// mobile
 			} else {
-				jqAjax.saveBoard(basicEditor.document.getBody().getText());
+//				jqAjax.saveBoard(mobileEditor.document.getBody().getText());
+				jqAjax.saveBoard(mobileEditor.getData());
 			}
 			
 			/*
