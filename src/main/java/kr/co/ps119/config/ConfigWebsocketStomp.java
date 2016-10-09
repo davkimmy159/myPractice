@@ -17,6 +17,7 @@ public class ConfigWebsocketStomp extends AbstractWebSocketMessageBrokerConfigur
 		registry.addEndpoint("/websocket/editor").withSockJS();
 	}
 	
+	
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.enableSimpleBroker("/subscribe");
