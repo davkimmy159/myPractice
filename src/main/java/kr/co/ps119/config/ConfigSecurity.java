@@ -62,13 +62,16 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 			.usernameParameter("loginId")
 			.passwordParameter("loginPassword")
 			.loginPage("/login/login")
-			.loginProcessingUrl("/login/validator")
+			.loginProcessingUrl("/login/validate_process")
 			.defaultSuccessUrl("/member/member_main")
 			.failureUrl("/login/login?fail=true")
 //			.successHandler(customAuthenticationSuccessHandler())
-//			.failureHandler(customAuthenticationFailureHandler())
+			.failureHandler(customAuthenticationFailureHandler())
 			.and()
-			.logout().permitAll();
+			.logout()
+			.logoutUrl("/login/logout_process")
+			.logoutSuccessUrl("/index")
+			.invalidateHttpSession(true);
 			/*
 			.and()
 			.requiresChannel()

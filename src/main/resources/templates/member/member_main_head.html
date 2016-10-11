@@ -56,22 +56,36 @@ li, #createRoom_desktop:hover, #createRoom_tablet:hover {
 							<li class="dropdown visible-sm-block">
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown 1<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li><a id="craeteRoom_tablet" data-toggle="modal" data-target="#createRoomModal">create room</a></li>
+									<li>
+										<a id="craeteRoom_tablet" data-toggle="modal" data-target="#createRoomModal">create room</a>
+									</li>
 									<li class="divider"></li>
-									<li><a id="">test2</a></li>
+									<li>
+										<a id="">sm test 1</a></li>
 									<li class="divider"></li>
-									<li><a id="">test3</a></li>
+									<li>
+										<a id="">sm test 2</a>
+									</li>
 									<li class="divider"></li>
-									<li><a id="">test4</a></li>
+									<li>
+										<a id="">sm test 3</a>
+									</li>
 								</ul>
+								<!-- /.dropdown-menu -->
 							</li>
 							<li><a id="craeteRoom_desktop" class="hidden-sm" data-toggle="modal" data-target="#createRoomModal">create room</a></li>
 							<hr class="visible-xs-block" />
-							<li><a id="" name="" class="hidden-sm" href="">test2</a></li>
+							<li>
+								<a id="" name="" class="hidden-sm" href="">test 2</a>
+							</li>
 							<hr class="visible-xs-block" />
-							<li><a id="" name="" class="hidden-sm" href="">test3</a></li>
+							<li>
+								<a id="" name="" class="hidden-sm" href="">test 3</a>
+							</li>
 							<hr class="visible-xs-block" />
-							<li><a id="" name="" class="hidden-sm" href="">test4</a></li>
+							<li>
+								<a id="" name="" class="hidden-sm" href="">test 4</a>
+							</li>
 							
 							<!-- mobile view -->
 							<hr class="visible-xs-block" />
@@ -83,36 +97,65 @@ li, #createRoom_desktop:hover, #createRoom_tablet:hover {
 											+&nbsp;<span class="caret"></span>
 										</a>
 										<ul class="dropdown-menu col-xs-5">
-											<li><a id="">test1</a></li>
-											<li><a id="">test2</a></li>
-											<li><a id="">test3</a></li>
+											<li>
+												<a id="">xs (mobile) left 1</a>
+											</li>
+											<li>
+												<a id="">xs (mobile) left 2</a>
+											</li>
+											<li>
+												<a id="">xs (mobile) left 3</a>
+											</li>
 										</ul>
+										<!-- /.dropdown-menu -->
 									</li>
+									<!-- /.dropdown -->
 							
 								 	<li class="dropdown col-xs-5">
 										<a class="dropdown-toggle" style="text-align: center;" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
 											-&nbsp;<span class="caret"></span>
 										</a>
 										<ul class="dropdown-menu">
-											<li class="dropdown-header">Signed in as <br /><strong id="loginId" th:text="${#authentication.getPrincipal().getUsername()}">username</strong></li>
+											<li class="dropdown-header">
+												Signed in as <br /><strong id="loginId" th:text="${#authentication.getPrincipal().getUsername()}">username</strong>
+											</li>
 											<li class="divider"></li>
-											<li><a id="">test1</a></li>
-											<li><a id="">test2</a></li>
-											<li><a id="">test3</a></li>
+											<li>
+												<a id="">xs (mobile) right 1</a>
+											</li>
+											<li>
+												<a id="">xs (mobile) right 2</a>
+											</li>
+											<li>
+												<a class="logout_btn">Sign out</a>
+											</li>
 										</ul>
+										<!-- /.dropdown-menu -->
 									</li>
+									<!-- /.dropdown -->
 								</ul>
+								<!-- /.nav.nav-pills -->
 							</li>
+							<!-- /.visible-xs-block -->
+							<!-- /mobile view -->
 						</ul>
+						<!-- /.nav.navbar-nav -->
+						<!-- /navbar left -->
 						
 						<!-- desktop view -->
 						<ul class="nav navbar-nav navbar-right">
 							<li class="dropdown">
 								<a href="" class="dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-expanded="false"><span class="create_room_btn">+&nbsp;</span><span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li><a id="">test1</a></li>
-									<li><a id="">test2</a></li>
-									<li><a id="">test3</a></li>
+									<li>
+										<a id="">sm ~ lg (desktop) left 1</a>
+									</li>
+									<li>
+										<a id="">sm ~ lg (desktop) left 2</a>
+									</li>
+									<li>
+										<a id="">sm ~ lg (desktop) left 3</a>
+									</li>
 								</ul>
 								<!-- /ul.dropdown-menu -->
 							</li>
@@ -121,25 +164,35 @@ li, #createRoom_desktop:hover, #createRoom_tablet:hover {
 							<li class="dropdown">
 								<a href="" class="dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-expanded="false">-&nbsp;<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li class="dropdown-header">Signed in as<br /><strong th:text="${#authentication.getPrincipal().getUsername()}">username</strong></li>
+									<li class="dropdown-header">
+										Signed in as<br /><strong th:text="${#authentication.getPrincipal().getUsername()}">username</strong>
+									</li>
 									<li class="divider"></li>
-									<li><a id="">test1</a></li>
-									<li><a id="">test2</a></li>
-									<li><a id="">test3</a></li>
+									<li>
+										<a id="">sm ~ lg (desktop) right 1</a>
+									</li>
+									<li>
+										<a id="">sm ~ lg (desktop) right 2</a>
+									</li>
+									<li>
+										<a class="logout_btn">Sign out</a>
+									</li>
 								</ul>
-								<!-- /ul.dropdown-menu -->
+								<!-- /.dropdown-menu -->
 							</li>
-							<!-- /li.dropdown -->
+							<!-- /.dropdown -->
 						</ul>
-						<!-- /ul.navbar right -->
+						<!-- /.navbar right -->
 					</div>
 					<!-- /.navbar-collapse -->
 				</div>
 				<!-- /.container-fluid -->
 			</nav>
-			<!-- /nav.navbar -->
+			<!-- /.navbar -->
 		</div>
 		<!-- /.row -->
+		
+		<form class="logout_form" action="" th:action="@{/login/logout_process}" method="post"></form>
 
 		<!-- replaced here by under layer -->
 		<div layout:fragment="main"></div>
@@ -156,9 +209,11 @@ li, #createRoom_desktop:hover, #createRoom_tablet:hover {
 			// notify.notify("로그인 ID", "id : " + $('strong').val());
 			
 			$(function() {
+				$("a.logout_btn").click(function() {
+					$("form.logout_form").submit();
+				});
 			});
 		</script>
 	</div>
-	
 </body>
 </html>

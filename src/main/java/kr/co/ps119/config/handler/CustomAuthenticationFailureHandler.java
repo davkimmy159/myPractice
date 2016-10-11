@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
@@ -40,13 +43,32 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 		String tmpLoginPassword= request.getParameter(this.loginPassword);
 		String tmpLoginRedirect = request.getParameter(this.loginRedirect);
 		
-		request.setAttribute(loginId, tmpLoginId);
-		request.setAttribute(loginPassword, tmpLoginPassword);
-		request.setAttribute(loginRedirect, tmpLoginRedirect);
+		request.setAttribute("loginId", tmpLoginId);
+		request.setAttribute("loginPassword", tmpLoginPassword);
+		request.setAttribute("loginRedirect", tmpLoginRedirect);
 		
-		request.setAttribute(securityExceptionMsg, exception.getMessage());
+		request.setAttribute(this.securityExceptionMsg, exception.getMessage());
 		
 		request.getRequestDispatcher(defaultFailureUrl).forward(request, response);
+		
+		// should hold the attributes from your last request
+		// FlashMap lastAttributes = RequestContextUtils.getInputFlashMap(request);
+		
+		System.out.println(tmpLoginId);
+		System.out.println(tmpLoginPassword);
+		System.out.println(tmpLoginRedirect);
+		
+		/*
+		// will hold the attributes for your next request
+		FlashMap forNextRequest = RequestContextUtils.getOutputFlashMap(request);
+		
+		forNextRequest.put("loginId", "asd");
+		forNextRequest.put("loginPassword", "asdasd");
+		forNextRequest.put("loginRedirect", "asdasdasd");
+		forNextRequest.put("securityExceptionMsg", this.securityExceptionMsg);
+		
+		response.sendRedirect(defaultFailureUrl);
+		*/
 	}
 
 	public String getLoginId() {
