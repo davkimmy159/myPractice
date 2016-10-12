@@ -12,6 +12,9 @@ var jqObj = {
 var basicEditor = CKEDITOR.replace('basicEditor', {
 	contentsCss  : 'body {white-space: nowrap;}',
 	customConfig : 'config2.js',
+	toolbarCanCollapse: true,
+	resize_enabled: false,
+	removePlugins: 'elementspath',
 	enterMode: CKEDITOR.ENTER_BR
 //	shiftEnterMode: CKEDITOR.ENTER_P
 	/*
@@ -30,11 +33,9 @@ var basicEditor = CKEDITOR.replace('basicEditor', {
     */
 });
 
-basicEditor.config.resize_enabled = false;
-basicEditor.config.removePlugins = 'elementspath';
-
 // mobileEditor settings (inline CKEditor)
-var mobileEditor = CKEDITOR.inline('mobileEditor');
+var mobileEditor = CKEDITOR.inline('mobileEditor', {
+});
 
 // memoEditor settings (inline CKEditor)
 var memoEditor = CKEDITOR.inline('memoEditor');
@@ -86,7 +87,7 @@ var session = {
 					var contentDataBody = JSON.parse(contentData.body);
 					
 					// desktop
-					if (matchMedia("screen and (min-width: 768px)").matches) {
+					if (utils.isDesktopSize()) {
 //						var ranges = basicEditor.getSelection().getRanges();
 						basicEditor.setData(contentDataBody.messageBody);
 //						basicEditor.getSelection().selectRanges(ranges);
@@ -192,7 +193,7 @@ var session = {
 		editorContent.username = session.nickname;
 
 		// desktop
-		if (matchMedia("screen and (min-width: 768px)").matches) {
+		if (utils.isDesktopSize()) {
 			editorContent.messageBody = basicEditor.getData();
 			basicEditor.focus();
 
@@ -236,9 +237,13 @@ var utils = {
 		$('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
 	},
 		
+	isDesktopSize : function() {
+		return matchMedia("screen and (min-width: 768px)").matches;
+	},
+	
 	// focus move
 	focusToEditor : function() {
-		if (matchMedia("screen and (min-width: 768px)").matches) {
+		if (utils.isDesktopSize()) {
 			basicEditor.focus();
 		} else {
 			mobileEditor.focus();
@@ -248,7 +253,7 @@ var utils = {
 	// detects sizes
 	editorSizeDetectFunc : function(basicEditorFunction, mobileEditorFunction) {
 		if(((typeof basicEditorFunction) == 'function') && ((typeof mobileEditorFunction) == 'function')) {
-			if (matchMedia("screen and (min-width: 768px)").matches) {
+			if (utils.isDesktopSize()) {
 				basicEditorFunction();
 			} else {
 				mobileEditorFunction();
@@ -298,18 +303,6 @@ var utils = {
 	
 	// veryfy chat input
 	verifyChatInput : function() {
-		/*
-		if (!session.socket) {
-			notify.notify('Join required', 'You need to join first!');
-			$('#nicknameInput').focus();
-		} else if (!(this.checkStr($('#chatInput').val()))) {
-			$('#chatInput').focus();
-		} else {
-			session.chatMsgSend();
-			$('#chatInput').focus();
-		}
-		*/
-		
 		if (session.socket && session.stompClient) {
 			if (this.checkStr($('#chatInput').val())) {
 				session.chatMsgSend();
@@ -341,7 +334,7 @@ var utils = {
 				$('#nicknameInput').attr('placeholder', session.nickname);
 				
 				// Hide navbar collapsible menus in mobile
-				if (!(matchMedia("screen and (min-width: 768px)").matches)) {
+				if (!(utils.isDesktopSize())) {
 					if($('.navbar-toggle').css('display') !='none'){
 						$(".navbar-toggle").trigger( "click" );
 					}
@@ -373,7 +366,7 @@ var utils = {
 			$('#nicknameInput').attr('placeholder', 'Type nickname');
 			
 			// Hide navbar content (in effect only in mobile mode)
-			if (!(matchMedia("screen and (min-width: 768px)").matches)) {
+			if (!(utils.isDesktopSize())) {
 				if($('.navbar-toggle').css('display') !='none'){
 					$(".navbar-toggle").trigger( "click" );
 				}
@@ -413,11 +406,17 @@ toggleJoinEvent();
 */
 var eventObj = {
 	
+	mobileEditorToolbarHide : function() {
+		$('#editorSaveBtn').click(function() {
+			
+		});
+	},
+		
 	// For focus on nickname input on mobile view
 	collapseBtnFocusMove : function() {
 		$('#collapseBtn').click(function() {
 			// <![CDATA[
-			if (!(matchMedia("screen and (min-width: 768px)").matches) && !(session.socket)) {
+			if (!(utils.isDesktopSize()) && !(session.socket)) {
 			// ]]>
 				setTimeout(function() {
 					$('#nicknameInput').focus();
@@ -450,7 +449,8 @@ var eventObj = {
 				notify.notify('title', 'CTRL + SHIFT clicked! (chatInput)');
 				
 				// Focus to basic editor
-				if(matchMedia("screen and (min-width: 768px)").matches) {
+				if(utils.isDesktopSize()) {
+					
 					basicEditor.focus();
 					
 				// Focus to mobile editor
@@ -509,22 +509,6 @@ var eventObj = {
 		});
 	},
 	
-	
-	
-	// Toggle toolbar
-	toggleToolbarEvent : function() {
-		$('#toolbarToggleBtn').click(function() {
-			func.toggleToolbarFunc();
-		});
-		$('#basicStatus').click(function() {
-			func.toggleToolbarFunc();
-			badge.reset();
-		});
-		$('#mobileStatus').click(function() {
-			func.toggleToolbarFunc();
-		});
-	},
-	
 	windowOutEvent : function() {
 		// Logout, close event with 'esc' key on browser window
 		$(window).keydown(function(event) {
@@ -572,7 +556,7 @@ var eventObj = {
 			if (session.socket && session.stompClient) {
 				
 				// desktop
-				if (matchMedia("screen and (min-width: 768px)").matches) {
+				if (utils.isDesktopSize()) {
 //					jqAjax.saveBoard(basicEditor.document.getBody().getText());
 					jqAjax.saveBoard(basicEditor.getData());
 					
@@ -701,43 +685,6 @@ var eventObj = {
 				BCModalFunc.BCEventEndDate.data("DateTimePicker").date(null);
 			});	
 		}
-	}
-};
-
-var func = {
-	// Toggle toolbar function
-	toggleToolbarFunc : function() {
-		setTimeout(function() {
-//			this.toggle = !this.toggle;
-			
-//			$('#cke_3_top').toggle();
-//			$('#cke_4_top').toggle();
-			$('#toolbarToggle').toggleClass('glyphicon-ice-lolly-tasted');
-			$('#toolbarToggle').toggleClass('glyphicon-ice-lolly');
-			if (matchMedia("screen and (min-width: 768px)").matches) {
-				resizeFuncs.setBasicHeight();
-				basicEditor.focus();
-			} else {
-				$('#mobileEditor').focus();
-			}
-		}, 135);
-		
-		/*
-		setTimeout(function() {
-			
-			var str = 'data-original-title';
-			
-			if($('#toolbarToggle').hasClass('glyphicon-ice-lolly-tasted')) {
-				$('#toolbarToggleBtn').attr(str, 'Hide toolbar!').tooltip('hide');
-				$('#basicStatus').attr(str, 'Hide toolbar!').tooltip('hide');
-				$('#mobileStatus').attr(str, 'Hide toolbar!').tooltip('hide');
-			} else {
-				$('#toolbarToggleBtn').attr(str, 'Show toolbar!').tooltip('hide');
-				$('#basicStatus').attr(str, 'Show toolbar!').tooltip('hide');
-				$('#mobileStatus').attr(str, 'Show toolbar!').tooltip('hide');
-			}
-		}, 135);
-		*/
 	}
 };
 
@@ -1001,7 +948,7 @@ $(document).ready(function() {
 	$('#nicknameInput').focus();
 	
 	// Initial setting
-	if (matchMedia("screen and (min-width: 768px)").matches) {
+	if (utils.isDesktopSize()) {
 		// utils.chatAppend("큰 화면 전용");
 		resizeFuncs.setInitialBasicHeight();
 	} else {
@@ -1016,7 +963,7 @@ $(document).ready(function() {
 	$(window).resize(function() {
 		
 		// To basic from mobile
-		if (matchMedia("screen and (min-width: 768px)").matches) {
+		if (utils.isDesktopSize()) {
 			
 			// resize editor, chatArea
 			resizeFuncs.setBasicHeight();
