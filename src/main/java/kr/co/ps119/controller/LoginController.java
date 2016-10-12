@@ -1,17 +1,19 @@
 package kr.co.ps119.controller;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import kr.co.ps119.entity.Member;
-import kr.co.ps119.service.MemberService;
 
 @Controller
 @RequestMapping(
@@ -20,28 +22,23 @@ import kr.co.ps119.service.MemberService;
 )
 public class LoginController {
 	
-	@Autowired
-	private LoginService loginService;
-	
 	@GetMapping(value = "login")
 	public String login() {
 		return "login/login";
 	}
-	
-	@PostMapping(value = "validate")
-	public String loginValidate(
-			@RequestParam String loginEmailId,
-			@RequestParam String loginPassword,
-			RedirectAttributes redirectAttrs) {
-	
-		String targetEmailId = loginEmailId;
-		String targetPassword = loginPassword;
-		boolean exist = false;
-		
-		exist = loginService.getLoginMemberInfo(targetEmailId);
-		
-		redirectAttrs.addFlashAttribute("loginEmailId", loginEmailId);
-		
-		return "redirect:/member/member_main";
-	}	
+
+	// Controller method, not under authentication
+	@GetMapping(value = "login_after_registraiton")
+	public String requestHandler(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	 
+		// Save Request for security redirect later
+		new HttpSessionRequestCache().saveRequest(request, response);
+		 
+		// Commence authentication using login page
+		new LoginUrlAuthenticationEntryPoint("/login/login").commence(request, response, new InsufficientAuthenticationException("Full authentication required"));
+//		return null; // Stop request handling here
+	 
+		// ... do normal processing
+		return "/member/member_main";  
+	}
 }

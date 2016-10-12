@@ -96,11 +96,12 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 	@Bean
 	public CustomAuthenticationFailureHandler customAuthenticationFailureHandler() {
 		 CustomAuthenticationFailureHandler customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
-		 customAuthenticationFailureHandler.setLoginId("loginId");
-		 customAuthenticationFailureHandler.setLoginPassword("loginPassword");
-		 customAuthenticationFailureHandler.setLoginRedirect("loginRedirect");
-		 customAuthenticationFailureHandler.setsecurityExceptionMsg("securityExceptionMsg");
-		 customAuthenticationFailureHandler.setDefaultFailureUrl("/login/login?fail=true");
+		 customAuthenticationFailureHandler.setLoginIdParamName("loginId");
+		 customAuthenticationFailureHandler.setLoginPasswordParamName("loginPassword");
+		 customAuthenticationFailureHandler.setLoginRedirectParamName("loginRedirect");
+		 customAuthenticationFailureHandler.setSecurityExceptionMsgParamName("securityExceptionMsg");
+		 customAuthenticationFailureHandler.setDefaultFailureUrlParamName("defaultFailureUrl");
+		 customAuthenticationFailureHandler.setDefaultFailureUrl("/login/login");
 		 return customAuthenticationFailureHandler;
 	}
 }

@@ -1,8 +1,16 @@
 package kr.co.ps119.controller;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -61,18 +69,22 @@ public class NewAccountController {
 				model.addAttribute("duplicationInput", memberForm.getEmail());
 				model.addAttribute("duplicationError", duplicationCheckMsg);
 				break;
+			
 			case DUPLICATE_USERNAME :
 				duplicationCheckMsg = NewAccount.DUPLICATE_USERNAME.getMessage();
 				model.addAttribute("duplicationInput", memberForm.getUsername());
 				model.addAttribute("duplicationError", duplicationCheckMsg);
 				break;
+			
 			// Checks unexpected error while saving entity into DB
 			case UNEXPECTED_SERVER_ERROR :
 				model.addAttribute("serverSideError", NewAccount.UNEXPECTED_SERVER_ERROR.getMessage());	
 				break;
+			
 			case SUCCESSFUL :
 				returnPage = "redirect:/member/member_main";
 				break;
+			
 			// Checks special unexpected error 
 			default :
 				model.addAttribute("serverSideError", NewAccount.UNEXPECTED_SERVER_ERROR.getMessage());	

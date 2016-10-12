@@ -45,83 +45,76 @@ $('#memoEditor').height($(window).height() * 0.2);
 var session = {
 	
 	socket : null,
-	stompChat : null,
-	stompEditor : null,
+	stompClient : null,
 	nickname : null,
 	id : null,
 	
 	connect : function() {
-		var urlForChat = path.getFullContextPath() + '/websocket/chat';
-		var urlForEditor = path.getFullContextPath() + '/websocket/editor';
-		this.socket = new SockJS(urlForChat);
-		this.socket2 = new SockJS(urlForEditor);
-		this.stompChat = Stomp.over(this.socket);
-		this.stompEditor = Stomp.over(this.socket2);
+		var websocketUrl = path.getFullContextPath() + '/websocket/board';
+		this.socket = new SockJS(websocketUrl);
+		this.stompClient = Stomp.over(this.socket);
 		
-		this.stompChat.connect({},
+		this.stompClient.connect({},
 			function(frame) {
-				notify.notify("Stomp chat connection", frame);
+				notify.notify("Stomp connection for board", frame);
 				
 				// chat subscribe 1
-				session.stompChat.subscribe('/subscribe/chat', function(message) {
-					var msgBody = JSON.parse(message.body);
-					
-					if(msgBody.message) {
-						utils.chatAppend(msgBody.username + ' : ' + msgBody.message);
-						
-						if(session.nickname != msgBody.username) {
-							notify.notify(msgBody.username, msgBody.message);	
-						}
-					} else {
-						utils.chatAppend(msgBody.username);
+				session.stompClient.subscribe('/subscribe/chat', function(messageData) {
+					var chatMessage = JSON.parse(messageData.body);
 
-						if(session.nickname != msgBody.username) {
-							notify.notify(msgBody.username, '');
-						}
+					utils.chatAppend(chatMessage.chatAreaMessage);
+					notify.notify(chatMessage.username, chatMessage.messageBody);
+					
+					if(session.nickname != chatMessage.username) {
+//						notify.notify(chatMsgBody.username, chatMsgBody.messageBody);
 					}
 				});
 				
 				// chat subscribe 2
-				session.stompChat.subscribe('/subscribe/chat/update_alarm', function(alarmMsg) {
-					var msgBody = JSON.parse(alarmMsg.body);
-					utils.chatAppend("*** DB content changed by " + msgBody.username);
-					notify.notify(msgBody.message, ' by \'' + msgBody.username + '\'');
+				session.stompClient.subscribe('/subscribe/chat/db_update_alarm', function(alarmMessage) {
+					var alarmMsgBody = JSON.parse(alarmMessage.body);
 					
+					utils.chatAppend(alarmMsgBody.chatAreaMessage);
+					notify.notify(alarmMsgBody.messageBody, ' by \'' + alarmMsgBody.username + '\'');
+					
+					// Rewrites html page of DB list
 					jqAjax.updateList();
 				});
 				
-				var tmpMsg = JSON.stringify({
-					username : session.nickname + ' 님이 접속했습니다.'
-				});
-				
-				session.stompChat.send('/dest/chat', {}, tmpMsg);
-			},
-			function(error) {
-				notify.notify("Stomp chat connection failed", error);
-				session.disconnect();
-			}
-		);
-		
-		this.stompEditor.connect({},
-			function(frame) {
-				notify.notify("Stomp editor connection successful", frame);
-				
-				session.stompEditor.subscribe('/subscribe/editor', function(content) {
-					var contentBody = JSON.parse(content.body);
+				// editor subscribe 1
+				session.stompClient.subscribe('/subscribe/editor', function(contentData) {
+					var contentDataBody = JSON.parse(contentData.body);
 					
 					// desktop
 					if (matchMedia("screen and (min-width: 768px)").matches) {
-						var ranges = basicEditor.getSelection().getRanges();
-						basicEditor.setData(contentBody.content);
-						basicEditor.getSelection().selectRanges( ranges );
+//						var ranges = basicEditor.getSelection().getRanges();
+						basicEditor.setData(contentDataBody.messageBody);
+//						basicEditor.getSelection().selectRanges(ranges);
+						
 					// mobile
 					} else {
-						mobileEditor.setData(contentBody.content);
+						mobileEditor.setData(contentDataBody.messageBody);
+					}
+					
+					utils.chatAppend(contentDataBody.chatAreaMessage);
+					notify.notify("Editor update", " by '" + contentDataBody.username + "'");
+					
+					if(session.nickname != chatMsgBody.username) {
+//						notify.notify("Editor update", " by '" + contentDataBody.username + "'");
 					}
 				});
+				
+				var joinMsg = JSON.stringify({
+					username : session.nickname,
+					messageBody : ' 님이 접속했습니다.'
+				});
+				
+				session.stompClient.send('/dest/chat', {}, joinMsg);
 			},
 			function(error) {
-				notify.notify("Stomp editor connection failed", error);
+				utils.chatAppend("Error : Stomp  connection failed (" + error + ")");
+				notify.notify("Error", "Stomp connection failed", error);
+				session.disconnect();
 			}
 		);
 		
@@ -140,89 +133,76 @@ var session = {
 	
 	disconnect : function() {
 		
-		var tmpMsg = JSON.stringify({
-			username : session.nickname + ' 님이 나갔습니다.'
+		var exitMsg = JSON.stringify({
+			username : session.nickname,
+			messageBody : ' 님이 나갔습니다.'
 		});
 		
-		session.stompChat.send('/dest/chat', {}, tmpMsg);
+		session.stompClient.send('/dest/chat', {}, exitMsg);
 		
-		// Close chat stomp
-		if(this.stompChat) {
-			this.stompChat.disconnect(function() {
-				notify.notify("Disconnection", "Stomp chat disconnected");
-			});
-			this.stompChat = null;
-		};
+		// For Good bye message isn't sent
+		setTimeout(function() {
 		
-		// Close editor stomp
-		if(this.stompEditor) {
-			this.stompEditor.disconnect(function() {
-				notify.notify("Disconnection", "Stomp editor disconnected");
-			});
-			this.stompEditor = null;
-		};
-		
-		// Close socket
-		if(this.socket) {
-			this.socket.close();
-			this.socket = null;
-		}
-		if(this.socket2) {
-			this.socket2.close();
-			this.socket2 = null;
-		}
-		
-		notify.notify("Disconnection", "fully disconnected");
+			// Close stomp client
+			if(session.stompClient) {
+				session.stompClient.disconnect(function() {
+					notify.notify("Disconnection", "Stomp disconnected");
+				});
+				session.stompClient = null;
+			};
+			
+			// Close socket
+			if(session.socket) {
+				session.socket.close();
+				session.socket = null;
+			}
+			
+			notify.notify("Disconnection", "fully disconnected (stomp & socket)");
+		}, 200);
 	},
 	
 	reconnect : function() {
+		utils.chatAppend("Stomp reconnecting...");
+		notify.notify("Stomp reconnection", "Reconnecting...");
 		this.disconnect();
 		this.connect();
 	},
 	
 	// Send data to socket
-	msgSend : function() {
+	chatMsgSend : function() {
 		var msg = JSON.stringify({
 			username : session.nickname,
-			message : $('#chatInput').val()
+			messageBody : $('#chatInput').val()
 		});
 		
-		this.stompChat.send('/dest/chat', {}, msg);
-		
 		$('#chatInput').val('');
+		
+		this.stompClient.send('/dest/chat', {}, msg);
+		
 		msg = null;
 	},
 	
-	contentSend : function() {
-		// when editorContentSocket is connected
-		if (this.stompEditor) {
-			// desktop
-			if (matchMedia("screen and (min-width: 768px)").matches) {
-				var basicEditorContent = JSON.stringify({
-					content : basicEditor.getData()
-				});
-				session.stompEditor.send('/dest/editor', {}, basicEditorContent);
-				basicEditor.focus();
+	editorContentSend : function() {
+		
+		var editorContent = {
+				username : "",
+				messageBody : ""
+		};
 
-			// mobile
-			} else {
-				var mobileEditorContent = JSON.stringify({
-					content : mobileEditor.getData()
-				});
-				session.stompEditor.send('/dest/editor', {}, mobileEditorContent);
-				
-				mobileEditor.focus();
-			}
-			
-			var updateMsg = JSON.stringify({
-				username : '컨텐츠 갱신 by ' + session.nickname 
-			});
-			
-			this.stompChat.send('/dest/chat', {}, updateMsg);
-			
+		editorContent.username = session.nickname;
+
+		// desktop
+		if (matchMedia("screen and (min-width: 768px)").matches) {
+			editorContent.messageBody = basicEditor.getData();
+			basicEditor.focus();
+
+		// mobile
 		} else {
-			$('#editorInputBtn').blur();
+			editorContent.messageBody = mobileEditor.getData();
+			mobileEditor.focus();
 		}
+
+		session.stompClient.send('/dest/editor', {}, JSON.stringify(editorContent));
 	}
 };
 
@@ -256,6 +236,41 @@ var utils = {
 		$('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
 	},
 		
+	// focus move
+	focusToEditor : function() {
+		if (matchMedia("screen and (min-width: 768px)").matches) {
+			basicEditor.focus();
+		} else {
+			mobileEditor.focus();
+		}	
+	},
+	
+	// detects sizes
+	editorSizeDetectFunc : function(basicEditorFunction, mobileEditorFunction) {
+		if(((typeof basicEditorFunction) == 'function') && ((typeof mobileEditorFunction) == 'function')) {
+			if (matchMedia("screen and (min-width: 768px)").matches) {
+				basicEditorFunction();
+			} else {
+				mobileEditorFunction();
+			}	
+		} else {
+			notify.notify("editorSizeDetectFunc error", "parameter is not function!");
+		}
+	},
+	
+	// session check
+	workWithSession : function(functionWithSession, functionWithoutSession) {
+		if(((typeof functionWithSession) == 'function') && ((typeof functionWithoutSession) == 'function')) {
+			if (session.socket && session.stompClient) {
+				functionWithSession();
+			} else {
+				functionWithoutSession();
+			}	
+		} else {
+			notify.notify("workWithSession error", "parameter is not function!");
+		}
+	},
+	
 	toggleClassArrayFunc : function(array, str) {
 		for ( var ctr in array)
 			array[ctr].toggleClass(str);
@@ -283,20 +298,34 @@ var utils = {
 	
 	// veryfy chat input
 	verifyChatInput : function() {
+		/*
 		if (!session.socket) {
-			notify.notify('title', 'You need to join first!');
+			notify.notify('Join required', 'You need to join first!');
 			$('#nicknameInput').focus();
 		} else if (!(this.checkStr($('#chatInput').val()))) {
 			$('#chatInput').focus();
 		} else {
-			session.msgSend();
+			session.chatMsgSend();
 			$('#chatInput').focus();
+		}
+		*/
+		
+		if (session.socket && session.stompClient) {
+			if (this.checkStr($('#chatInput').val())) {
+				session.chatMsgSend();
+				$('#chatInput').focus();
+			} else {
+				$('#chatInput').focus();
+			}
+		} else {
+			notify.notify('Join required', 'You need to join first!');
+			$('#nicknameInput').focus();
 		}
 	},
 	
 	// Verify and control Join condition
 	verifyJoin : function() {
-		if (!session.socket) {
+		if (!(session.socket) || !(session.stompClient)) {
 			if (this.checkStr($('#nicknameInput').val())) {
 				session.nickname = $('#nicknameInput').val();
 				$('#nicknameInput').val("");
@@ -384,6 +413,7 @@ toggleJoinEvent();
 */
 var eventObj = {
 	
+	// For focus on nickname input on mobile view
 	collapseBtnFocusMove : function() {
 		$('#collapseBtn').click(function() {
 			// <![CDATA[
@@ -526,29 +556,45 @@ var eventObj = {
 	
 	editorInputSendEvent : function() {
 		$('#editorInputBtn').click(function() {
-			session.contentSend();
+			if (session.socket && session.stompClient) {
+				session.editorContentSend();
+				
+				utils.focusToEditor();
+			} else {
+				notify.notify('Join required', 'You need to join first!');
+				$('#nicknameInput').focus();
+			}
 		});
 	},
 	
 	editorSaveEvent : function() {
 		$('#editorSaveBtn').click(function() {
-			// desktop
-			if (matchMedia("screen and (min-width: 768px)").matches) {
-//				jqAjax.saveBoard(basicEditor.document.getBody().getText());
-				jqAjax.saveBoard(basicEditor.getData());
+			if (session.socket && session.stompClient) {
 				
-				var alarmMsg = JSON.stringify({
+				// desktop
+				if (matchMedia("screen and (min-width: 768px)").matches) {
+//					jqAjax.saveBoard(basicEditor.document.getBody().getText());
+					jqAjax.saveBoard(basicEditor.getData());
+					
+				// mobile
+				} else {
+//					jqAjax.saveBoard(mobileEditor.document.getBody().getText());
+					jqAjax.saveBoard(mobileEditor.getData());
+				}
+				
+				var dbUpdateMsg = JSON.stringify({
 					username : session.nickname,
-					message : "Content update"
+					messageBody : "Content update"
 				});
 				
-				session.stompChat.send("/dest/chat/update_alarm", {}, alarmMsg);
+				session.stompClient.send("/dest/chat/db_update_alarm", {}, dbUpdateMsg);
 				
-			// mobile
+				utils.focusToEditor();
 			} else {
-//				jqAjax.saveBoard(mobileEditor.document.getBody().getText());
-				jqAjax.saveBoard(mobileEditor.getData());
+				notify.notify('Join required', 'You need to join first!');
+				$('#nicknameInput').focus();
 			}
+			
 			
 			/*
 			Array.prototype
@@ -565,12 +611,12 @@ var eventObj = {
 		$('#listDelBtn').click(function() {
 			jqAjax.deleteAllBoards();
 			
-			var alarmMsg = JSON.stringify({
+			var dbUpdateMsg = JSON.stringify({
 				username : session.nickname,
-				message : "All contents have been deleted"
+				messageBody : "All contents have been deleted"
 			});
 			
-			session.stompChat.send("/dest/chat/update_alarm", {}, alarmMsg);
+			session.stompClient.send("/dest/chat/db_update_alarm", {}, dbUpdateMsg);
 			
 		});
 	},

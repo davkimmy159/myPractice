@@ -9,98 +9,89 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.web.servlet.FlashMap;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-	private String loginId;
+	private String loginIdParamName;
 	
-	private String loginPassword;
+	private String loginPasswordParamName;
 	
-	private String loginRedirect;
+	private String loginRedirectParamName;
 	
-	private String securityExceptionMsg;
+	private String securityExceptionMsgParamName;
+	
+	private String defaultFailureUrlParamName;
 	
 	private String defaultFailureUrl;
 	
 	public CustomAuthenticationFailureHandler() {
-		this("", "", "", "", "");
+		this("", "", "", "", "", "");
 	}
 	
-	public CustomAuthenticationFailureHandler(String loginId, String loginPassword, String loginRedirect, String securityExceptionMsg, String defaultFailureUrl) {
-		this.loginId = loginId;
-		this.loginPassword = loginPassword;
-		this.loginRedirect = loginRedirect;
-		this.securityExceptionMsg = securityExceptionMsg;
+	public CustomAuthenticationFailureHandler(String loginIdParamName,
+											  String loginPasswordParamName,
+											  String loginRedirectParamName,
+											  String securityExceptionMsgParamName,
+											  String defaultFailureUrlParamName,
+											  String defaultFailureUrl) {
+		this.loginIdParamName = loginIdParamName;
+		this.loginPasswordParamName = loginPasswordParamName;
+		this.loginRedirectParamName = loginRedirectParamName;
+		this.securityExceptionMsgParamName = securityExceptionMsgParamName;
+		this.defaultFailureUrlParamName = defaultFailureUrlParamName;
 		this.defaultFailureUrl = defaultFailureUrl;
 	}
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+		request.setAttribute(this.loginIdParamName, request.getParameter(this.loginIdParamName));
+		request.setAttribute(this.loginPasswordParamName, request.getParameter(this.loginPasswordParamName));
+		request.setAttribute(this.loginRedirectParamName, request.getParameter(this.loginRedirectParamName));
+		request.setAttribute(this.securityExceptionMsgParamName, exception.getMessage());
+		request.setAttribute(this.defaultFailureUrlParamName, this.defaultFailureUrl);
 		
-		String tmpLoginId = request.getParameter(this.loginId);
-		String tmpLoginPassword= request.getParameter(this.loginPassword);
-		String tmpLoginRedirect = request.getParameter(this.loginRedirect);
-		
-		request.setAttribute("loginId", tmpLoginId);
-		request.setAttribute("loginPassword", tmpLoginPassword);
-		request.setAttribute("loginRedirect", tmpLoginRedirect);
-		
-		request.setAttribute(this.securityExceptionMsg, exception.getMessage());
-		
-		request.getRequestDispatcher(defaultFailureUrl).forward(request, response);
-		
-		// should hold the attributes from your last request
-		// FlashMap lastAttributes = RequestContextUtils.getInputFlashMap(request);
-		
-		System.out.println(tmpLoginId);
-		System.out.println(tmpLoginPassword);
-		System.out.println(tmpLoginRedirect);
-		
-		/*
-		// will hold the attributes for your next request
-		FlashMap forNextRequest = RequestContextUtils.getOutputFlashMap(request);
-		
-		forNextRequest.put("loginId", "asd");
-		forNextRequest.put("loginPassword", "asdasd");
-		forNextRequest.put("loginRedirect", "asdasdasd");
-		forNextRequest.put("securityExceptionMsg", this.securityExceptionMsg);
-		
-		response.sendRedirect(defaultFailureUrl);
-		*/
+		request.getRequestDispatcher(this.defaultFailureUrl).forward(request, response);
 	}
 
-	public String getLoginId() {
-		return loginId;
+	public String getLoginIdParamName() {
+		return loginIdParamName;
 	}
 
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setLoginIdParamName(String loginIdParamName) {
+		this.loginIdParamName = loginIdParamName;
 	}
 
-	public String getLoginPassword() {
-		return loginPassword;
+	public String getLoginPasswordParamName() {
+		return loginPasswordParamName;
 	}
 
-	public void setLoginPassword(String loginPassword) {
-		this.loginPassword = loginPassword;
+	public void setLoginPasswordParamName(String loginPasswordParamName) {
+		this.loginPasswordParamName = loginPasswordParamName;
 	}
 
-	public String getLoginRedirect() {
-		return loginRedirect;
+	public String getLoginRedirectParamName() {
+		return loginRedirectParamName;
 	}
 
-	public void setLoginRedirect(String loginRedirect) {
-		this.loginRedirect = loginRedirect;
+	public void setLoginRedirectParamName(String loginRedirectParamName) {
+		this.loginRedirectParamName = loginRedirectParamName;
 	}
 
-	public String getsecurityExceptionMsg() {
-		return securityExceptionMsg;
+	public String getSecurityExceptionMsgParamName() {
+		return securityExceptionMsgParamName;
 	}
 
-	public void setsecurityExceptionMsg(String securityExceptionMsg) {
-		this.securityExceptionMsg = securityExceptionMsg;
+	public void setSecurityExceptionMsgParamName(String securityExceptionMsgParamName) {
+		this.securityExceptionMsgParamName = securityExceptionMsgParamName;
+	}
+
+	public String getDefaultFailureUrlParamName() {
+		return defaultFailureUrlParamName;
+	}
+
+	public void setDefaultFailureUrlParamName(String defaultFailureUrlParamName) {
+		this.defaultFailureUrlParamName = defaultFailureUrlParamName;
 	}
 
 	public String getDefaultFailureUrl() {

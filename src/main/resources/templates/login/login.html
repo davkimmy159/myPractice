@@ -18,11 +18,11 @@
 }
 
 #error-title {
-	padding-top: 0px;
+	padding-top: 10px;
 }
 
 h3 {
-	margin-top: 15px;
+	margin-top: 5px;
 }
 </style>
 <title>Login</title>
@@ -48,20 +48,40 @@ h3 {
 			<div class="row">
 			
 				<div class="error_container" th:if="${securityExceptionMsg}">
+					<!-- 
 					<div id="error-title" class="alert alert-warning alert-dismissible">
 						<button type="button" class="close" data-dismiss="alert">&times;</button>
 						<h3><span><Strong>Error input</Strong></span></h3>
 						<span>Fail : </span><br />
 						<span th:text="${securityExceptionMsg}"></span>
 					</div>
+					-->
+					<div id="error-title" class="alert alert-danger alert-dismissible">
+						<button type="button" class="close" data-dismiss="error">&times;</button>
+						<h3><span><Strong>Wrong ID</Strong></span></h3>
+						<!-- <span class="wrong_input" th:text="${loginId}"></span><br /> -->
+						<span>Id or password is wrong. Please try again.</span>
+					</div>
+					
 				</div>
+
+				<!-- 
+				<div class="error_container" th:if="${defaultFailureUrl}">
+					<div id="error-title" class="alert alert-warning alert-dismissible">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<h3><span><Strong>Default failure URL</Strong></span></h3>
+						<span>URL : </span><br />
+						<span th:text="${defaultFailureUrl}"></span>
+					</div>
+				</div>
+				-->
 			
 				<div class="well">
 					<form action="#" th:action="@{/login/validate_process}" method="post">
 						<div class="form-group">
 							<label class="control-label" for="loginId">ID&nbsp;(username)</label>
 							<div class="">
-								<input id="loginId" name="loginId" class="form-control" placeholder="Username" th:value="#{loginId ? loginId}" />
+								<input id="loginId" name="loginId" class="form-control" placeholder="Username" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -80,7 +100,8 @@ h3 {
 								<button class="btn btn-success btn-block" type="submit">Sign in</button>
 							</div>
 						</div>
-						<input type="hidden" name="loginRedirect" th:value="#{loginRedirect ? loginRedirect}" />
+						<input type="hidden" name="loginRedirect" th:value="${loginRedirect}" />
+						<!-- <input type="hidden" name="defaultFailureUrl" th:value="${defaultFailureUrl}" /> -->
 					</form>
 				</div>
 				<!-- /.well -->
@@ -109,8 +130,33 @@ h3 {
 
 	<!-- jQuery & bootstrap JS is loaded here by upper layer -->
 
-	<script>
-	
-	</script>
+
+	<!-- Custom Javascript -->
+	<div layout:fragment="customScript">
+		<script src="../js/utils.js" th:src="@{/js/utils.js}" type="text/javascript"></script>
+		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
+		<script>
+		    $(function () {
+		    	/*
+		    	if (typeof (history.pushState) != "undefined") {
+		    		notify.notify("history.pushState", history.pushState);
+			    	notify.notify("defaultFailureUrl", $("input[name='defaultFailureUrl']").val());
+			    		
+		    		if($("input[name='defaultFailureUrl']").val() != "") {
+		    			var obj = {
+		            		page: "Login update",
+		            		url: path.getContextPath() + $("input[name='defaultFailureUrl']").val()
+			            };
+		    			notify.notify("obj", "page : " + obj.page + ", url : " + obj.url);
+			            history.pushState(obj, obj.page, obj.url);
+			            notify.notify("after history.pushState", "");
+		    		}
+		        } else {
+		            alert("Browser does not support HTML5.");
+		        }
+		    	*/
+		    });
+		</script>
+	</div>
 </body>
 </html>
