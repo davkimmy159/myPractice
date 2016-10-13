@@ -18,7 +18,7 @@ import kr.co.ps119.service.TestService;
 
 @Controller
 @RequestMapping("/test")
-public class Controller_2 {
+public class AjaxTestController {
 
 	@Autowired
 	private MemberService service2;

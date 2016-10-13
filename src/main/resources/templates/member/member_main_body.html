@@ -2,14 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="member/member_main_head">
 <head>
 <style type="text/css">
+#test.row {
+	outline: black solid 1px;
+}
+
+#test2.container-fluid {
+	outline: red solid 1px;
+}
 </style>
 <title>User main</title>
 </head>
 <body>
 	<!-- Substitution of 'main' on upper layer -->
 	<div layout:fragment="main">
-		<div id="" class="row">
-			<div id="" class="container-fluid col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
+		<div id="test" class="row">
+			<div id="test2" class="container-fluid col-sm-10 col-sm-offset-2">
 				<div class="container-fluid">
 					<div class="form-group">
 						<h3>test</h3>
@@ -33,62 +40,129 @@
 		<div id="createRoomModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
+				
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
 						</button>
+						
 						<!-- Nav tabs -->
 						<ul class="nav nav-pills" role="tablist">
-							<li role="presentation" class="active"><a href="#tabContent3" data-toggle="tab" aria-controls="tabContent3" role="tab">test</a></li>
+						
+							<li role="presentation" class="active">
+								<a href="#tabContent1" data-toggle="tab">
+									<span>test 1</span>
+								</a>
+							</li>
+							
+							<li role="presentation" class="">
+								<a href="#tabContent2" data-toggle="tab">
+									<span>test 2</span>
+								</a>
+							</li>
+							
 						</ul>
 						<!-- /.Nav tabs -->
 					</div>
 					<!-- /.modal-header -->
+					
 					<div class="modal-body">
-						<!-- Tab-content -->
 						<div class="tab-content">
-							<!-- tabContent3 -->
-							<div id="tabContent3" class="tab-pane fade in active" role="tabpanel">
+						
+							<!-- tab content 1 -->
+							<div id="createRoomModal_tabContent1" class="tab-pane fade in active" role="tabpanel">
 								<div class="container-fluid">
 									<div class="panel panel-info">
+									
 										<div class="panel-heading">
 											<ul class="nav nav-pills" role="tablist">
-												<li role="presentation" class="active"><a href="#memoContent1" data-toggle="tab" aria-controls="memo writing" role="tab"><span class="glyphicon glyphicon-edit"></span>&nbsp;test</a></li>
+											
+												<li role="presentation" class="active">
+													<a href="#tabContent1_test1" data-toggle="tab" role="tab">
+														<span class="glyphicon glyphicon-edit"></span>
+														&nbsp;
+														<span>test 1</span>
+													</a>
+												</li>
+												
+												<li role="presentation" class="">
+													<a href="#tabContent1_test2" data-toggle="tab" role="tab">
+														<span class="glyphicon glyphicon-edit"></span>
+														&nbsp;
+														<span>test 2</span>
+													</a>
+												</li>
+												
 											</ul>
+											<!-- /.nav.nav-pills -->
 										</div>
+										<!-- /.panel-heading -->
+										
 										<div class="panel-body">
-											<!-- Tab-content -->
 											<div class="tab-content">
-												<form method='post'>
-													<div id="" class="tab-pane fade in active" role="tabpanel">
+											
+												<div id="createRoomModal_tabContent1_test1" class="tab-pane fade in active" role="tabpanel">
+													<form action="" method='post'>
+														<h3></h3>
 														<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
 														<div class="pull-right">
-															<button type="submit" class="btn btn-primary">create</button>
+															<button type="button" class="btn btn-primary">
+																<span>create</span>
+															</button>
 														</div>
-													</div>
-												</form>
+													</form>
+												</div>
+												<!-- /.tab-pane -->
+												
+												<div id="createRoomModal_tabContent1_test2" class="tab-pane fade" role="tabpanel">
+													<form action="" method='post'>
+														<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
+														<div class="pull-right">
+															<button type="button" class="btn btn-primary">
+																<span>create</span>
+															</button>
+														</div>
+													</form>
+												</div>
+												<!-- /.tab-pane -->
+												
 											</div>
 											<!-- /.tab-content -->
 										</div>
 										<!-- /.panel-body -->
+										
 										<div class="panel-footer">
-											<button id="" class="btn btn-primary">sub button</button>
+											<button id="" class="btn btn-primary">
+												<span>sub button</span>
+											</button>
 										</div>
 										<!-- /.panel-footer -->
+										
 									</div>
 									<!-- /.panel -->
 								</div>
 								<!-- /.container-fluid -->
 							</div>
-							<!-- /.tabContent3 -->
+							<!-- /#tabContent1 -->
+							
+							<!-- tab content 2 -->
+							<div id="createRoomModal_tabContent2" class="tab-pane fade" role="tabpanel">
+
+							</div>
+							<!-- /#tabContent2 -->
+							
 						</div>
 						<!-- /.tab-content -->
 					</div>
 					<!-- /.modal-body -->
+					
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							<span>Close</span>
+						</button>
 					</div>
 					<!-- /.modal-footer -->
+					
 				</div>
 				<!-- /.modal-content -->
 			</div>
@@ -98,5 +172,7 @@
 
 		<!-- =================================================================================================== -->
 	</div>
+	<!-- layout:fragment="main" -->
+	
 </body>
 </html>

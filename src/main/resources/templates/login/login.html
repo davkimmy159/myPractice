@@ -137,6 +137,10 @@ h3 {
 		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
 		<script>
 		    $(function () {
+		    	$("#error-title").find("button").click(function() {
+		    		$("#error-title").remove();
+		    	});
+		    	
 		    	/*
 		    	if (typeof (history.pushState) != "undefined") {
 		    		notify.notify("history.pushState", history.pushState);

@@ -31,16 +31,21 @@ import javax.validation.Valid;
 		value = "/",
 		method = { RequestMethod.GET, RequestMethod.POST }
 )
-public class Controller_1 {
+public class BasicTestController {
 	
 	@Autowired
 	MemberService memberService;
 	
 	@GetMapping(value = "test")
-	public String main() {
+	public String test() {
 		return "board/board_body";
 	}
 
+	@GetMapping(value = "test2")
+	public String test2() {
+		return "board/board_body2";
+	}
+	
 	@GetMapping(value = "index")
 	public String user_index() {
 		return "index_body";
