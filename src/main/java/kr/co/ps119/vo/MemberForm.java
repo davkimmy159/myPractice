@@ -12,7 +12,7 @@ public class MemberForm {
 	@Email(message = "email is invalid")
 	@Size(min = 5,
 		  max = 100,
-	 	  message = "email length is too long")
+	 	  message = "email length must be between 5 ~ 100")
 	private String email;
 	
 	@NotBlank(message = "username is empty")

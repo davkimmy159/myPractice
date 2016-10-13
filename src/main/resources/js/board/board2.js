@@ -51,7 +51,7 @@ var session = {
 	id : null,
 	chatHandler: "/dest/chat",
 	editorHandler: "/dest/editor",
-	dbUpdateAlarmHandler: "/dest/db_update_alarm",
+	dbUpdateAlarmHandler: "/dest/chat/db_update_alarm",
 	
 	connect : function() {
 		var websocketUrl = path.getFullContextPath() + '/websocket/board';
@@ -81,7 +81,7 @@ var session = {
 					utils.chatAppend(alarmMsgBody.chatAreaMessage);
 					notify.notify(alarmMsgBody.messageBody, ' by \'' + alarmMsgBody.username + '\'');
 					
-					// Rewrites html page of DB list
+					// Updates html page of DB list
 					jqAjax.updateList();
 				});
 				
@@ -560,21 +560,20 @@ var eventObj = {
 				
 				// desktop
 				if (utils.isDesktopSize()) {
-//					jqAjax.saveBoard(basicEditor.document.getBody().getText());
 					jqAjax.saveBoard(basicEditor.getData());
 					
 				// mobile
 				} else {
-//					jqAjax.saveBoard(mobileEditor.document.getBody().getText());
 					jqAjax.saveBoard(mobileEditor.getData());
 				}
-				
+//				jqAjax.saveBoard(basicEditor.document.getBody().getText());
+
 				var dbUpdateMsg = JSON.stringify({
 					username : session.nickname,
 					messageBody : "Content update"
 				});
 				
-				session.stompClient.send(session.dbUpdateAlarm, {}, dbUpdateMsg);
+				session.stompClient.send(session.dbUpdateAlarmHandler, {}, dbUpdateMsg);
 				
 				utils.focusToEditor();
 			} else {

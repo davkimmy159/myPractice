@@ -27,7 +27,7 @@
 	margin-bottom: 20px;
 }
 
-#error-title {
+.alert {
 	padding-top: 10px;
 }
 
@@ -71,25 +71,25 @@ span.duplication_input {
 		<div id="registrationContainer" class="container-fluid col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4" th:object="${memberForm}">
 			
 			<div class="error_container" th:if="${#fields.hasErrors('*')}" th:with="errorCount=${#lists.size(#fields.errors())}">
-				<div id="error-title" class="alert alert-warning alert-dismissible">
+				<div class="alert alert-warning alert-dismissible fade in">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<h3><span><Strong>Server validation failed</Strong></span></h3>
 					<span th:text="'Total : ' + ${errorCount}"></span>
 				</div>
 				
-				<div class="alert alert-danger alert-dismissible" th:if="${#fields.hasErrors('email')}"  th:with="errorMsg=${#fields.errors('email')}">
+				<div class="alert alert-danger alert-dismissible fade in" th:if="${#fields.hasErrors('email')}"  th:with="errorMsg=${#fields.errors('email')}">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<span><strong>email</strong> is invalid</span><br />
 					<span th:text="${errorMsg}"></span>
 				</div>
 				
-				<div class="alert alert-danger alert-dismissible" th:if="${#fields.hasErrors('username')}" th:with="errorMsg=${#fields.errors('username')}">
+				<div class="alert alert-danger alert-dismissible fade in" th:if="${#fields.hasErrors('username')}" th:with="errorMsg=${#fields.errors('username')}">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<span><strong>username</strong> is invalid</span><br />
 					<span th:text="${errorMsg}"></span>
 				</div>
 				
-				<div class="alert alert-danger alert-dismissible" th:if="${#fields.hasErrors('password')}"  th:with="errorMsg=${#fields.errors('password')}">
+				<div class="alert alert-danger alert-dismissible fade in" th:if="${#fields.hasErrors('password')}"  th:with="errorMsg=${#fields.errors('password')}">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<span><strong>password</strong> is invalid</span><br />
 					<span th:text="${errorMsg}"></span>
@@ -97,7 +97,7 @@ span.duplication_input {
 			</div>
 			
 			<div class="error_container" th:if="${duplicationError}">
-				<div id="error-title" class="alert alert-warning alert-dismissible">
+				<div class="alert alert-warning alert-dismissible fade in">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<h3><span><Strong>Duplicate input</Strong></span></h3>
 					<span th:text="${duplicationInput}" class="duplication_input"></span><br />
@@ -106,7 +106,7 @@ span.duplication_input {
 			</div>
 			
 			<div class="error_container" th:if="${serverSideError}">
-				<div id="error-title" class="alert alert-warning alert-dismissible">
+				<div class="alert alert-warning alert-dismissible fade in">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<h3><span><Strong>Server side error</Strong></span></h3>
 					<span th:text="${serverSideError}"></span>

@@ -14,13 +14,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 )
 public class MemberController {
 
-	@PostMapping(value = "member_main")
+	@GetMapping(value = "member_main")
 	public String userMain() {
-		return "member/member_main_body";
+		return "member/member_main";
 	}
 	
-	@GetMapping(value = "createRoom")
+	@PostMapping(value = "create_room")
 	public String createRoom() {
+		System.out.println("createRoom!");
+		
+		return "redirect:/test2";
+	}
+	
+	@GetMapping(value = "room")
+	public String test() {
+		
 		return "test";
 	}
 }

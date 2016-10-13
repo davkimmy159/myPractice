@@ -20,6 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -37,6 +38,8 @@ public class Board implements Serializable {
 	
 	@Column
 	@NotBlank(message = "title is empty")
+	@Length(max = 100,
+			message = "board name must be between 0 ~ 100")
 	private String title;
 	
 	@Column

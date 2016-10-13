@@ -56,13 +56,12 @@ h3 {
 						<span th:text="${securityExceptionMsg}"></span>
 					</div>
 					-->
-					<div id="error-title" class="alert alert-danger alert-dismissible">
-						<button type="button" class="close" data-dismiss="error">&times;</button>
-						<h3><span><Strong>Wrong ID</Strong></span></h3>
+					<div id="error-title" class="alert alert-danger alert-dismissible fade in">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<h4><span><Strong>Wrong ID or password</Strong></span></h4>
 						<!-- <span class="wrong_input" th:text="${loginId}"></span><br /> -->
 						<span>Id or password is wrong. Please try again.</span>
 					</div>
-					
 				</div>
 
 				<!-- 
@@ -137,10 +136,11 @@ h3 {
 		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
 		<script>
 		    $(function () {
-		    	$("#error-title").find("button").click(function() {
-		    		$("#error-title").remove();
-		    	});
-		    	
+		    	/*
+		    	$(".alert-dismissable").click(function (e) {
+				    $(this).fadeOut('slow');
+				});
+		    	*/
 		    	/*
 		    	if (typeof (history.pushState) != "undefined") {
 		    		notify.notify("history.pushState", history.pushState);

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.ps119.flag.NewAccount;
-import kr.co.ps119.service.CreateAccountService;
+import kr.co.ps119.service.AccountService;
 import kr.co.ps119.vo.MemberForm;
 
 @Controller
@@ -33,7 +33,7 @@ import kr.co.ps119.vo.MemberForm;
 public class NewAccountController {
 
 	@Autowired
-	CreateAccountService creaetAccountService;
+	AccountService creaetAccountService;
 
 	// Empty instance for validation tags in thymeleaf
 	@ModelAttribute("memberForm")

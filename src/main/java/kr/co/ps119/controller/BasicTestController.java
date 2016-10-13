@@ -38,50 +38,11 @@ public class BasicTestController {
 	
 	@GetMapping(value = "test")
 	public String test() {
-		return "board/board_body";
-	}
-
-	@GetMapping(value = "test2")
-	public String test2() {
-		return "board/board_body2";
+		return "board/board";
 	}
 	
 	@GetMapping(value = "index")
 	public String user_index() {
-		return "index_body";
+		return "index";
 	}
-	
-	
-	/*
-	@GetMapping(value = "account_creation")
-	public String accountCreation() {
-		return "account_creation";
-	}
-	*/
-
-	/*
-	 * @RequestMapping(method = RequestMethod.GET) public String printList(Model
-	 * model) { List<MemberUser> list = service1.findAll();
-	 * model.addAttribute("list", list); if
-	 * (!model.containsAttribute("memberUserForm"))
-	 * model.addAttribute("memberUserForm", null); return "member_table"; }
-	 * 
-	 * @RequestMapping(value = "control", method = RequestMethod.POST, params =
-	 * "insert") public String insert(Model model, @Validated MemberUserForm
-	 * memberUserForm, BindingResult result) { if (result.hasErrors()) { return
-	 * printList(model); } MemberUser memberUser = new MemberUser();
-	 * BeanUtils.copyProperties(memberUserForm, memberUser); MemberUser
-	 * addedMemberUse = service1.save(memberUser); return printList(model); }
-	 * 
-	 * @RequestMapping(value = "control", method = RequestMethod.POST, params =
-	 * "update") public String update(Model model, @RequestParam(name = "modId")
-	 * Long modId) { service1.delete(modId); return printList(model); }
-	 * 
-	 * @RequestMapping(value = "control", method = RequestMethod.POST, params =
-	 * "delete") public String delete(Model model, @RequestParam(name = "modId")
-	 * Long modId) { service1.delete(modId); return printList(model); }
-	 * 
-	 * @RequestMapping(value = "writing", method = RequestMethod.POST) public
-	 * String writing() { return "a"; }
-	 */
 }

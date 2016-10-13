@@ -20,6 +20,15 @@ public class StompMessageController {
 		return chatMessage;
 	}
 	
+	@MessageMapping("/chat/db_update_alarm")
+	@SendTo("/subscribe/chat/db_update_alarm")
+	public StompDBUpdateMessage handler3(StompDBUpdateMessage DBUpdateMessage) {
+		
+		DBUpdateMessage.makeChatAreaMessage();
+		
+		return DBUpdateMessage;
+	}
+	
 	@MessageMapping("/editor")
 	@SendTo("/subscribe/editor")
 	public StompEditorContent handler2(StompEditorContent editorContent) {
@@ -29,15 +38,7 @@ public class StompMessageController {
 		return editorContent;
 	}
 	
-	@MessageMapping("/chat/db_update_alarm")
-	@SendTo("/subscribe/chat/db_update_alarm")
-	public StompDBUpdateMessage handler3(StompDBUpdateMessage DBUpdateMessage) {
-		
-		DBUpdateMessage.makeChatAreaMessage();
-		
-		return DBUpdateMessage;
-	}
-    
+	
     /*
 	@SubscribeMapping({"/queue/subscribe1"})
 	public StompBasicMessage handleSubscription() {

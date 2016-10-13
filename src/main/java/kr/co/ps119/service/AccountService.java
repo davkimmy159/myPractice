@@ -19,7 +19,7 @@ import kr.co.ps119.repository.MemberRepository;
 import kr.co.ps119.vo.MemberForm;
 
 @Service
-public class CreateAccountService {
+public class AccountService {
 	
 	@PersistenceContext
 	private EntityManager em;

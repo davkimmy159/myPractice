@@ -27,6 +27,28 @@ strong.loginIdDisplay {
 	font-size: 17px;
 	color: rgb(130, 130, 130);
 }
+
+
+
+#test.row {
+	outline: black solid 1px;
+}
+
+#test2.container-fluid {
+	outline: red solid 1px;
+}
+
+.page-header {
+	margin-top: 0px;
+}
+
+.page-header h3 {
+	margin-top: 0px;
+}
+
+#create_board_usernamename_input {
+	color: gray;
+}
 </style>
 <title>default_index</title>
 </head>
@@ -68,7 +90,7 @@ strong.loginIdDisplay {
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">sm dropdown 1<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
-										<a id="">sm test 1</a>
+										<a id="" data-toggle="modal" data-target="#createRoomModal">modal test button</a>
 									</li>
 									<li class="divider"></li>
 									<li>
@@ -178,7 +200,7 @@ strong.loginIdDisplay {
 								</a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
-										<a id="" data-toggle="modal" data-target="#createRoomModal">Create a colla</a>
+										<a id="">Create a colla</a>
 									</li>
 									<li>
 										<a id="">sm ~ lg (desktop) left 2</a>
@@ -232,8 +254,181 @@ strong.loginIdDisplay {
 		
 		<form class="logout_form" action="" th:action="@{/login/logout_process}" method="post"></form>
 
-		<!-- replaced here by under layer -->
-		<div layout:fragment="main"></div>
+		
+		<div id="test" class="row">
+			<div id="test2" class="container-fluid col-sm-10 col-sm-offset-2">
+				<div class="container-fluid">
+					<div class="form-group">
+						<h3>test</h3>
+					</div>
+					<div class="form-group">
+						<h3>test</h3>
+					</div>
+					<div class="form-group">
+						<h3>test</h3>
+					</div>
+				</div>
+				<!-- /.container-fluid -->
+			</div>
+			<!-- /.container-fluid -->
+		</div>
+		<!-- /.row -->
+		
+				<!-- =================================================================================================== -->
+
+		<!-- Main modal -->
+		<div id="createRoomModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+				
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+						</button>
+						
+						<!-- Nav tabs -->
+						<ul class="nav nav-pills" role="tablist">
+						
+							<li role="presentation" class="active">
+								<a href="#tabContent1" data-toggle="tab">
+									<span>test 1</span>
+								</a>
+							</li>
+							
+							<li role="presentation" class="">
+								<a href="#tabContent2" data-toggle="tab">
+									<span>test 2</span>
+								</a>
+							</li>
+							
+						</ul>
+						<!-- /.Nav tabs -->
+					</div>
+					<!-- /.modal-header -->
+					
+					<div class="modal-body">
+						<div class="tab-content">
+						
+							<!-- tab content 1 -->
+							<div id="createRoomModal_tabContent1" class="tab-pane fade in active" role="tabpanel">
+								<div class="container-fluid">
+									<div class="panel panel-info">
+									
+										<div class="panel-heading">
+											<ul class="nav nav-pills" role="tablist">
+											
+												<li role="presentation" class="active">
+													<a href="#createRoomModal_tabContent1_test1" data-toggle="tab" role="tab">
+														<span class="glyphicon glyphicon-edit"></span>
+														&nbsp;
+														<span>test 1</span>
+													</a>
+												</li>
+												
+												<li role="presentation" class="">
+													<a href="#createRoomModal_tabContent1_test2" data-toggle="tab" role="tab">
+														<span class="glyphicon glyphicon-edit"></span>
+														&nbsp;
+														<span>test 2</span>
+													</a>
+												</li>
+												
+											</ul>
+											<!-- /.nav.nav-pills -->
+										</div>
+										<!-- /.panel-heading -->
+										
+										<div class="panel-body">
+											<div class="tab-content">
+											
+												<div id="createRoomModal_tabContent1_test1" class="tab-pane fade in active" role="tabpanel">
+													<div class="page-header">
+														<h3>
+															<span>Collaborate immediately</span>
+														</h3>
+													</div>
+													<form class="form-horizontal" action="" th:action="@{/board/create_board}" method='post'>
+													
+														<div class="form-group">
+															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Room name</label>
+															<div class="col-sm-9 col-md-10">
+																<input id="create_board_name_input" name="boardName" class="form-control" type="text" placeholder="Insert your room name here" />
+															</div>
+														</div>
+														
+														<div class="form-group">
+															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Username</label>
+															<div class="col-sm-9 col-md-10">
+																<input id="create_board_usernamename_input" name="ownerUsername" class="form-control" type="text" th:value="${#authentication.getPrincipal().getUsername()}" readonly="readonly" />
+															</div>
+														</div>
+														
+														<div class="pull-right">
+															<button type="submit" class="btn btn-primary">
+																<span>create</span>
+															</button>
+														</div>
+														<!-- /.pull-right -->
+													</form>
+												</div>
+												<!-- /.tab-pane -->
+												
+												<div id="createRoomModal_tabContent1_test2" class="tab-pane fade" role="tabpanel">
+													<form action="" method='post'>
+														<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
+														<div class="pull-right">
+															<button type="button" class="btn btn-primary">
+																<span>create</span>
+															</button>
+														</div>
+													</form>
+												</div>
+												<!-- /.tab-pane -->
+												
+											</div>
+											<!-- /.tab-content -->
+										</div>
+										<!-- /.panel-body -->
+										
+										<div class="panel-footer">
+											<button id="" class="btn btn-primary">
+												<span>sub button</span>
+											</button>
+										</div>
+										<!-- /.panel-footer -->
+										
+									</div>
+									<!-- /.panel -->
+								</div>
+								<!-- /.container-fluid -->
+							</div>
+							<!-- /#tabContent1 -->
+							
+							<!-- tab content 2 -->
+							<div id="createRoomModal_tabContent2" class="tab-pane fade" role="tabpanel">
+
+							</div>
+							<!-- /#tabContent2 -->
+							
+						</div>
+						<!-- /.tab-content -->
+					</div>
+					<!-- /.modal-body -->
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">
+							<span>Close</span>
+						</button>
+					</div>
+					<!-- /.modal-footer -->
+					
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		
 	</div>
 
 
