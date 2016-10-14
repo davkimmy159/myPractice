@@ -2,8 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <!--  basic settings for bootstrap -->
+<meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <!-- <meta http-equiv="imagetoolbar" content="no" /> -->
 <!-- IE8 에서 HTML5 요소와 미디어 쿼리를 위한 HTML5 shim 와 Respond.js -->
 <!-- WARNING: Respond.js 는 당신이 file:// 을 통해 페이지를 볼 때는 동작하지 않습니다. -->
@@ -12,6 +13,7 @@
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
  <![endif]-->
 
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> -->
 
 <!-- bootstrap.css & bootstrap theme.css -->
 <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
@@ -74,8 +76,18 @@
 </head>
 <body>
 
-	<!-- replaced here by under layer -->
-	<div layout:fragment="body"></div>
+	<!-- Main body fragment -->	
+	
+	<!-- Authentication information -->
+	<div th:with="principal = ${#authentication.principal}">
+	
+		<!-- replaced here by under layer -->
+		<div layout:fragment="body"></div>
+			
+	</div>
+	<!-- /th:if -->
+	<!-- /Authentication information -->
+
 
 	<!-- jquery.js & bootstrap.js -->
 	<!-- <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script> -->
@@ -157,7 +169,11 @@
 	<script src="../bower_components/floating-label/dist/floating-label.min.js" th:src="@{/bower_components/floating-label/dist/floating-label.min.js}"></script>
 	
 	
+
+	
+	
 	<!-- replaced here by under layer ('customScript')-->
 	<div layout:fragment="customScript"></div>
+	
 </body>
 </html>

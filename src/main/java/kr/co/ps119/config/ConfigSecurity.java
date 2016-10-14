@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import kr.co.ps119.config.handler.CustomAuthenticationFailureHandler;
 import kr.co.ps119.config.handler.CustomAuthenticationSuccessHandler;
@@ -47,13 +49,20 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+
+		// UTF-8 character encoding
+		CharacterEncodingFilter filter = new CharacterEncodingFilter();
+		filter.setEncoding("UTF-8");
+		filter.setForceEncoding(true);
+		http.addFilterBefore(filter, CsrfFilter.class);
+		
 		// h2 db console setting
 		http.csrf().ignoringAntMatchers("/h2/**/");
 		http.headers().frameOptions().disable();
 		
 		http.authorizeRequests()
 			.antMatchers("/login/login").permitAll()	//anonymous()
-			.antMatchers("/new_account/registration_input_form").anonymous()
+			.antMatchers("/new_account/registration_input_form").permitAll()	// anonymous()
 			.antMatchers("/index").permitAll()
 			.antMatchers("/member/**").hasAnyAuthority("role_member", "role_admin")
 			.anyRequest().permitAll()
@@ -79,6 +88,7 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 			*/
 	}
 
+	
 	@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);

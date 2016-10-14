@@ -63,6 +63,8 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/images/**").addResourceLocations("classpath:/images/");
 	}
 
+	/*
+	// Turned off as spring security configuration sets this instead
 	// Character encoding (UTF-8)
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	@Bean
@@ -72,6 +74,7 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 		filter.setForceEncoding(true);
 		return filter;
 	}
+	*/
 
 	// Layout dialect for thymeleaf-layout-dialect
 	@Bean

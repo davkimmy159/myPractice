@@ -58,6 +58,8 @@ var session = {
 		this.socket = new SockJS(websocketUrl);
 		this.stompClient = Stomp.over(this.socket);
 		
+		this.nickname = 
+		
 		this.stompClient.connect({},
 			function(frame) {
 				notify.notify("Stomp connection for board", frame);
@@ -116,23 +118,19 @@ var session = {
 				session.stompClient.send(session.chatHandler, {}, joinMsg);
 			},
 			function(error) {
-				utils.chatAppend("Error : Stomp  connection failed (" + error + ")");
+				
+				var joinMsg = JSON.stringify({
+					username : session.nickname,
+					messageBody : ' test'
+				});
+				session.stompClient.send(session.chatHandler, {}, joinMsg);
+				
+				utils.chatAppend("Error : Stomp  connection failed :");
+				utils.chatAppend(error);
 				notify.notify("Error", "Stomp connection failed", error);
 				session.disconnect();
 			}
 		);
-		
-		/*
-		// Unexpected disconnection
-		if ($('#joinToggleBtn').html() == ('Exit')) {
-			notify.notify('title', 'Chatting is disconnected accidentaly!', 'error');
-			notify.notify('title', 'Join again please!', 'error');
-			$('#joinToggleBtn').html('Join');
-			$('#joinToggleBtn').removeClass('btn-danger');
-			$('#joinToggleBtn').addClass('btn-success');
-			// jqAjax.deleteRefresh();
-		}
-		*/		
 	},
 	
 	disconnect : function() {
@@ -144,7 +142,7 @@ var session = {
 		
 		session.stompClient.send(session.chatHandler, {}, exitMsg);
 		
-		// For Good bye message isn't sent
+		// For good-bye message isn't sent
 		setTimeout(function() {
 		
 			// Close stomp client
@@ -189,8 +187,8 @@ var session = {
 	editorContentSend : function() {
 		
 		var editorContent = {
-				username : "",
-				messageBody : ""
+			username : "",
+			messageBody : ""
 		};
 
 		editorContent.username = session.nickname;
@@ -266,7 +264,7 @@ var utils = {
 		}
 	},
 	
-	// session check
+	// session check v1
 	workWithSession : function(functionWithSession, functionWithoutSession) {
 		if(((typeof functionWithSession) == 'function') && ((typeof functionWithoutSession) == 'function')) {
 			if (session.socket && session.stompClient) {
@@ -277,6 +275,13 @@ var utils = {
 		} else {
 			notify.notify("workWithSession error", "parameter is not function!");
 		}
+	},
+
+	// session check v2
+	workWithSession2 : function() {
+		if(!(session.socket || session.stompClient)) {
+			return notify.notify("workWithSession error", "parameter is not function!");	
+		}	
 	},
 	
 	toggleClassArrayFunc : function(array, str) {
@@ -315,10 +320,11 @@ var utils = {
 			}
 		} else {
 			notify.notify('Join required', 'You need to join first!');
-			$('#nicknameInput').focus();
+//			$('#nicknameInput').focus();
 		}
 	},
 	
+	/*
 	// Verify and control Join condition
 	verifyJoin : function() {
 		if (!(session.socket) || !(session.stompClient)) {
@@ -381,6 +387,7 @@ var utils = {
 			$('#nicknameInput').focus();
 		}
 	},
+	*/
 	
 	showHeight : function() {
 		// Each height
@@ -415,6 +422,8 @@ var eventObj = {
 		});
 	},
 		
+	
+	/*
 	// For focus on nickname input on mobile view
 	collapseBtnFocusMove : function() {
 		$('#collapseBtn').click(function() {
@@ -427,6 +436,7 @@ var eventObj = {
 			}
 		});
 	},
+	*/
 	
 	chatInputKey : function() {
 		
@@ -500,6 +510,7 @@ var eventObj = {
 		});
 	},
 	
+	/*
 	toggleJoinEvent : function() {
 		// Toggle join (button)
 		$('#joinToggleBtn').click(function() {
@@ -511,7 +522,9 @@ var eventObj = {
 				utils.verifyJoin();
 		});
 	},
+	*/
 	
+	/*
 	windowOutEvent : function() {
 		// Logout, close event with 'esc' key on browser window
 		$(window).keydown(function(event) {
@@ -534,6 +547,7 @@ var eventObj = {
 			}
 		});
 	},
+	*/
 	
 	showHeightsEvent : function() {
 		$('#showHeights').click(function() {
@@ -549,7 +563,7 @@ var eventObj = {
 				utils.focusToEditor();
 			} else {
 				notify.notify('Join required', 'You need to join first!');
-				$('#nicknameInput').focus();
+//				$('#nicknameInput').focus();
 			}
 		});
 	},
@@ -578,7 +592,7 @@ var eventObj = {
 				utils.focusToEditor();
 			} else {
 				notify.notify('Join required', 'You need to join first!');
-				$('#nicknameInput').focus();
+//				$('#nicknameInput').focus();
 			}
 			
 			/*
@@ -861,7 +875,7 @@ var resizeFuncs = {
 		utils.toggleClassArrayFunc(this.formControlArray, 'form-control');
 		utils.toggleClassArrayFunc(this.btnGroupArray, 'btn-group-justified');
 	},
-		
+	
 	setBothCalendarHeight : function() {
 		// resize height of basicCalendar in modal
 		basicCalendar.fullCalendar('option', 'contentHeight', $(window).height() * 0.48);
@@ -878,11 +892,11 @@ var resizeFuncs = {
 		jqObj.chatArea.height($(window).height() - 175);
 	},
 	
-	// There was a problem that editor's height is not compatible with
-	// chatArea's one at some point
-	// I think it was from CKEditor's toolbar height changes.
-	// So I've deicded to use an if statement to ensure it's compatible
-	// when resizing
+	/*
+		There was a problem that editor's height is not compatible with chatArea's one at some point.
+		I think it was from CKEditor's toolbar height changes.
+		So I've deicded to use an if statement to ensure it's compatible when resizing
+	*/
 	checkEditorHeightAgainAndResize : function() {
 		if (jqObj.editorContainer.height() != jqObj.chatContainer.height()) {
 			this.setBasicEditorHeight();
@@ -913,17 +927,16 @@ var resizeFuncs = {
 	
 };
 
-//test block
-$('#test1').click(function() {
-	// jqAjax.test1();
-});
-
-// $(document).ready
-// ======================================================================================
+// =============================================================================================
 
 // $(function() {
 $(document).ready(function() {
 
+	setTimeout(function() {
+		session.connect();	
+	}, 1000);
+	
+	
 	$.each(eventObj, function(index, element) {
 		if((typeof element) == 'function') {
 			element();
@@ -935,6 +948,7 @@ $(document).ready(function() {
 			BCModalSet[ctr]();
 		}
 	}
+	
 	/*
 	$.each(BCModalSet, function(index, element) {
 		if((typeof element) == 'function') {
@@ -944,7 +958,7 @@ $(document).ready(function() {
 	*/
 	
 	// this is for only testing
-	$('#nicknameInput').focus();
+//	$('#nicknameInput').focus();
 	
 	// Initial setting
 	if (utils.isDesktopSize()) {
@@ -956,8 +970,10 @@ $(document).ready(function() {
 		resizeFuncs.setMobileHeight();
 	}
 	
-	// Added because of error of inline editor on Chrome
-	// Inline editor initialized in hidden tag on Chrome can't be used
+	/*
+		Added because of error of inline editor on Chrome
+		Inline editor initialized in hidden tag on Chrome can't be used
+	*/
 	mobileEditor.on('instanceReady', function() {
 		$("#mobileEditor").addClass("visible-xs-block");
 	});
@@ -979,6 +995,7 @@ $(document).ready(function() {
 				resizeFuncs.setBasicHeight();
 				basicEditor.setData(mobileEditor.getData());
 			}
+			
 		// To mobile from basic
 		} else {
 			

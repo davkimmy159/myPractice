@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import kr.co.ps119.flag.NewAccount;
+import kr.co.ps119.flag.NewAccountFlag;
 import kr.co.ps119.service.AccountService;
 import kr.co.ps119.vo.MemberForm;
 
@@ -50,48 +50,60 @@ public class NewAccountController {
 	public String createAccount(
 			@Valid @ModelAttribute MemberForm memberForm,
 			Errors errors,
-			Model model,
-			RedirectAttributes redirectAttrs) {
+			RedirectAttributes model) {
 		
-		String returnPage = "new_account/registration_input_form";
+		String returnPage = "redirect:/new_account/registration_input_form";
 		
 		// JSR-303 check
 		if (errors.hasErrors()) {
 			return returnPage;
 		}
 
-		NewAccount saveStatus = creaetAccountService.createAccount(memberForm);
+		// Gets result sign from service bean
+		NewAccountFlag saveStatus = creaetAccountService.createAccount(memberForm);
 		String duplicationCheckMsg;
 		
+		// Does next action depending on result sign above
+		// This is server-side validation logic
 		switch(saveStatus) {
+			// Duplication of email
 			case DUPLICATE_EMAIL :
-				duplicationCheckMsg = NewAccount.DUPLICATE_EMAIL.getMessage();
-				model.addAttribute("duplicationInput", memberForm.getEmail());
-				model.addAttribute("duplicationError", duplicationCheckMsg);
+				// Gets the alert message from result sign
+				duplicationCheckMsg = NewAccountFlag.DUPLICATE_EMAIL.getMessage();
+				
+				// Sends email input and alert message to view through model
+				model.addFlashAttribute("duplicationInput", memberForm.getEmail());
+				model.addFlashAttribute("duplicationError", duplicationCheckMsg);
 				break;
-			
+
+			// Duplication of username
 			case DUPLICATE_USERNAME :
-				duplicationCheckMsg = NewAccount.DUPLICATE_USERNAME.getMessage();
-				model.addAttribute("duplicationInput", memberForm.getUsername());
-				model.addAttribute("duplicationError", duplicationCheckMsg);
+				// Gets the alert message from result sign
+				duplicationCheckMsg = NewAccountFlag.DUPLICATE_USERNAME.getMessage();
+
+				// Sends username input and alert message to view through model
+				model.addFlashAttribute("duplicationInput", memberForm.getUsername());
+				model.addFlashAttribute("duplicationError", duplicationCheckMsg);
 				break;
 			
-			// Checks unexpected error while saving entity into DB
+			// Unexpected error
+			// ex) save error ...
 			case UNEXPECTED_SERVER_ERROR :
-				model.addAttribute("serverSideError", NewAccount.UNEXPECTED_SERVER_ERROR.getMessage());	
+				// Gets the alert message from result sign and sends to view through model
+				model.addFlashAttribute("serverSideError", NewAccountFlag.UNEXPECTED_SERVER_ERROR.getMessage());	
 				break;
 			
+			// Successful creation of account
 			case SUCCESSFUL :
+				// Just redirects to main page for member
 				returnPage = "redirect:/member/member_main";
 				break;
 			
-			// Checks special unexpected error 
+			// Checks any unexpected special error
 			default :
-				model.addAttribute("serverSideError", NewAccount.UNEXPECTED_SERVER_ERROR.getMessage());	
+				model.addFlashAttribute("serverSideError", NewAccountFlag.UNEXPECTED_SERVER_ERROR.getMessage());	
 				break;
 		}		
-		
-//		redirectAttrs.addFlashAttribute("loginEmailId", memberForm.getEmail());
 		
 		return returnPage;
 	}

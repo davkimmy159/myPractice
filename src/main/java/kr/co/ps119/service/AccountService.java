@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.entity.MemberAuthority;
-import kr.co.ps119.flag.NewAccount;
+import kr.co.ps119.flag.NewAccountFlag;
 import kr.co.ps119.repository.AuthorityRepository;
 import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.repository.CommentRepository;
@@ -42,41 +42,50 @@ public class AccountService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	public NewAccount createAccount(MemberForm memberForm) {
+	public NewAccountFlag createAccount(MemberForm memberForm) {
 		MemberForm targetMemberForm = memberForm;
 
 		Member checkMember;
+		
 		// Checks email duplication
 		checkMember = memberRepo.findByEmail(targetMemberForm.getEmail());
 		if (checkMember != null) {
-			return NewAccount.DUPLICATE_EMAIL;
+			return NewAccountFlag.DUPLICATE_EMAIL;
 		}
 
 		// Checks username duplication
 		checkMember = memberRepo.findByUsername(targetMemberForm.getUsername());
 		if(checkMember != null) {
-			return NewAccount.DUPLICATE_USERNAME;
+			return NewAccountFlag.DUPLICATE_USERNAME;
 		}
+		
+		
+		/* Starts creating an account */
 		
 		Member saveEntity = new Member();
 		
+		// Encodes password 
 		String rawPassword = targetMemberForm.getPassword();
 		String encodedPassword = passwordEncoder.encode(rawPassword);
 		targetMemberForm.setPassword(encodedPassword);
-		
 		BeanUtils.copyProperties(targetMemberForm, saveEntity);
-		
+
+		// Sets basic authority of account
 		MemberAuthority memAuth = new MemberAuthority();
 		memAuth.setAuthority(authRepo.findOne(1));
+		
+		// Saves entity
 		memAuth.setMember(saveEntity);
 		
+		// Gets entity that is just saved above
 		Member resultEntity = memberRepo.save(saveEntity);
 		
 		// Checks whether unexpected save error has been occurred
+		// ex) save error ...
 		if(resultEntity == null) {
-			return NewAccount.UNEXPECTED_SERVER_ERROR;
+			return NewAccountFlag.UNEXPECTED_SERVER_ERROR;
 		}
 		
-		return NewAccount.SUCCESSFUL;
+		return NewAccountFlag.SUCCESSFUL;
 	}
 }

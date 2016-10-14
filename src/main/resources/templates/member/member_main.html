@@ -22,12 +22,17 @@ li, #createRoom_desktop:hover, #createRoom_tablet:hover {
 	cursor: pointer;
 }
 
-strong.loginIdDisplay {
+span#loginIdDisplayMobile {
 	font-style: italic;
 	font-size: 17px;
-	color: rgb(130, 130, 130);
+	color: rgb(255, 255, 255);
 }
 
+span#loginIdDisplayDesktop {
+	font-style: italic;
+	font-size: 17px;
+	color: rgb(0, 0, 0);
+}
 
 
 #test.row {
@@ -47,8 +52,33 @@ strong.loginIdDisplay {
 }
 
 #create_board_usernamename_input {
-	color: gray;
+	color: blue;
+	font-weight: 700;
 }
+
+.error_container .alert {
+	padding-top: 10px;
+}
+
+.error_container h3 {
+	margin-top: 5px;
+}
+
+.error_container span.wrong_title {
+	color: red;
+	font-style: italic;
+	font-size: 20px;
+}
+.error_container .help-block {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+/*
+.glyphicon.form-control-feedback {
+	top: 25px;
+}
+*/
 </style>
 <title>default_index</title>
 </head>
@@ -90,7 +120,7 @@ strong.loginIdDisplay {
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">sm dropdown 1<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
-										<a id="" data-toggle="modal" data-target="#createRoomModal">modal test button</a>
+										<a id="" data-toggle="modal" data-target="#createBoardModal">modal test button</a>
 									</li>
 									<li class="divider"></li>
 									<li>
@@ -112,7 +142,7 @@ strong.loginIdDisplay {
 							<!-- category button list -->
 							<!-- For xs, md, lg size (the same as right above) -->
 							<li>
-								<a id="" name="" class="hidden-sm" data-toggle="modal" data-target="#createRoomModal">modal test button</a>
+								<a id="" name="" class="hidden-sm" data-toggle="modal" data-target="#createBoardModal">modal test button</a>
 							</li>
 							<hr class="visible-xs-block" />
 							<li>
@@ -127,9 +157,10 @@ strong.loginIdDisplay {
 								<a id="" name="" class="hidden-sm" href="">xs, md, lg test 4</a>
 							</li>
 							
+							<hr class="visible-xs-block" />
+							
 							<!-- user utility button -->
 							<!-- mobile view -->
-							<hr class="visible-xs-block" />
 							<li class="visible-xs-block">
 								<ul class="nav nav-pills">
 									<!-- style="text-align: center;" -->
@@ -161,13 +192,10 @@ strong.loginIdDisplay {
 										<ul class="dropdown-menu">
 											<li class="dropdown-header">
 												<span>Signed in as</span><br />
-												<span>
-													<strong class="loginIdDisplay" th:text="${#authentication.getPrincipal().getUsername()}">
-														username
-													</strong>
+												<span id="loginIdDisplayMobile" th:text="${principal.username}">
+													<strong>username</strong>
 												</span>
 											</li>
-											<li class="divider"></li>
 											<li>
 												<a id="">xs (mobile) right 1</a>
 											</li>
@@ -221,13 +249,10 @@ strong.loginIdDisplay {
 								<ul class="dropdown-menu" role="menu">
 									<li class="dropdown-header">
 										<span>Signed in as</span><br />
-										<span>	
-											<strong class="loginIdDisplay" th:text="${#authentication.getPrincipal().getUsername()}">
-												username
-											</strong>
+										<span id="loginIdDisplayDesktop" th:text="${principal.username}">	
+											<strong>username</strong>
 										</span>
 									</li>
-									<li class="divider"></li>
 									<li>
 										<a id="">sm ~ lg (desktop) right 1</a>
 									</li>
@@ -274,10 +299,10 @@ strong.loginIdDisplay {
 		</div>
 		<!-- /.row -->
 		
-				<!-- =================================================================================================== -->
+<!-- ========================================================================================================================================== -->
 
-		<!-- Main modal -->
-		<div id="createRoomModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<!-- Create board modal -->
+		<div id="createBoardModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 				
@@ -310,7 +335,7 @@ strong.loginIdDisplay {
 						<div class="tab-content">
 						
 							<!-- tab content 1 -->
-							<div id="createRoomModal_tabContent1" class="tab-pane fade in active" role="tabpanel">
+							<div id="createBoardModal_tabContent1" class="tab-pane fade in active" role="tabpanel">
 								<div class="container-fluid">
 									<div class="panel panel-info">
 									
@@ -318,7 +343,7 @@ strong.loginIdDisplay {
 											<ul class="nav nav-pills" role="tablist">
 											
 												<li role="presentation" class="active">
-													<a href="#createRoomModal_tabContent1_test1" data-toggle="tab" role="tab">
+													<a href="#createBoardModal_tabContent1_test1" data-toggle="tab" role="tab">
 														<span class="glyphicon glyphicon-edit"></span>
 														&nbsp;
 														<span>test 1</span>
@@ -326,7 +351,7 @@ strong.loginIdDisplay {
 												</li>
 												
 												<li role="presentation" class="">
-													<a href="#createRoomModal_tabContent1_test2" data-toggle="tab" role="tab">
+													<a href="#createBoardModal_tabContent1_test2" data-toggle="tab" role="tab">
 														<span class="glyphicon glyphicon-edit"></span>
 														&nbsp;
 														<span>test 2</span>
@@ -341,25 +366,39 @@ strong.loginIdDisplay {
 										<div class="panel-body">
 											<div class="tab-content">
 											
-												<div id="createRoomModal_tabContent1_test1" class="tab-pane fade in active" role="tabpanel">
+												<div id="createBoardModal_tabContent1_test1" class="tab-pane fade in active" role="tabpanel">
+													
+													<div class="error_container" th:if="${errorMessage}">
+														<div class="alert alert-warning alert-dismissible fade in">
+															<button type="button" class="close" data-dismiss="alert">&times;</button>
+															<h3><span><Strong>Wrong title input</Strong></span></h3>
+															<span th:text="${wrongTitleInput}" class="wrong_title"></span><br />
+															<span th:text="${errorMessage}"></span>
+														</div>
+													</div>
+													
 													<div class="page-header">
 														<h3>
 															<span>Collaborate immediately</span>
 														</h3>
 													</div>
-													<form class="form-horizontal" action="" th:action="@{/board/create_board}" method='post'>
+													<form id="createBoardForm" class="form-horizontal" action="" th:action="@{/board/create_board}" method='post'>
 													
-														<div class="form-group">
-															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Room name</label>
+														<div class="form-group has-feedback">
+															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Title</label>
 															<div class="col-sm-9 col-md-10">
-																<input id="create_board_name_input" name="boardName" class="form-control" type="text" placeholder="Insert your room name here" />
+																<input id="create_board_name_input" name="boardName" class="form-control" type="text" placeholder="Insert your room name here" data-error="Title is invalid" />
+																<span class="glyphicon form-control-feedback"></span><!-- required="required" pattern="[a-zA-Z1-9!`~@#$%^&amp;*()-_+=]{1,200}"  -->
+																<div class="help-block">client-side : any </div>
+																<div class="help-block">server-side : 1 ~ 5 (no blank)</div><!-- Character range : 1 ~ 200 -->
+																<div class="help-block with-errors"></div>
 															</div>
 														</div>
 														
 														<div class="form-group">
-															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Username</label>
+															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Owner</label>
 															<div class="col-sm-9 col-md-10">
-																<input id="create_board_usernamename_input" name="ownerUsername" class="form-control" type="text" th:value="${#authentication.getPrincipal().getUsername()}" readonly="readonly" />
+																<input id="create_board_usernamename_input" name="ownerUsername" class="form-control" type="text" th:value="${principal.username}" readonly="readonly" />
 															</div>
 														</div>
 														
@@ -369,11 +408,12 @@ strong.loginIdDisplay {
 															</button>
 														</div>
 														<!-- /.pull-right -->
+														
 													</form>
 												</div>
 												<!-- /.tab-pane -->
 												
-												<div id="createRoomModal_tabContent1_test2" class="tab-pane fade" role="tabpanel">
+												<div id="createBoardModal_tabContent1_test2" class="tab-pane fade" role="tabpanel">
 													<form action="" method='post'>
 														<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
 														<div class="pull-right">
@@ -405,7 +445,7 @@ strong.loginIdDisplay {
 							<!-- /#tabContent1 -->
 							
 							<!-- tab content 2 -->
-							<div id="createRoomModal_tabContent2" class="tab-pane fade" role="tabpanel">
+							<div id="createBoardModal_tabContent2" class="tab-pane fade" role="tabpanel">
 
 							</div>
 							<!-- /#tabContent2 -->
@@ -434,19 +474,32 @@ strong.loginIdDisplay {
 
 	<!-- jQuery & bootstrap JS is loaded here by upper layer -->
 
+
 	<!-- Custom Javascript -->
 	<div layout:fragment="customScript">
 		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
 		<script>
 //			notify.notify("Login successful", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "ID : " + $(".loginIdDisplay").html());
 			
-			$(function() {
+			$("#createBoardModal").on("shown.bs.modal", function(event) {
+				$("#create_board_name_input").focus();
+			});
+			
+			$(document).ready(function() {
 				$("a#logout_btn_mobile").click(function() {
 					$("form.logout_form").submit();
 				});
 				
 				$("a#logout_btn_desktop").click(function() {
 					$("form.logout_form").submit();
+				});
+				
+				$("form#createBoardForm").validator().on('submit', function(e) {
+					if (e.isDefaultPrevented()) {
+						notify.notify('Wrong input', '잘못된 입력이 있습니다.\n수정 후 다시 시도해주세요', 'error');
+					} else {
+						
+					}
 				});
 			});
 		</script>

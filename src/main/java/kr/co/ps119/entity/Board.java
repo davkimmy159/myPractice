@@ -38,8 +38,8 @@ public class Board implements Serializable {
 	
 	@Column
 	@NotBlank(message = "title is empty")
-	@Length(max = 100,
-			message = "board name must be between 0 ~ 100")
+	@Length(max = 600,
+			message = "board name must be between 0 ~ 600")
 	private String title;
 	
 	@Column

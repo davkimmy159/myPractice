@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.co.ps119.entity.Member;
-import kr.co.ps119.flag.NewAccount;
+import kr.co.ps119.flag.NewAccountFlag;
 import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.repository.CommentRepository;
 import kr.co.ps119.repository.MemberRepository;

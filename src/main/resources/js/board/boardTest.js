@@ -49,6 +49,9 @@ var session = {
 	stompClient : null,
 	nickname : null,
 	id : null,
+	chatHandler: "/dest/chat",
+	editorHandler: "/dest/editor",
+	dbUpdateAlarmHandler: "/dest/chat/db_update_alarm",
 	
 	connect : function() {
 		var websocketUrl = path.getFullContextPath() + '/websocket/board';
@@ -77,9 +80,6 @@ var session = {
 					
 					utils.chatAppend(alarmMsgBody.chatAreaMessage);
 					notify.notify(alarmMsgBody.messageBody, ' by \'' + alarmMsgBody.username + '\'');
-					
-					// Rewrites html page of DB list
-					jqAjax.updateList();
 				});
 				
 				// editor subscribe 1
@@ -110,7 +110,7 @@ var session = {
 					messageBody : ' 님이 접속했습니다.'
 				});
 				
-				session.stompClient.send('/dest/chat', {}, joinMsg);
+				session.stompClient.send(session.chatHandler, {}, joinMsg);
 			},
 			function(error) {
 				utils.chatAppend("Error : Stomp  connection failed (" + error + ")");
@@ -139,7 +139,7 @@ var session = {
 			messageBody : ' 님이 나갔습니다.'
 		});
 		
-		session.stompClient.send('/dest/chat', {}, exitMsg);
+		session.stompClient.send(session.chatHandler, {}, exitMsg);
 		
 		// For Good bye message isn't sent
 		setTimeout(function() {
@@ -178,7 +178,7 @@ var session = {
 		
 		$('#chatInput').val('');
 		
-		this.stompClient.send('/dest/chat', {}, msg);
+		this.stompClient.send(session.chatHandler, {}, msg);
 		
 		msg = null;
 	},
@@ -203,7 +203,7 @@ var session = {
 			mobileEditor.focus();
 		}
 
-		session.stompClient.send('/dest/editor', {}, JSON.stringify(editorContent));
+		session.stompClient.send(session.editorHandler, {}, JSON.stringify(editorContent));
 	}
 };
 
@@ -236,7 +236,7 @@ var utils = {
 		$('#chatArea').append(str + '\n');
 		$('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
 	},
-		
+
 	isDesktopSize : function() {
 		return matchMedia("screen and (min-width: 768px)").matches;
 	},
@@ -555,30 +555,20 @@ var eventObj = {
 		$('#editorSaveBtn').click(function() {
 			if (session.socket && session.stompClient) {
 				
-				// desktop
-				if (utils.isDesktopSize()) {
-//					jqAjax.saveBoard(basicEditor.document.getBody().getText());
-					jqAjax.saveBoard(basicEditor.getData());
-					
-				// mobile
-				} else {
-//					jqAjax.saveBoard(mobileEditor.document.getBody().getText());
-					jqAjax.saveBoard(mobileEditor.getData());
-				}
+				notify.notify("Save button", "Save button is clicked!");
 				
 				var dbUpdateMsg = JSON.stringify({
 					username : session.nickname,
 					messageBody : "Content update"
 				});
 				
-				session.stompClient.send("/dest/chat/db_update_alarm", {}, dbUpdateMsg);
+				session.stompClient.send(session.dbUpdateAlarmHandler, {}, dbUpdateMsg);
 				
 				utils.focusToEditor();
 			} else {
 				notify.notify('Join required', 'You need to join first!');
 				$('#nicknameInput').focus();
 			}
-			
 			
 			/*
 			Array.prototype
@@ -593,14 +583,15 @@ var eventObj = {
 	
 	editorDelEvent : function() {
 		$('#listDelBtn').click(function() {
-			jqAjax.deleteAllBoards();
+
+			notify.notify("Delete all button", "Delete button is clicked!");
 			
 			var dbUpdateMsg = JSON.stringify({
 				username : session.nickname,
 				messageBody : "All contents have been deleted"
 			});
 			
-			session.stompClient.send("/dest/chat/db_update_alarm", {}, dbUpdateMsg);
+			session.stompClient.send(session.dbUpdateAlarm, {}, dbUpdateMsg);
 			
 		});
 	},
@@ -894,8 +885,6 @@ var resizeFuncs = {
 		// CKEditor is loaded at the last moment, so I used 'on' method
 		// from CKEditor
 		basicEditor.on('instanceReady', function() {
-			// keyword 'this' in 'on' method of CKEditor instance means
-			// basicEditor itself, so I specified 'resizeFuncs' object
 			resizeFuncs.setBasicEditorHeight();
 			resizeFuncs.checkEditorHeightAgainAndResize();
 		});
@@ -956,6 +945,12 @@ $(document).ready(function() {
 		resizeFuncs.setGapByTogglingClass();
 		resizeFuncs.setMobileHeight();
 	}
+	
+	// Added because of error of inline editor on Chrome
+	// Inline editor initialized in hidden tag on Chrome can't be used
+	mobileEditor.on('instanceReady', function() {
+		$("#mobileEditor").addClass("visible-xs-block");
+	});
 	
 	// resize height of both calendar in modal
 	resizeFuncs.setBothCalendarHeight();

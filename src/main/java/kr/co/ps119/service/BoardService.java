@@ -24,6 +24,7 @@ public class BoardService {
 	private CommentRepository commentRepo;
 	
 	public Long createBoard(String boardName, String ownerUsername) {
+		
 		Board board = new Board();
 		Member boardOwner = memberRepo.findByUsername(ownerUsername);
 		

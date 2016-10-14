@@ -38,7 +38,7 @@ public class BasicTestController {
 	
 	@GetMapping(value = "test")
 	public String test() {
-		return "board/board";
+		return "board/boardTest";
 	}
 	
 	@GetMapping(value = "index")
