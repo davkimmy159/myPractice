@@ -15,8 +15,9 @@ apply plugin: 'war'
 apply plugin: 'spring-boot'
 apply plugin: 'eclipse-wtp'
 
+
 war {
-	baseName = 'imcolla'
+	baseName = '/imcolla'
 //	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
