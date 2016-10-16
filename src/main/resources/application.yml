@@ -12,6 +12,8 @@ spring:
   devtools:
     restart:
       enabled: false
+server:
+  context-path: /imcolla
 #  activemq:
 #    in-memory: true
 #    pool:
@@ -46,8 +48,6 @@ spring:
     cache: false
   session:
     store-type: none
-server:
-  context-path: /imcolla
 
 #jdbc:h2:~/test
 
