@@ -2,6 +2,7 @@ package kr.co.ps119.service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import kr.co.ps119.repository.MemberRepository;
 import kr.co.ps119.vo.MemberForm;
 
 @Service
+@Transactional
 public class AccountService {
 	
 	@PersistenceContext

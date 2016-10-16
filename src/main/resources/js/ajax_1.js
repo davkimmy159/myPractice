@@ -1,5 +1,26 @@
 var jqAjax = {
 
+	updateBoardDB : function(boardId, editorContent) {
+		$.ajax({
+			url : '../ajax/board/updateBoardDB',
+			type : 'GET',
+			data : {
+				'boardId' : boardId,
+				'editorContent' : editorContent
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify('Ajax 통신 성공 code : ' + status, '저장 프로세스 : ' + data.resultMessage);
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+			}
+		});
+	},
+		
 	updateList : function() {
 		$.ajax({
 			url : 'test/boardUpdateAjaxTest',
@@ -42,25 +63,7 @@ var jqAjax = {
 			}
 		});
 	},
-	
-	saveBoard : function(editorContent) {
-		$.ajax({
-			url : 'test/boardSaveAjaxTest',
-			type : 'GET',
-			data : {'editorContent' : editorContent},
-			contentType : "application/json; charset=utf-8",
-			dataType : 'json',
-			// cache: false,
-			// processData: false,
-			success : function(data, status) {
-				notify.notify('저장 성공 : ' + status, '리스트 수 : ' + data.listSize);
-			},
-			error : function(request, status, error) {
-				notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
-			}
-		});
-	},
-	
+
 	deleteAllBoards : function() {
 		$.ajax({
 			url : 'test/boardDeleteAjaxTest',

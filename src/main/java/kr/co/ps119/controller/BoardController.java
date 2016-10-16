@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.ps119.service.BoardService;
@@ -22,7 +23,7 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	@PostMapping(value = "create_board")
+	@GetMapping(value = "create_board")
 	public String createBoard(
 			@RequestParam String boardName,
 			@RequestParam String ownerUsername,
@@ -39,32 +40,57 @@ public class BoardController {
 		
 		// Checks trimmed one and whether it's blank or only white space string and returns if it is
 		if(boardNameLength == 0) {
-			model.addFlashAttribute("wrongTitleInput", "It's empty or blank");
+			model.addFlashAttribute("blankTitleInput", "It's empty or blank");
 			model.addFlashAttribute("errorMessage", "Title of board cannot be empty or blank. Please try again");
 			return returnPage;
-			
+		
 		// Returns board name if it's unqualified
 		} else if(boardNameLength > 5) {
-			model.addFlashAttribute("wrongTitleInput", boardName);
+			model.addFlashAttribute("wrongTitleInput", trimmedBoardName);
 			model.addFlashAttribute("errorMessage", "Length of board title must be between 1 ~ 5 (for test). Please try again");
 			return returnPage;
 		}
 		
-		
 		Long boardId = boardService.createBoard(boardName, ownerUsername);
+		
+		if(boardId < 0) {
+			model.addFlashAttribute("serverError", "Server error!");
+			model.addFlashAttribute("errorMessage", "Server error has been occurred. Please try again");
+			return returnPage;
+		}
 		
 		model.addAttribute("boardId", boardId);
 		
-		return "redirect:/board/{boardId}";
+		returnPage = "redirect:/board/{boardId}";
+		
+		return returnPage;
 	}
 
 	
 	
-	@GetMapping(value = "{boardId}")
-	public String getBoard(@PathVariable Long boardId) {
+	@PostMapping(value = "{boardId}")
+	public String getBoard(
+			@PathVariable Long boardId,
+			RedirectAttributes model) {
 		
-		System.out.println("@PathVariable : " + boardId);
+		String returnPage = "redirect:/index";
 		
-		return "board/board2";
+		boolean boardExists = boardService.findOne(boardId);
+
+		if(boardExists) {
+			returnPage = "board/board";
+		} else {
+			// If board doesn't exist
+			model.addAttribute("boardExists", boardExists);
+		}
+		
+		return returnPage;
+	}
+	
+	@GetMapping(value = "deleteAll")
+	private String deleteAll() {
+		boardService.deleteAllBoardsOfMember();
+		
+		return "redirect:/member/member_main";
 	}
 }

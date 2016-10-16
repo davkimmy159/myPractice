@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,7 @@ import kr.co.ps119.repository.MemberAuthorityRepository;
 import kr.co.ps119.repository.MemberRepository;
 
 @Service
+@Transactional
 public class TestService {
 	
 	@PersistenceContext

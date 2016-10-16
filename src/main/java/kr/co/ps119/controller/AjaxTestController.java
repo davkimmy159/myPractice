@@ -26,33 +26,6 @@ public class AjaxTestController {
 	@Autowired
 	private TestService testService;
 	
-	@GetMapping(value = "boardUpdateAjaxTest")
-	@ResponseBody
-	public Map<String, Object> ajaxTest3() {
-
-		List<Board> boardList = testService.getList();
-
-		Map<String, Object> jsonObject = new HashMap<>();
-
-		jsonObject.put("boardList", boardList);
-
-		return jsonObject;
-	}
-	
-	
-	@GetMapping(value = "boardSaveAjaxTest")
-	@ResponseBody
-	public Map<String, Object> ajaxTest1(@RequestParam(value = "editorContent") String editorContent) {
-
-		int listSize = testService.saveContent(editorContent);
-
-		Map<String, Object> jsonObject = new HashMap<>();
-
-		jsonObject.put("listSize", listSize);
-
-		return jsonObject;
-	}
-	
 	@GetMapping(value = "boardDeleteAjaxTest")
 	@ResponseBody
 	public Map<String, Object> ajaxTest2() {
@@ -66,6 +39,7 @@ public class AjaxTestController {
 		return jsonObject;
 	}
 	
+	/*
 	@GetMapping(value = "test1")
 	@ResponseBody
 	public Map<String, Object> test1() {
@@ -78,6 +52,7 @@ public class AjaxTestController {
 		
 		return jsonObject;
 	}
+	*/
 	
 	/*
 	@GetMapping(value = "test2")

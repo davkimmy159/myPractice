@@ -1,0 +1,112 @@
+<!-- user utility button -->
+<!-- mobile view -->
+<li th:fragment="userUtilityButtonMobileFragment" class="visible-xs-block">
+	<ul th:fragment="userUtilityButtonMobileFragment_ul" class="nav nav-pills">
+		<!-- style="text-align: center;" -->
+	 	<li class="dropdown col-xs-5 col-xs-offset-1">
+			<a class="dropdown-toggle" style="text-align: center;" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+				<span>+</span>
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu col-xs-5">
+				<li>
+					<a id="">Create a colla</a>
+				</li>
+				<li>
+					<a id="">xs (mobile) left 2</a>
+				</li>
+				<li>
+					<a id="">xs (mobile) left 3</a>
+				</li>
+			</ul>
+			<!-- /.dropdown-menu -->
+		</li>
+		<!-- /.dropdown -->
+
+	 	<li class="dropdown col-xs-5">
+			<a class="dropdown-toggle" style="text-align: center;" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+				<span>-</span>
+				<span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				<li class="dropdown-header">
+					<span>Signed in as</span><br />
+					<span id="loginIdDisplayMobile" th:text="${principal.username}">
+						<strong>username</strong>
+					</span>
+				</li>
+				<li>
+					<a id="">xs (mobile) right 1</a>
+				</li>
+				<li>
+					<a id="">xs (mobile) right 2</a>
+				</li>
+				<li>
+					<a id="logoutBtnMobile">Sign out</a>
+				</li>
+			</ul>
+			<!-- /.dropdown-menu -->
+		</li>
+		<!-- /.dropdown -->
+	</ul>
+	<!-- /.nav.nav-pills -->
+	
+	<!-- logout form button for both mobile and desktop -->
+	<form id="logoutForm" type="hidden" action="" th:action="@{/login/logout_process}" method="post"></form>
+	
+</li>
+<!-- /.visible-xs-block -->
+<!-- /mobile view -->
+
+
+<!-- Separated to two elements -->
+<!-- member utility button -->
+<!-- desktop view -->
+<li th:fragment="userUtilityButtonDesktopFragment1" class="dropdown">
+	<a href="" class="dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-expanded="false">
+		<span>+</span>
+		<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu" role="menu">
+		<li>
+			<a id="">Create a colla</a>
+		</li>
+		<li>
+			<a id="">sm ~ lg (desktop) left 2</a>
+		</li>
+		<li>
+			<a id="">sm ~ lg (desktop) left 3</a>
+		</li>
+	</ul>
+	<!-- /ul.dropdown-menu -->
+</li>
+<!-- /li.dropdown -->
+
+<li th:fragment="userUtilityButtonDesktopFragment2" class="dropdown">
+	<a href="" class="dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-expanded="false">
+		<span>-</span>
+		<span class="caret"></span>
+	</a>
+	<ul class="dropdown-menu" role="menu">
+		<li class="dropdown-header">
+			<span>Signed in as</span><br />
+			<span id="loginIdDisplayDesktop" th:text="${principal.username}">	
+				<strong>username</strong>
+			</span>
+		</li>
+		<li>
+			<a id="">sm ~ lg (desktop) right 1</a>
+		</li>
+		<li>
+			<a id="">sm ~ lg (desktop) right 2</a>
+		</li>
+		<li>
+			<a id="logoutBtnDesktop">Sign out</a>
+		</li>
+	</ul>
+	<!-- /.dropdown-menu -->
+</li>
+<!-- /.dropdown -->
+
+<!-- /.navbar right -->
+<!-- /desktop view -->

@@ -64,7 +64,7 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 			.antMatchers("/login/login").permitAll()	//anonymous()
 			.antMatchers("/new_account/registration_input_form").permitAll()	// anonymous()
 			.antMatchers("/index").permitAll()
-			.antMatchers("/member/**").hasAnyAuthority("role_member", "role_admin")
+			.antMatchers("/member/**", "/board/**").hasAnyAuthority("ROLE_MEMBER", "ROLE_ADMIN")
 			.anyRequest().permitAll()
 			.and()
 			.formLogin()

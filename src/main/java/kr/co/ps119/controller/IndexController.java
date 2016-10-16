@@ -31,7 +31,7 @@ import javax.validation.Valid;
 		value = "/",
 		method = { RequestMethod.GET, RequestMethod.POST }
 )
-public class BasicTestController {
+public class IndexController {
 	
 	@Autowired
 	MemberService memberService;
@@ -43,6 +43,9 @@ public class BasicTestController {
 	
 	@GetMapping(value = "index")
 	public String user_index() {
+		
+		
+		
 		return "index";
 	}
 }

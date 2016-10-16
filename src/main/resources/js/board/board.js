@@ -43,56 +43,81 @@ $('#memoEditor').height($(window).height() * 0.2);
 
 // ===================================================================================================
 
+
 var session = {
 	
 	socket : null,
 	stompClient : null,
 	nickname : null,
-	id : null,
-	chatHandler: "/dest/chat",
-	editorHandler: "/dest/editor",
-	dbUpdateAlarmHandler: "/dest/chat/db_update_alarm",
+	boardId : null,
+	chatHandler: "/dest/chat/",
+	editorHandler: "/dest/editor/",
+	dbUpdateAlarmHandler: "/dest/chat/db_update_alarm/",
+	
+	chatSubscribe: "/subscribe/chat/",
+	editorSubscribe: "/subscribe/editor/",
+	dbUpdateAlarmSubscribe: "/subscribe/chat/db_update_alarm/",
+	
 	
 	connect : function() {
+
+		// Sets path of destination and subscribe point for each board
+		this.chatHandler += $("input#boardId").val();
+		this.editorHandler += $("input#boardId").val();
+		this.dbUpdateAlarmHandler += $("input#boardId").val();
+		
+		this.chatSubscribe += $("input#boardId").val();
+		this.editorSubscribe += $("input#boardId").val();
+		this.dbUpdateAlarmSubscribe += $("input#boardId").val();
+		
+		// Sets nickname
+		this.nickname = $("#loginIdDisplayDesktop").text();
+		
+		// Sets board id
+		this.boardId = $("#boardId").val();
+		
 		var websocketUrl = path.getFullContextPath() + '/websocket/board';
 		this.socket = new SockJS(websocketUrl);
 		this.stompClient = Stomp.over(this.socket);
-		
-		this.nickname = 
 		
 		this.stompClient.connect({},
 			function(frame) {
 				notify.notify("Stomp connection for board", frame);
 				
 				// chat subscribe 1
-				session.stompClient.subscribe('/subscribe/chat', function(messageData) {
+				session.stompClient.subscribe(session.chatSubscribe, function(messageData) {
 					var chatMessage = JSON.parse(messageData.body);
 
 					utils.chatAppend(chatMessage.chatAreaMessage);
-					notify.notify(chatMessage.username, chatMessage.messageBody);
+//					notify.notify(chatMessage.username, chatMessage.messageBody);
 					
 					if(session.nickname != chatMessage.username) {
-//						notify.notify(chatMsgBody.username, chatMsgBody.messageBody);
+						notify.notify(chatMessage.username, chatMessage.messageBody);
 					}
 				});
 				
 				// chat subscribe 2
-				session.stompClient.subscribe('/subscribe/chat/db_update_alarm', function(alarmMessage) {
+				session.stompClient.subscribe(session.dbUpdateAlarmSubscribe, function(alarmMessage) {
 					var alarmMsgBody = JSON.parse(alarmMessage.body);
 					
 					utils.chatAppend(alarmMsgBody.chatAreaMessage);
-					notify.notify(alarmMsgBody.messageBody, ' by \'' + alarmMsgBody.username + '\'');
+//					notify.notify(alarmMsgBody.messageBody, ' by \'' + alarmMsgBody.username + '\'');
+					
+					if(session.nickname != alarmMsgBody.username) {
+						notify.notify(alarmMsgBody.messageBody, " by '" + alarmMsgBody.username + "\'", "success");
+					}
 					
 					// Updates html page of DB list
-					jqAjax.updateList();
+//					jqAjax.updateList();
 				});
 				
 				// editor subscribe 1
-				session.stompClient.subscribe('/subscribe/editor', function(contentData) {
+				session.stompClient.subscribe(session.editorSubscribe, function(contentData) {
 					var contentDataBody = JSON.parse(contentData.body);
 					
 					// desktop
 					if (utils.isDesktopSize()) {
+//						notify.notify("test", basicEditor.getSelection().getRanges().length);
 //						var ranges = basicEditor.getSelection().getRanges();
 						basicEditor.setData(contentDataBody.messageBody);
 //						basicEditor.getSelection().selectRanges(ranges);
@@ -103,10 +128,10 @@ var session = {
 					}
 					
 					utils.chatAppend(contentDataBody.chatAreaMessage);
-					notify.notify("Editor update", " by '" + contentDataBody.username + "'");
+//					notify.notify("Editor update", " by '" + contentDataBody.username + "'");
 					
-					if(session.nickname != chatMsgBody.username) {
-//						notify.notify("Editor update", " by '" + contentDataBody.username + "'");
+					if(session.nickname != contentDataBody.username) {
+						notify.notify("Editor update", " by '" + contentDataBody.username + "'", "success");
 					}
 				});
 				
@@ -237,7 +262,12 @@ var utils = {
 		$('#chatArea').append(str + '\n');
 		$('#chatArea').scrollTop($('#chatArea')[0].scrollHeight);
 	},
-
+	
+	// Checks whether session is alive
+	isSessionAlive() {
+		return session.socket && session.stompClient;
+	},
+	
 	isDesktopSize : function() {
 		return matchMedia("screen and (min-width: 768px)").matches;
 	},
@@ -267,7 +297,7 @@ var utils = {
 	// session check v1
 	workWithSession : function(functionWithSession, functionWithoutSession) {
 		if(((typeof functionWithSession) == 'function') && ((typeof functionWithoutSession) == 'function')) {
-			if (session.socket && session.stompClient) {
+			if (utils.isSessionAlive()) {
 				functionWithSession();
 			} else {
 				functionWithoutSession();
@@ -311,7 +341,7 @@ var utils = {
 	
 	// veryfy chat input
 	verifyChatInput : function() {
-		if (session.socket && session.stompClient) {
+		if (utils.isSessionAlive()) {
 			if (this.checkStr($('#chatInput').val())) {
 				session.chatMsgSend();
 				$('#chatInput').focus();
@@ -438,53 +468,7 @@ var eventObj = {
 	},
 	*/
 	
-	chatInputKey : function() {
-		
-		// for CTRL + SHIFT
-		var isCtrl = false;
-		
-		// Focus back to chatInput on pressing enter key on chatInput
-		$('#chatInput').keydown(function(event) {
-			
-			// ENTER
-			if (event.which === 13) {
-				utils.verifyChatInput();
-				
-			// CTRL
-			} else if (event.which == 17) {
-				isCtrl = true;
-			}
-			
-			// CTRL + SHIFT
-			// <![CDATA[
-			if (event.which == 16 && isCtrl) {
-			// ]]>
-				notify.notify('title', 'CTRL + SHIFT clicked! (chatInput)');
-				
-				// Focus to basic editor
-				if(utils.isDesktopSize()) {
-					
-					basicEditor.focus();
-					
-				// Focus to mobile editor
-				} else {
-					mobileEditor.focus();
-				}
-			}
-		});
-		
-		// Toggle isCtrl false
-		$('#chatInput').keyup(function(event) {
-			if(event.which == 17) {
-				isCtrl=false;
-			}
-		});
-		
-		// Focus back to chatInput on clicking chatInputBtn
-		$('#chatInputBtn').click(function() {
-			utils.verifyChatInput();
-		});
-	},
+
 	
 	badgeEvent : function() {
 		// Badge event function
@@ -557,7 +541,7 @@ var eventObj = {
 	
 	editorInputSendEvent : function() {
 		$('#editorInputBtn').click(function() {
-			if (session.socket && session.stompClient) {
+			if (utils.isSessionAlive()) {
 				session.editorContentSend();
 				
 				utils.focusToEditor();
@@ -570,21 +554,21 @@ var eventObj = {
 	
 	editorSaveEvent : function() {
 		$('#editorSaveBtn').click(function() {
-			if (session.socket && session.stompClient) {
+			if (utils.isSessionAlive()) {
 				
 				// desktop
 				if (utils.isDesktopSize()) {
-					jqAjax.saveBoard(basicEditor.getData());
+					jqAjax.updateBoardDB(session.boardId, basicEditor.getData());
 					
 				// mobile
 				} else {
-					jqAjax.saveBoard(mobileEditor.getData());
+					jqAjax.updateBoardDB(session.boardId, mobileEditor.getData());
 				}
 //				jqAjax.saveBoard(basicEditor.document.getBody().getText());
 
 				var dbUpdateMsg = JSON.stringify({
 					username : session.nickname,
-					messageBody : "Content update"
+					messageBody : "DB content update"
 				});
 				
 				session.stompClient.send(session.dbUpdateAlarmHandler, {}, dbUpdateMsg);
@@ -608,7 +592,7 @@ var eventObj = {
 	
 	editorDelEvent : function() {
 		$('#listDelBtn').click(function() {
-			jqAjax.deleteAllBoards();
+//			jqAjax.deleteAllBoards();
 			
 			var dbUpdateMsg = JSON.stringify({
 				username : session.nickname,
@@ -617,6 +601,54 @@ var eventObj = {
 			
 			session.stompClient.send(session.dbUpdateAlarm, {}, dbUpdateMsg);
 			
+		});
+	},
+	
+	chatInputKey : function() {
+		
+		// for CTRL + SHIFT
+		var isCtrl = false;
+		
+		// Focus back to chatInput on pressing enter key on chatInput
+		$('#chatInput').keydown(function(event) {
+			
+			// ENTER
+			if (event.which === 13) {
+				utils.verifyChatInput();
+				
+			// CTRL
+			} else if (event.which == 17) {
+				isCtrl = true;
+			}
+			
+			// CTRL + SHIFT
+			// <![CDATA[
+			if (event.which == 16 && isCtrl) {
+			// ]]>
+//				notify.notify('title', 'CTRL + SHIFT clicked! (chatInput)');
+				
+				// Focus to basic editor
+				if(utils.isDesktopSize()) {
+					
+					basicEditor.focus();
+					
+				// Focus to mobile editor
+				} else {
+					mobileEditor.focus();
+				}
+			}
+		});
+		
+		// Toggle isCtrl false
+		$('#chatInput').keyup(function(event) {
+			if(event.which == 17) {
+				isCtrl=false;
+			}
+		});
+		
+		// Focus back to chatInput on clicking chatInputBtn
+		$('#chatInputBtn').click(function() {
+			utils.verifyChatInput();
 		});
 	},
 	
@@ -870,6 +902,7 @@ var resizeFuncs = {
 	formControlArray : [ $('#chatInputBtn') ],
 	btnGroupArray : [ $('#btnGroup1'), $('#btnGroup2') ],
 	
+	// For rearrangement of each component 
 	setGapByTogglingClass : function() {
 		utils.toggleClassArrayFunc(this.formGroupArray, 'form-group');
 		utils.toggleClassArrayFunc(this.formControlArray, 'form-control');
@@ -931,12 +964,11 @@ var resizeFuncs = {
 
 // $(function() {
 $(document).ready(function() {
-
+	
 	setTimeout(function() {
-		session.connect();	
+		session.connect();
 	}, 1000);
-	
-	
+
 	$.each(eventObj, function(index, element) {
 		if((typeof element) == 'function') {
 			element();

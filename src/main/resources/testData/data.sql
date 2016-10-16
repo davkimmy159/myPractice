@@ -10,5 +10,5 @@ INSERT INTO comment(content, create_date, board_id) VALUES('content_3', {ts '200
 INSERT INTO comment(content, create_date, board_id) VALUES('content_4', {ts '2000-12-12 11:22:33'}, 2);
 */
 
-INSERT INTO authority(authority) VALUES('role_member');
-INSERT INTO authority(authority) VALUES('role_admin');
+INSERT INTO authority(authority) VALUES('ROLE_MEMBER');
+INSERT INTO authority(authority) VALUES('ROLE_ADMIN');

@@ -18,8 +18,12 @@ hr {
 	border-color : #151515;
 }
 
-li, #createRoom_desktop:hover, #createRoom_tablet:hover {
+li {
 	cursor: pointer;
+}
+
+li.dropdown-header {
+	cursor: default;
 }
 
 span#loginIdDisplayMobile {
@@ -34,14 +38,10 @@ span#loginIdDisplayDesktop {
 	color: rgb(0, 0, 0);
 }
 
+tr {
+	cursor: pointer;
+} 
 
-#test.row {
-	outline: black solid 1px;
-}
-
-#test2.container-fluid {
-	outline: red solid 1px;
-}
 
 .page-header {
 	margin-top: 0px;
@@ -80,11 +80,14 @@ span#loginIdDisplayDesktop {
 }
 */
 </style>
-<title>default_index</title>
+<title>Member main page</title>
 </head>
 <body>
 	<!-- Substitution of 'body' on upper layer -->
 	<div layout:fragment="body" id="" class="container-fluid">
+	
+		<!-- <input id="boardExists" th:value="${#httpServletRequest.getAttribute('boardExists')}" type="hidden" /> -->
+	
 		<div class="row">
 			<nav id="" class="navbar navbar-default navbar-fixed-top navbar-inverse">
 				<div id="" class="container-fluid">
@@ -120,19 +123,19 @@ span#loginIdDisplayDesktop {
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">sm dropdown 1<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
-										<a id="" data-toggle="modal" data-target="#createBoardModal">modal test button</a>
+										<a>Index</a>
+									</li>
+									<li>
+										<a data-toggle="modal" data-target="#createBoardModal">Create</a>
+									</li>
+									<li class="divider"></li>
+									<li class="divider"></li>
+									<li>
+										<a>sm test 3</a>
 									</li>
 									<li class="divider"></li>
 									<li>
-										<a id="">sm test 2</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a id="">sm test 3</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a id="">sm test 4</a>
+										<a>sm test 4</a>
 									</li>
 								</ul>
 								<!-- /.dropdown-menu -->
@@ -142,132 +145,46 @@ span#loginIdDisplayDesktop {
 							<!-- category button list -->
 							<!-- For xs, md, lg size (the same as right above) -->
 							<li>
-								<a id="" name="" class="hidden-sm" data-toggle="modal" data-target="#createBoardModal">modal test button</a>
+								<a class="hidden-sm" href="../index.html" th:href="@{/index}">Index</a>
+							</li>
+							<hr class="visible-xs-block" /><li>
+								<a class="hidden-sm" data-toggle="modal" data-target="#createBoardModal">Create</a>
+							</li>
+							<hr class="visible-xs-block" />
+							
+							<li>
+								<a class="hidden-sm" href="">xs, md, lg test 3</a>
 							</li>
 							<hr class="visible-xs-block" />
 							<li>
-								<a id="" name="" class="hidden-sm" href="">xs, md, lg test 2</a>
-							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a id="" name="" class="hidden-sm" href="">xs, md, lg test 3</a>
-							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a id="" name="" class="hidden-sm" href="">xs, md, lg test 4</a>
+								<a class="hidden-sm" href="">xs, md, lg test 4</a>
 							</li>
 							
 							<hr class="visible-xs-block" />
+							
 							
 							<!-- user utility button -->
 							<!-- mobile view -->
-							<li class="visible-xs-block">
-								<ul class="nav nav-pills">
-									<!-- style="text-align: center;" -->
-								 	<li class="dropdown col-xs-5 col-xs-offset-1">
-										<a class="dropdown-toggle" style="text-align: center;" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-											<span>+</span>
-											<span class="caret"></span>
-										</a>
-										<ul class="dropdown-menu col-xs-5">
-											<li>
-												<a id="">Create a colla</a>
-											</li>
-											<li>
-												<a id="">xs (mobile) left 2</a>
-											</li>
-											<li>
-												<a id="">xs (mobile) left 3</a>
-											</li>
-										</ul>
-										<!-- /.dropdown-menu -->
-									</li>
-									<!-- /.dropdown -->
-							
-								 	<li class="dropdown col-xs-5">
-										<a class="dropdown-toggle" style="text-align: center;" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-											<span>-</span>
-											<span class="caret"></span>
-										</a>
-										<ul class="dropdown-menu">
-											<li class="dropdown-header">
-												<span>Signed in as</span><br />
-												<span id="loginIdDisplayMobile" th:text="${principal.username}">
-													<strong>username</strong>
-												</span>
-											</li>
-											<li>
-												<a id="">xs (mobile) right 1</a>
-											</li>
-											<li>
-												<a id="">xs (mobile) right 2</a>
-											</li>
-											<li>
-												<a id="logout_btn_mobile">Sign out</a>
-											</li>
-										</ul>
-										<!-- /.dropdown-menu -->
-									</li>
-									<!-- /.dropdown -->
-								</ul>
-								<!-- /.nav.nav-pills -->
-							</li>
+							<li th:replace="fragments/userUtilityButtons :: userUtilityButtonMobileFragment"></li>
 							<!-- /.visible-xs-block -->
 							<!-- /mobile view -->
+							
+							
 						</ul>
 						<!-- /.nav.navbar-nav -->
 						<!-- /navbar left -->
+
 						
 						<!-- member utility button -->
 						<!-- desktop view -->
 						<ul class="nav navbar-nav navbar-right">
-							<li class="dropdown">
-								<a href="" class="dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-expanded="false">
-									<span>+</span>
-									<span class="caret"></span>
-								</a>
-								<ul class="dropdown-menu" role="menu">
-									<li>
-										<a id="">Create a colla</a>
-									</li>
-									<li>
-										<a id="">sm ~ lg (desktop) left 2</a>
-									</li>
-									<li>
-										<a id="">sm ~ lg (desktop) left 3</a>
-									</li>
-								</ul>
-								<!-- /ul.dropdown-menu -->
-							</li>
-							<!-- /li.dropdown -->
-							
-							<li class="dropdown">
-								<a href="" class="dropdown-toggle hidden-xs" data-toggle="dropdown" role="button" aria-expanded="false">
-									<span>-</span>
-									<span class="caret"></span>
-								</a>
-								<ul class="dropdown-menu" role="menu">
-									<li class="dropdown-header">
-										<span>Signed in as</span><br />
-										<span id="loginIdDisplayDesktop" th:text="${principal.username}">	
-											<strong>username</strong>
-										</span>
-									</li>
-									<li>
-										<a id="">sm ~ lg (desktop) right 1</a>
-									</li>
-									<li>
-										<a id="">sm ~ lg (desktop) right 2</a>
-									</li>
-									<li>
-										<a id="logout_btn_desktop">Sign out</a>
-									</li>
-								</ul>
-								<!-- /.dropdown-menu -->
-							</li>
-							<!-- /.dropdown -->
+							<li th:replace="fragments/userUtilityButtons :: userUtilityButtonDesktopFragment1"></li>
+							<li th:replace="fragments/userUtilityButtons :: userUtilityButtonDesktopFragment2"></li>
 						</ul>
 						<!-- /.navbar right -->
+						<!-- /desktop view -->
+						
+						
 					</div>
 					<!-- /.navbar-collapse -->
 				</div>
@@ -277,23 +194,145 @@ span#loginIdDisplayDesktop {
 		</div>
 		<!-- /.row -->
 		
-		<form class="logout_form" action="" th:action="@{/login/logout_process}" method="post"></form>
-
-		
-		<div id="test" class="row">
-			<div id="test2" class="container-fluid col-sm-10 col-sm-offset-2">
-				<div class="container-fluid">
-					<div class="form-group">
-						<h3>test</h3>
-					</div>
-					<div class="form-group">
-						<h3>test</h3>
-					</div>
-					<div class="form-group">
-						<h3>test</h3>
-					</div>
+		<div class="row" ><!-- style="outline: black solid 1px;" -->
+			<div class="container-fluid col-sm-2" style="outline: gold solid 1px;">
+				<div class="form-group">
+					<h4>test 1</h4>				
 				</div>
-				<!-- /.container-fluid -->
+				<div class="form-group">
+					<h4>test 2</h4>				
+				</div>
+				<div class="form-group">
+					<h4>test 3</h4>				
+				</div>
+			</div>
+			
+			<div class="container-fluid col-sm-10" ><!-- style="outline: red solid 1px;" -->
+					
+				<div id="boardListTableContainer" class="row">
+				
+					<div class="panel panel-success">
+						
+						<div class="panel-heading">
+							<ul class="nav nav-pills">
+								<li class="active">
+									<a href="#boardListTableContainer_tabContent1" data-toggle="tab">My boards</a>
+								</li>
+								<li>
+									<a href="#boardListTableContainer_tabContent2" data-toggle="tab">All boards</a>
+								</li>
+								<li>
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								    	Dropdown <span class="caret"></span>
+								    </a>
+								    <ul class="dropdown-menu">
+									    <li>
+									    	<a href="">tset 1</a>
+									    </li>
+									    <li>
+									    	<a href="">test 2</a>
+									    </li>
+									    <li>
+									    	<a href="">test 3</a>
+									    </li>
+									    <li role="separator" class="divider"></li>
+									    <li>
+									    	<a href="">test 4</a>
+									    </li>
+								    </ul>
+								</li>
+							</ul>
+							<!-- /.nav nav-tabs -->
+						
+						</div>
+						<!-- /.panel-heading -->
+					
+						<div class="panel-body">
+							<div class="tab-content">
+							
+								<div id="boardListTableContainer_tabContent1" class="tab-pane fade in active" role="tabpanel">
+									
+									<h2>
+										<span>My board list</span>
+									</h2>
+									
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Title</th>
+												<th>Create</th>
+												<th>Last up</th>
+												<th>Up</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="board : ${userBoardList}" class="eachRowInTable">
+												<td th:text="${board.getId()}" class="eachBoardIdInTable">Number</td>
+												<td th:text="${board.getTitle()}">Title</td>
+												<td th:text="${board.getFormattedLocalCreateDate()}">Create date</td>
+												<td th:text="${board.getFormattedLocalLastUpdateDate()}">Last update date</td>
+												<td th:text="${board.getUpdateCount()}">Update count</td>
+											</tr>
+										</tbody>
+									</table>
+										
+								</div>
+								<!-- /.tab-pane-->
+						
+								<div id="boardListTableContainer_tabContent2" class="tab-pane fade in" role="tabpanel">
+									
+									<h2>
+										<span>All boards</span>
+									</h2>
+									
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Title</th>
+												<th>Create</th>
+												<th>Last up</th>
+												<th>Up</th>
+												<th>Owner</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="board : ${allBoardList}" class="eachRowInTable">
+												<td th:text="${board.getId()}" class="eachBoardIdInTable">Number</td>
+												<td th:text="${board.getTitle()}">Title</td>
+												<td th:text="${board.getFormattedLocalCreateDate()}">Create date</td>
+												<td th:text="${board.getFormattedLocalLastUpdateDate()}">Last update date</td>
+												<td th:text="${board.getUpdateCount()}">Update count</td>
+												<td th:text="${board.getMember().getUsername()}">Owner</td>
+											</tr>
+										</tbody>
+									</table>
+									
+								</div>
+								<!-- /.tab-pane-->
+						
+							</div>
+							<!-- /.tab-content -->
+						</div>
+						<!-- /.panel-body -->
+						
+						<div class="panel-footer">
+							<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createBoardModal">
+								<span>Create</span>
+							</button>
+							<a class="btn btn-danger" type="button" href="#" th:href="@{/board/deleteAll}">
+								<span>Delete all</span>
+							</a>
+						</div>
+						
+						
+						
+					</div>
+					<!-- /.panel -->
+						
+				</div>
+				<!-- /.row -->
 			</div>
 			<!-- /.container-fluid -->
 		</div>
@@ -334,7 +373,6 @@ span#loginIdDisplayDesktop {
 					<div class="modal-body">
 						<div class="tab-content">
 						
-							<!-- tab content 1 -->
 							<div id="createBoardModal_tabContent1" class="tab-pane fade in active" role="tabpanel">
 								<div class="container-fluid">
 									<div class="panel panel-info">
@@ -369,12 +407,28 @@ span#loginIdDisplayDesktop {
 												<div id="createBoardModal_tabContent1_test1" class="tab-pane fade in active" role="tabpanel">
 													
 													<div class="error_container" th:if="${errorMessage}">
-														<div class="alert alert-warning alert-dismissible fade in">
+													
+														<div class="alert alert-warning alert-dismissible fade in" th:if="${blankTitleInput}">
+															<button type="button" class="close" data-dismiss="alert">&times;</button>
+															<h3><span><Strong>Blank title input</Strong></span></h3>
+															<span th:text="${blankTitleInput}" class="wrong_title"></span><br />
+															<span th:text="${errorMessage}"></span>
+														</div>
+														
+														<div class="alert alert-warning alert-dismissible fade in" th:if="${wrongTitleInput}">
 															<button type="button" class="close" data-dismiss="alert">&times;</button>
 															<h3><span><Strong>Wrong title input</Strong></span></h3>
 															<span th:text="${wrongTitleInput}" class="wrong_title"></span><br />
 															<span th:text="${errorMessage}"></span>
 														</div>
+														
+														<div class="alert alert-warning alert-dismissible fade in" th:if="${serverError}">
+															<button type="button" class="close" data-dismiss="alert">&times;</button>
+															<h3><span><Strong>Server error</Strong></span></h3>
+															<span th:text="${serverError}" class="wrong_title"></span><br />
+															<span th:text="${errorMessage}"></span>
+														</div>
+														
 													</div>
 													
 													<div class="page-header">
@@ -382,12 +436,13 @@ span#loginIdDisplayDesktop {
 															<span>Collaborate immediately</span>
 														</h3>
 													</div>
+													
 													<form id="createBoardForm" class="form-horizontal" action="" th:action="@{/board/create_board}" method='post'>
 													
 														<div class="form-group has-feedback">
 															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Title</label>
 															<div class="col-sm-9 col-md-10">
-																<input id="create_board_name_input" name="boardName" class="form-control" type="text" placeholder="Insert your room name here" data-error="Title is invalid" />
+																<input name="boardName" class="form-control" type="text" placeholder="Insert your room name here" th:value="${wrongTitleInput}" data-error="Title is invalid" />
 																<span class="glyphicon form-control-feedback"></span><!-- required="required" pattern="[a-zA-Z1-9!`~@#$%^&amp;*()-_+=]{1,200}"  -->
 																<div class="help-block">client-side : any </div>
 																<div class="help-block">server-side : 1 ~ 5 (no blank)</div><!-- Character range : 1 ~ 200 -->
@@ -398,7 +453,7 @@ span#loginIdDisplayDesktop {
 														<div class="form-group">
 															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Owner</label>
 															<div class="col-sm-9 col-md-10">
-																<input id="create_board_usernamename_input" name="ownerUsername" class="form-control" type="text" th:value="${principal.username}" readonly="readonly" />
+																<input name="ownerUsername" class="form-control" type="text" th:value="${principal.username}" readonly="readonly" />
 															</div>
 														</div>
 														
@@ -410,6 +465,7 @@ span#loginIdDisplayDesktop {
 														<!-- /.pull-right -->
 														
 													</form>
+													
 												</div>
 												<!-- /.tab-pane -->
 												
@@ -432,7 +488,7 @@ span#loginIdDisplayDesktop {
 										
 										<div class="panel-footer">
 											<button id="" class="btn btn-primary">
-												<span>sub button</span>
+												<span>test</span>
 											</button>
 										</div>
 										<!-- /.panel-footer -->
@@ -477,22 +533,34 @@ span#loginIdDisplayDesktop {
 
 	<!-- Custom Javascript -->
 	<div layout:fragment="customScript">
+		<script src="../js/utils.js" th:src="@{/js/utils.js}" type="text/javascript"></script>
 		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
 		<script>
 //			notify.notify("Login successful", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + "ID : " + $(".loginIdDisplay").html());
 			
 			$("#createBoardModal").on("shown.bs.modal", function(event) {
-				$("#create_board_name_input").focus();
+				$("input[name='boardName']").focus();
 			});
 			
 			$(document).ready(function() {
-				$("a#logout_btn_mobile").click(function() {
-					$("form.logout_form").submit();
-				});
 				
-				$("a#logout_btn_desktop").click(function() {
-					$("form.logout_form").submit();
-				});
+				
+				$("tr.eachRowInTable").click(function() {
+			        window.location = path.getFullContextPath() + "/board/" + $(this).find("td.eachBoardIdInTable").html();
+			    });
+				
+				// Shows 'create board' modal if board isn't created
+				if($(".error_container").find("span").text()) {
+					$("#createBoardModal").modal("show");
+				}
+				
+				/*
+				// Shows 'create board' modal if board doesn't exist (URL connection)
+				if($("#boardExists").val()) {
+					notify.notify("test", $("boardExists").val());
+					$("#createBoardModal").modal("show");
+				}
+				*/
 				
 				$("form#createBoardForm").validator().on('submit', function(e) {
 					if (e.isDefaultPrevented()) {

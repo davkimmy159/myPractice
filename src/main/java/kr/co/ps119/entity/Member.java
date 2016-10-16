@@ -29,13 +29,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 public class Member implements UserDetails, Serializable {
 
-	// Sets 'enabled' as true before persist(save in DB)
+	private static final long serialVersionUID = 3443687366576503018L;
+	
+	// Sets default values
 	@PrePersist
-	void setEnabledTrue() {
+	void setDefaultValues() {
 		enabled = true;
 	}
-	
-	private static final long serialVersionUID = 3443687366576503018L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

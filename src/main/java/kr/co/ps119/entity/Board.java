@@ -1,6 +1,13 @@
 package kr.co.ps119.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.chrono.IsoChronology;
+import java.time.format.DateTimeFormatter;
+import java.time.zone.ZoneRules;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -31,6 +39,19 @@ public class Board implements Serializable {
 
 	private static final long serialVersionUID = -4939299278182413724L;
 
+	private static final ZoneId ZONE_ID_SEOUL = ZoneId.of("Asia/Seoul");
+	
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+	
+	// Sets default values
+	@PrePersist
+	void setDefaultValues() {
+		setCreateDate(new Date(System.currentTimeMillis()));
+		setLastUpdateDate(new Date(System.currentTimeMillis()));
+		setUpdateCount(0L);
+		setContent("Welcome to IMCOLLA!");
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "board_id")
@@ -51,6 +72,15 @@ public class Board implements Serializable {
 	@NotNull(message = "date is empty")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createDate;
+	
+	@Column
+	@NotNull(message = "date is empty")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastUpdateDate;
+	
+	@Column
+	@NotNull(message = "date is empty")
+	private Long updateCount;
 
 	// foreign key 1
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -103,13 +133,59 @@ public class Board implements Serializable {
 	}
 
 	public Date getCreateDate() {
-		return createDate;
+		return new Date(createDate.getTime());
 	}
-
+	
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
 
+	public Date getLastUpdateDate() {
+		return new Date(lastUpdateDate.getTime());
+	}
+
+	public void setLastUpdateDate(Date lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	public ZonedDateTime getZonedCreateDate() {
+		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(createDate.toInstant(), ZONE_ID_SEOUL);
+		return zonedDateTime;
+	}
+	
+	public ZonedDateTime getZonedLastUpdateDate() {
+		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(lastUpdateDate.toInstant(), ZONE_ID_SEOUL);
+		return zonedDateTime;
+	}
+	
+	public LocalDateTime getLocalCreateDate() {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(createDate.toInstant(), ZONE_ID_SEOUL);
+		return localDateTime;
+	}
+	
+	public LocalDateTime getLocalLastUpdateDate() {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(lastUpdateDate.toInstant(), ZONE_ID_SEOUL);
+		return localDateTime;
+	}
+	
+	public String getFormattedLocalCreateDate() {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(createDate.toInstant(), ZONE_ID_SEOUL);
+		return localDateTime.format(DATE_TIME_FORMATTER);
+	}
+	
+	public String getFormattedLocalLastUpdateDate() {
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(lastUpdateDate.toInstant(), ZONE_ID_SEOUL);
+		return localDateTime.format(DATE_TIME_FORMATTER);
+	}
+
+	public Long getUpdateCount() {
+		return updateCount;
+	}
+
+	public void setUpdateCount(Long updateCount) {
+		this.updateCount = updateCount;
+	}
+	
 	public Member getMember() {
 		return member;
 	}
@@ -143,39 +219,61 @@ public class Board implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getTitle() == null) ? 0 : title.hashCode());
-		result = prime * result + ((getContent() == null) ? 0 : content.hashCode());
-		result = prime * result + ((getCreateDate() == null) ? 0 : createDate.hashCode());
+		result = prime * result + ((content == null) ? 0 : content.hashCode());
+		result = prime * result + ((createDate == null) ? 0 : createDate.hashCode());
+		result = prime * result + ((lastUpdateDate == null) ? 0 : lastUpdateDate.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((updateCount == null) ? 0 : updateCount.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if(!(obj instanceof Board))
+		}
+		if (!(obj instanceof Board)) {
 			return false;
-//		if (getClass() != obj.getClass())
-//			return false;
+		}
 		Board other = (Board) obj;
-		if (getTitle() == null) {
-			if (other.title != null)
-				return false;
-		} else if (!getTitle().equals(other.title))
-			return false;
 		if (getContent() == null) {
-			if (other.content != null)
+			if (other.content != null) {
 				return false;
-		} else if (!getContent().equals(other.content))
+			}
+		} else if (!getContent().equals(other.content)) {
 			return false;
+		}
 		if (getCreateDate() == null) {
-			if (other.createDate != null)
+			if (other.createDate != null) {
 				return false;
-		} else if (!getCreateDate().equals(other.createDate))
+			}
+		} else if (!getCreateDate().equals(other.createDate)) {
 			return false;
-
+		}
+		if (getLastUpdateDate() == null) {
+			if (other.lastUpdateDate != null) {
+				return false;
+			}
+		} else if (!getLastUpdateDate().equals(other.lastUpdateDate)) {
+			return false;
+		}
+		if (getTitle() == null) {
+			if (other.title != null) {
+				return false;
+			}
+		} else if (!getTitle().equals(other.title)) {
+			return false;
+		}
+		if (getUpdateCount() == null) {
+			if (other.updateCount != null) {
+				return false;
+			}
+		} else if (!getUpdateCount().equals(other.updateCount)) {
+			return false;
+		}
 		return true;
 	}
 }

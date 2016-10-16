@@ -11,8 +11,8 @@ public class StompBoardController {
 
 	private static final Logger logger = LoggerFactory.getLogger(StompBoardController.class);
 	
-	@MessageMapping("/chat")
-	@SendTo("/subscribe/chat")
+	@MessageMapping("/chat/{boardId}")
+	@SendTo("/subscribe/chat/{boardId}")
 	public StompChatMessage handler1(StompChatMessage chatMessage) {
 		
 		chatMessage.makeChatAreaMessage();
@@ -20,8 +20,8 @@ public class StompBoardController {
 		return chatMessage;
 	}
 	
-	@MessageMapping("/chat/db_update_alarm")
-	@SendTo("/subscribe/chat/db_update_alarm")
+	@MessageMapping("/chat/db_update_alarm/{boardId}")
+	@SendTo("/subscribe/chat/db_update_alarm/{boardId}")
 	public StompDBUpdateMessage handler3(StompDBUpdateMessage DBUpdateMessage) {
 		
 		DBUpdateMessage.makeChatAreaMessage();
@@ -29,8 +29,8 @@ public class StompBoardController {
 		return DBUpdateMessage;
 	}
 	
-	@MessageMapping("/editor")
-	@SendTo("/subscribe/editor")
+	@MessageMapping("/editor/{boardId}")
+	@SendTo("/subscribe/editor/{boardId}")
 	public StompEditorContent handler2(StompEditorContent editorContent) {
 
 		editorContent.makeChatAreaMessage();
