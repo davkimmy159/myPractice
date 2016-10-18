@@ -34,14 +34,14 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import kr.co.ps119.utils.Utility;
+
 @Entity
 public class Board implements Serializable {
 
-	private static final long serialVersionUID = -4939299278182413724L;
+	private transient static final long serialVersionUID = -4939299278182413724L;
 
-	private static final ZoneId ZONE_ID_SEOUL = ZoneId.of("Asia/Seoul");
-	
-	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+	private transient static final Board emptyBoard = new Board(0L, "", "", null, null, 0L);
 	
 	// Sets default values
 	@PrePersist
@@ -100,10 +100,17 @@ public class Board implements Serializable {
 	public Board() {
 	}
 
-	public Board(String title, String content, Date createDate) {
+	public Board(String title, String content, Date createDate, Date lastUpdateDate, Long updateCount) {
+		this(0L, title, content, createDate, lastUpdateDate, updateCount);
+	}
+	
+	public Board(Long id, String title, String content, Date createDate, Date lastUpdateDate, Long updateCount) {
+		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.createDate = createDate;
+		this.lastUpdateDate = lastUpdateDate;
+		this.updateCount = updateCount;
 	}
 
 	public Long getId() {
@@ -149,33 +156,33 @@ public class Board implements Serializable {
 	}
 
 	public ZonedDateTime getZonedCreateDate() {
-		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(createDate.toInstant(), ZONE_ID_SEOUL);
+		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(createDate.toInstant(), Utility.getZoneIdSeoul());
 		return zonedDateTime;
 	}
 	
 	public ZonedDateTime getZonedLastUpdateDate() {
-		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(lastUpdateDate.toInstant(), ZONE_ID_SEOUL);
+		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(lastUpdateDate.toInstant(), Utility.getZoneIdSeoul());
 		return zonedDateTime;
 	}
 	
 	public LocalDateTime getLocalCreateDate() {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(createDate.toInstant(), ZONE_ID_SEOUL);
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(createDate.toInstant(), Utility.getZoneIdSeoul());
 		return localDateTime;
 	}
 	
 	public LocalDateTime getLocalLastUpdateDate() {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(lastUpdateDate.toInstant(), ZONE_ID_SEOUL);
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(lastUpdateDate.toInstant(), Utility.getZoneIdSeoul());
 		return localDateTime;
 	}
 	
 	public String getFormattedLocalCreateDate() {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(createDate.toInstant(), ZONE_ID_SEOUL);
-		return localDateTime.format(DATE_TIME_FORMATTER);
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(createDate.toInstant(), Utility.getZoneIdSeoul());
+		return localDateTime.format(Utility.getDateTimeFormatter());
 	}
 	
 	public String getFormattedLocalLastUpdateDate() {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(lastUpdateDate.toInstant(), ZONE_ID_SEOUL);
-		return localDateTime.format(DATE_TIME_FORMATTER);
+		LocalDateTime localDateTime = LocalDateTime.ofInstant(lastUpdateDate.toInstant(), Utility.getZoneIdSeoul());
+		return localDateTime.format(Utility.getDateTimeFormatter());
 	}
 
 	public Long getUpdateCount() {
@@ -210,6 +217,14 @@ public class Board implements Serializable {
 		}
 	}
 
+	public boolean isEmptyBoard() {
+		return this.id <= 0L;
+	}
+	
+	public static Board getEmptyBoard() {
+		return emptyBoard;
+	}
+	
 	@Override
 	public String toString() {
 		return "Board [id=" + id + ", title=" + title + ", content=" + content + ", createDate=" + createDate + "]";

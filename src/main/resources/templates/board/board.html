@@ -266,11 +266,15 @@ span#loginIdDisplayDesktop {
 			<div id="editorContainer" class="col-sm-9 container-fluid">
 				<div id="formGroup1" class="form-group">
 					<div id="basicEditorDiv" class="hidden-xs">
-						<div id="basicEditor" class="form-control">Welcome to IMCOLLA!</div>
+						<div id="basicEditor" class="form-control">
+						</div>
 					</div>
 					<div id="mobileEditorDiv" class=""> <!-- visible-xs-block -->
-						<div id="mobileEditor" class="form-control" contenteditable="true">Welcome to IMCOLLA!</div>
+						<div id="mobileEditor" class="form-control" contenteditable="true">
+						</div>
 					</div>
+					
+					<div id="boardContentFromServer" th:text="${boardContent}"></div>
 				</div>
 				<!-- /.from-group -->
 				

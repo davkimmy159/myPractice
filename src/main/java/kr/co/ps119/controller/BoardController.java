@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.ps119.entity.Board;
 import kr.co.ps119.service.BoardService;
 
 @Controller
@@ -23,7 +23,7 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	@GetMapping(value = "create_board")
+	@PostMapping(value = "create_board")
 	public String createBoard(
 			@RequestParam String boardName,
 			@RequestParam String ownerUsername,
@@ -66,8 +66,6 @@ public class BoardController {
 		return returnPage;
 	}
 
-	
-	
 	@PostMapping(value = "{boardId}")
 	public String getBoard(
 			@PathVariable Long boardId,
@@ -75,13 +73,17 @@ public class BoardController {
 		
 		String returnPage = "redirect:/index";
 		
-		boolean boardExists = boardService.findOne(boardId);
+		Board board = boardService.findOne(boardId);
 
-		if(boardExists) {
-			returnPage = "board/board";
+		// If board doesn't exist
+		if(board.isEmptyBoard()) {
+			model.addAttribute("boardExists", false);
+			
+		// If board exists
 		} else {
-			// If board doesn't exist
-			model.addAttribute("boardExists", boardExists);
+			returnPage = "board/board";
+			model.addAttribute("boardContent", board.getContent());
+			System.out.println(board.getContent());
 		}
 		
 		return returnPage;

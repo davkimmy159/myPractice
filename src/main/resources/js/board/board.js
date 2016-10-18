@@ -965,6 +965,8 @@ var resizeFuncs = {
 // $(function() {
 $(document).ready(function() {
 	
+	notify.notify("Board content", $("#boardContentFromServer").text());
+	
 	setTimeout(function() {
 		session.connect();
 	}, 1000);

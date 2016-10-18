@@ -22,7 +22,6 @@ import kr.co.ps119.repository.MemberRepository;
 @Transactional
 public class TestAccountCreationEventListener implements ApplicationListener<ApplicationReadyEvent> {
 
-
 	@PersistenceContext
 	private EntityManager em;
 	

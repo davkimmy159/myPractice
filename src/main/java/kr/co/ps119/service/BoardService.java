@@ -78,17 +78,16 @@ public class BoardService {
 		return boardIdAfterUpdate;
 	}
 	
-	public boolean findOne(Long boardId) {
-		boolean boardExists = false;
+	public Board findOne(Long boardId) {
 		Board board = boardRepo.findOne(boardId);
 		
 		if(board != null) {
-			boardExists = true;
-		} else {
 			
+		} else {
+			board = Board.getEmptyBoard();
 		}
 		
-		return boardExists;
+		return board;
 	}
 	
 	public List<Board> findAllBoardsOfMemberByUsername(String username) {
