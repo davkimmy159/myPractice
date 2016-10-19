@@ -42,6 +42,13 @@ tr {
 	cursor: pointer;
 } 
 
+h2 {
+	margin-top: 0px;
+}
+
+
+
+
 
 .page-header {
 	margin-top: 0px;
@@ -109,7 +116,7 @@ tr {
 						<!-- navbar-form -->
 						<div id="" class="navbar-form navbar-left">
 							<div class="form-group">
-								<input id="" type="text" class="form-control" size="30" placeholder="Search IMColla" />
+								<input id="" type="text" class="form-control" size="18" placeholder="Search IMColla" />
 							</div>
 						</div>
 						<!-- .navbar-form -->
@@ -123,19 +130,41 @@ tr {
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">sm dropdown 1<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
-										<a>Index</a>
-									</li>
-									<li>
-										<a data-toggle="modal" data-target="#createBoardModal">Create</a>
-									</li>
-									<li class="divider"></li>
-									<li class="divider"></li>
-									<li>
-										<a>sm test 3</a>
+										<a>test</a>
 									</li>
 									<li class="divider"></li>
 									<li>
-										<a>sm test 4</a>
+										<a>test</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a>test</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a>test</a>
+									</li>
+								</ul>
+								<!-- /.dropdown-menu -->
+							</li>
+							
+							<li class="dropdown visible-sm-block">
+								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">sm dropdown 2<span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a>test</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a>test</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a>test</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a>test</a>
 									</li>
 								</ul>
 								<!-- /.dropdown-menu -->
@@ -144,22 +173,37 @@ tr {
 							
 							<!-- category button list -->
 							<!-- For xs, md, lg size (the same as right above) -->
+							<li class="dropdown hidden-sm">
+								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+									<span>dropdown</span><span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu" role="menu">
+									<li>
+										<a>test</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a>test</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a>test</a>
+									</li>
+									<li class="divider"></li>
+									<li>
+										<a>test</a>
+									</li>
+								</ul>
+								<!-- /.dropdown-menu -->
+							</li>
+							<hr class="visible-xs-block" />
 							<li>
 								<a class="hidden-sm" href="../index.html" th:href="@{/index}">Index</a>
 							</li>
-							<hr class="visible-xs-block" /><li>
+							<hr class="visible-xs-block" />
+							<li>
 								<a class="hidden-sm" data-toggle="modal" data-target="#createBoardModal">Create</a>
 							</li>
-							<hr class="visible-xs-block" />
-							
-							<li>
-								<a class="hidden-sm" href="">xs, md, lg test 3</a>
-							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a class="hidden-sm" href="">xs, md, lg test 4</a>
-							</li>
-							
 							<hr class="visible-xs-block" />
 							
 							
@@ -264,15 +308,17 @@ tr {
 												<th>Create</th>
 												<th>Last up</th>
 												<th>Up</th>
+												<th>Hits</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr th:each="board : ${userBoardList}" class="eachRowInTable">
 												<td th:text="${board.getId()}" class="eachBoardIdInTable">Number</td>
 												<td th:text="${board.getTitle()}">Title</td>
-												<td th:text="${board.getFormattedLocalCreateDate()}">Create date</td>
-												<td th:text="${board.getFormattedLocalLastUpdateDate()}">Last update date</td>
+												<td th:text="${board.getFormattedCreateDateString()}">Create date</td>
+												<td th:text="${board.getFormattedLastUpdateDateString()}">Last update date</td>
 												<td th:text="${board.getUpdateCount()}">Update count</td>
+												<td th:text="${board.getHitCount()}">Hits</td>
 											</tr>
 										</tbody>
 									</table>
@@ -294,6 +340,7 @@ tr {
 												<th>Create</th>
 												<th>Last up</th>
 												<th>Up</th>
+												<th>Hits</th>
 												<th>Owner</th>
 											</tr>
 										</thead>
@@ -301,9 +348,10 @@ tr {
 											<tr th:each="board : ${allBoardList}" class="eachRowInTable">
 												<td th:text="${board.getId()}" class="eachBoardIdInTable">Number</td>
 												<td th:text="${board.getTitle()}">Title</td>
-												<td th:text="${board.getFormattedLocalCreateDate()}">Create date</td>
-												<td th:text="${board.getFormattedLocalLastUpdateDate()}">Last update date</td>
+												<td th:text="${board.getFormattedCreateDateString()}">Create date</td>
+												<td th:text="${board.getFormattedLastUpdateDateString()}">Last update date</td>
 												<td th:text="${board.getUpdateCount()}">Update count</td>
+												<td th:text="${board.getHitCount()}">Hits</td>
 												<td th:text="${board.getMember().getUsername()}">Owner</td>
 											</tr>
 										</tbody>

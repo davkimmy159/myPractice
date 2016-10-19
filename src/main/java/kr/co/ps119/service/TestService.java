@@ -51,40 +51,4 @@ public class TestService {
 	private int titleCnt = 1;
 	private Random random = new Random();
 	
-	public List<Board> getList() {
-		List<Board> boardList = boardRepo.findAll();
-		boardList.forEach(eachBoard -> eachBoard.getMember().getUsername());
-		return boardList;
-	}
-	
-	public int saveContent(String editorContent) {
-		Board board = new Board();
-		board.setTitle("Title " + titleCnt++);
-		board.setContent(editorContent);
-		board.setCreateDate(new Date(System.currentTimeMillis()));
-		board.setMember(memberRepo.findOne((long)(random.nextInt(3) + 1)));
-		boardRepo.save(board);
-		
-		return boardRepo.findAll().size();
-	}
-	
-	public List<Board> deleteList() {
-		boardRepo.deleteAll();
-		return boardRepo.findAll();
-	}
-	
-	public void test2() {
-		Member member1 = memberRepo.findOne(1L);
-		List<MemberAuthority> memAuthList = member1.getMemberAuthorities();
-		List<Authority> authList = new ArrayList<>();
-		
-		for(MemberAuthority one : memAuthList) {
-			System.out.println(one);
-			authList.add(one.getAuthority());
-		}
-		
-		for(Authority one : authList) {
-			System.out.println(one);
-		}
-	}
 }

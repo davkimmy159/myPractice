@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS board (
 	create_date TIMESTAMP NOT NULL,
 	last_update_date TIMESTAMP NOT NULL,
 	update_count BIGINT NOT NULL DEFAULT 0,
+	hit_count BIGINT NOT NULL DEFAULT 0,
 	member_id BIGINT NOT NULL,
 	CONSTRAINT board_board_id_pk PRIMARY KEY(board_id),
 	CONSTRAINT board_member_id_fk FOREIGN KEY(member_id) REFERENCES member(member_id)

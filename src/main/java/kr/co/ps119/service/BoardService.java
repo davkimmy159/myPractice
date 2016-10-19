@@ -1,6 +1,7 @@
 package kr.co.ps119.service;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -59,12 +60,12 @@ public class BoardService {
 		return createdBoardId;
 	}
 	
-	public Long updateBoard(Long boardId, String editorContent) {
+	public Long updateBoardContent(Long boardId, String editorContent) {
 		Board boardToBeUpdated = boardRepo.findOne(boardId);
 
 		boardToBeUpdated.setContent(editorContent);
 		boardToBeUpdated.setUpdateCount(boardToBeUpdated.getUpdateCount() + 1L);
-		boardToBeUpdated.setLastUpdateDate(new Date(System.currentTimeMillis()));
+		boardToBeUpdated.setLastUpdateDate(LocalDateTime.now());
 		
 		Board boardAfterUpdate = boardRepo.save(boardToBeUpdated);
 		Long boardIdAfterUpdate;
@@ -76,6 +77,9 @@ public class BoardService {
 		}
 		
 		return boardIdAfterUpdate;
+	}
+	
+	public void increaseBoardHits() {
 	}
 	
 	public Board findOne(Long boardId) {

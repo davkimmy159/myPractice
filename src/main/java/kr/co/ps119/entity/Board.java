@@ -41,15 +41,16 @@ public class Board implements Serializable {
 
 	private transient static final long serialVersionUID = -4939299278182413724L;
 
-	private transient static final Board emptyBoard = new Board(0L, "", "", null, null, 0L);
+	private transient static final Board emptyBoard = new Board(0L, "", "", null, null, 0L, 0L);
 	
 	// Sets default values
 	@PrePersist
 	void setDefaultValues() {
-		setCreateDate(new Date(System.currentTimeMillis()));
-		setLastUpdateDate(new Date(System.currentTimeMillis()));
-		setUpdateCount(0L);
 		setContent("Welcome to IMCOLLA!");
+		setCreateDate(LocalDateTime.now());
+		setLastUpdateDate(LocalDateTime.now());
+		setUpdateCount(0L);
+		setHitCount(0L);
 	}
 	
 	@Id
@@ -70,18 +71,20 @@ public class Board implements Serializable {
 	
 	@Column
 	@NotNull(message = "date is empty")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createDate;
+	private LocalDateTime createDate;
 	
 	@Column
 	@NotNull(message = "date is empty")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastUpdateDate;
+	private LocalDateTime lastUpdateDate;
 	
 	@Column
-	@NotNull(message = "date is empty")
+	@NotNull(message = "update count is empty")
 	private Long updateCount;
 
+	@Column
+	@NotNull(message = "hitCount count is empty")
+	private Long hitCount;
+	
 	// foreign key 1
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id",
@@ -100,17 +103,18 @@ public class Board implements Serializable {
 	public Board() {
 	}
 
-	public Board(String title, String content, Date createDate, Date lastUpdateDate, Long updateCount) {
-		this(0L, title, content, createDate, lastUpdateDate, updateCount);
+	public Board(String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long updateCount, Long hitCount) {
+		this(0L, title, content, createDate, lastUpdateDate, updateCount, hitCount);
 	}
 	
-	public Board(Long id, String title, String content, Date createDate, Date lastUpdateDate, Long updateCount) {
+	public Board(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long updateCount, Long hitCount) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.createDate = createDate;
 		this.lastUpdateDate = lastUpdateDate;
 		this.updateCount = updateCount;
+		this.hitCount = hitCount;
 	}
 
 	public Long getId() {
@@ -139,50 +143,28 @@ public class Board implements Serializable {
 		this.content = content;
 	}
 
-	public Date getCreateDate() {
-		return new Date(createDate.getTime());
+	public LocalDateTime getCreateDate() {
+		return createDate;
 	}
 	
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
 	}
 
-	public Date getLastUpdateDate() {
-		return new Date(lastUpdateDate.getTime());
+	public LocalDateTime getLastUpdateDate() {
+		return lastUpdateDate;
 	}
 
-	public void setLastUpdateDate(Date lastUpdateDate) {
+	public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 
-	public ZonedDateTime getZonedCreateDate() {
-		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(createDate.toInstant(), Utility.getZoneIdSeoul());
-		return zonedDateTime;
+	public String getFormattedCreateDateString() {
+		return createDate.format(Utility.getDateTimeFormatter());
 	}
 	
-	public ZonedDateTime getZonedLastUpdateDate() {
-		ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(lastUpdateDate.toInstant(), Utility.getZoneIdSeoul());
-		return zonedDateTime;
-	}
-	
-	public LocalDateTime getLocalCreateDate() {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(createDate.toInstant(), Utility.getZoneIdSeoul());
-		return localDateTime;
-	}
-	
-	public LocalDateTime getLocalLastUpdateDate() {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(lastUpdateDate.toInstant(), Utility.getZoneIdSeoul());
-		return localDateTime;
-	}
-	
-	public String getFormattedLocalCreateDate() {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(createDate.toInstant(), Utility.getZoneIdSeoul());
-		return localDateTime.format(Utility.getDateTimeFormatter());
-	}
-	
-	public String getFormattedLocalLastUpdateDate() {
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(lastUpdateDate.toInstant(), Utility.getZoneIdSeoul());
-		return localDateTime.format(Utility.getDateTimeFormatter());
+	public String getFormattedLastUpdateDateString() {
+		return lastUpdateDate.format(Utility.getDateTimeFormatter());
 	}
 
 	public Long getUpdateCount() {
@@ -191,6 +173,14 @@ public class Board implements Serializable {
 
 	public void setUpdateCount(Long updateCount) {
 		this.updateCount = updateCount;
+	}
+	
+	public void setHitCount(Long hitCount) {
+		this.hitCount = hitCount;
+	}
+	
+	public Long getHitCount() {
+		return hitCount;
 	}
 	
 	public Member getMember() {
@@ -227,7 +217,8 @@ public class Board implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Board [id=" + id + ", title=" + title + ", content=" + content + ", createDate=" + createDate + "]";
+		return "Board [id=" + id + ", title=" + title + ", content=" + content + ", createDate=" + createDate + ", lastUpdateDate=" + lastUpdateDate + ", updateCount=" + updateCount + ", hitCount="
+				+ hitCount + "]";
 	}
 
 	@Override
@@ -239,6 +230,7 @@ public class Board implements Serializable {
 		result = prime * result + ((lastUpdateDate == null) ? 0 : lastUpdateDate.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + ((updateCount == null) ? 0 : updateCount.hashCode());
+		result = prime * result + ((hitCount == null) ? 0 : hitCount.hashCode());
 		return result;
 	}
 
@@ -287,6 +279,13 @@ public class Board implements Serializable {
 				return false;
 			}
 		} else if (!getUpdateCount().equals(other.updateCount)) {
+			return false;
+		}
+		if (getHitCount() == null) {
+			if (other.hitCount != null) {
+				return false;
+			}
+		} else if (!getHitCount().equals(other.hitCount)) {
 			return false;
 		}
 		return true;

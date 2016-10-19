@@ -26,19 +26,6 @@ public class AjaxTestController {
 	@Autowired
 	private TestService testService;
 	
-	@GetMapping(value = "boardDeleteAjaxTest")
-	@ResponseBody
-	public Map<String, Object> ajaxTest2() {
-
-		List<Board> boardList = testService.deleteList();
-
-		Map<String, Object> jsonObject = new HashMap<>();
-
-		jsonObject.put("boardList", boardList);
-
-		return jsonObject;
-	}
-	
 	/*
 	@GetMapping(value = "test1")
 	@ResponseBody

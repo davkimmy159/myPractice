@@ -50,9 +50,9 @@ public class BoardController {
 			return returnPage;
 		
 		// Returns board name if it's unqualified
-		} else if(boardNameLength > 5) {
+		} else if(boardNameLength > 200) {
 			model.addFlashAttribute("wrongTitleInput", trimmedBoardName);
-			model.addFlashAttribute("errorMessage", "Length of board title must be between 1 ~ 5 (for test). Please try again");
+			model.addFlashAttribute("errorMessage", "Length of board title must be between 1 ~ 600 (english), 1 ~ 200 (korean). Please try again");
 			return returnPage;
 		}
 		
@@ -81,15 +81,16 @@ public class BoardController {
 		
 		Board board = boardService.findOne(boardId);
 
+		// If board exists
+		if(!(board.isEmptyBoard())) {
+			returnPage = "board/board";
+			model.addAttribute("boardContent", board.getContent());
+
 		// If board doesn't exist
-		if(board.isEmptyBoard()) {
+		} else {
 			FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
 			flashMap.put("boardExists", false);
 			
-		// If board exists
-		} else {
-			returnPage = "board/board";
-			model.addAttribute("boardContent", board.getContent());
 		}
 		
 		return returnPage;

@@ -68,6 +68,7 @@ dependencies {
 	compile 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	
 	runtime 'com.h2database:h2'
+	compile 'org.hibernate:hibernate-java8'
 //	runtime 'org.flywaydb:flyway-core'
 	
 //	compile group: 'com.fasterxml', name: 'jackson-module-hibernate', version: '1.9.1'
