@@ -1,30 +1,18 @@
 package kr.co.ps119.controller;
 
-import kr.co.ps119.service.*;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import kr.co.ps119.service.MemberService;
 
 @Controller
 @RequestMapping(
@@ -42,9 +30,16 @@ public class IndexController {
 	}
 	
 	@GetMapping(value = "index")
-	public String user_index() {
+	public String user_index(
+			HttpServletRequest request,
+			Model model) {
 		
-		
+		Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
+		if(flashMap != null) {
+			model.addAttribute("boardExists", (boolean)flashMap.get("boardExists"));
+		} else {
+			model.addAttribute("boardExists", false);
+		}
 		
 		return "index";
 	}

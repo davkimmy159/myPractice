@@ -1,14 +1,19 @@
 package kr.co.ps119.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import kr.co.ps119.entity.Board;
 import kr.co.ps119.service.BoardService;
@@ -69,7 +74,8 @@ public class BoardController {
 	@PostMapping(value = "{boardId}")
 	public String getBoard(
 			@PathVariable Long boardId,
-			RedirectAttributes model) {
+			HttpServletRequest request,
+			Model model) {
 		
 		String returnPage = "redirect:/index";
 		
@@ -77,13 +83,13 @@ public class BoardController {
 
 		// If board doesn't exist
 		if(board.isEmptyBoard()) {
-			model.addAttribute("boardExists", false);
+			FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
+			flashMap.put("boardExists", false);
 			
 		// If board exists
 		} else {
 			returnPage = "board/board";
 			model.addAttribute("boardContent", board.getContent());
-			System.out.println(board.getContent());
 		}
 		
 		return returnPage;

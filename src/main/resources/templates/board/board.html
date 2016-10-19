@@ -266,15 +266,13 @@ span#loginIdDisplayDesktop {
 			<div id="editorContainer" class="col-sm-9 container-fluid">
 				<div id="formGroup1" class="form-group">
 					<div id="basicEditorDiv" class="hidden-xs">
-						<div id="basicEditor" class="form-control">
+						<div id="basicEditor" class="form-control" th:text="${boardContent}">
 						</div>
 					</div>
 					<div id="mobileEditorDiv" class=""> <!-- visible-xs-block -->
 						<div id="mobileEditor" class="form-control" contenteditable="true">
 						</div>
 					</div>
-					
-					<div id="boardContentFromServer" th:text="${boardContent}"></div>
 				</div>
 				<!-- /.from-group -->
 				

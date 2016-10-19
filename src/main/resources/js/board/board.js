@@ -264,7 +264,7 @@ var utils = {
 	},
 	
 	// Checks whether session is alive
-	isSessionAlive() {
+	isSessionAlive : function() {
 		return session.socket && session.stompClient;
 	},
 	
@@ -621,11 +621,11 @@ var eventObj = {
 				isCtrl = true;
 			}
 			
-			// CTRL + SHIFT
+			// CTRL + ALT
 			// <![CDATA[
-			if (event.which == 16 && isCtrl) {
+			if (event.which == 18 && isCtrl) {
 			// ]]>
-//				notify.notify('title', 'CTRL + SHIFT clicked! (chatInput)');
+//				notify.notify('title', 'CTRL + ALT clicked! (chatInput)');
 				
 				// Focus to basic editor
 				if(utils.isDesktopSize()) {
@@ -637,6 +637,8 @@ var eventObj = {
 					mobileEditor.focus();
 				}
 			}
+			
+//			utils.chatAppend("Ctrl : " + isCtrl);
 		});
 		
 		// Toggle isCtrl false
@@ -665,14 +667,14 @@ var eventObj = {
 		function editorKeyEventAssistant(event) {
 			var keyCode = event.data.keyCode; 
 
-			// CTRL + SHIFT
-			if(keyCode == 3342352) {
-//				notify.notify('title', 'CTRL + SHIFT clicked! (editor)');
+//			utils.chatAppend(event.data.keyCode);
+			
+			// CTRL + ALT
+			if(keyCode == 5570578) {
 				$('#chatInput').focus();
 				
-			// ENTER
+			// CTRL + ENTER
 			} else if(keyCode == 1114125) {
-//				notify.notify('title', 'ENTER clicked! (editor)');
 				$('#editorInputBtn').trigger('click'); 
 			}
 			keyCode = null;
@@ -712,6 +714,10 @@ var eventObj = {
 		 * notify.notify(evt.data.getKeystroke() + ', ' +
 		 * evt.data.getKey()); // code });
 		 */
+	},
+	
+	editorResizeCollapseEvent : function() {
+		
 	},
 	
 	modalBasicSettings : {
@@ -965,8 +971,15 @@ var resizeFuncs = {
 // $(function() {
 $(document).ready(function() {
 	
-	notify.notify("Board content", $("#boardContentFromServer").text());
+	basicEditor.on('contentDom', function() {
+	    basicEditor.document.on('keyup', function(event) {
+	        notify.notify("test", "test");
+	    });
+	});
 	
+	
+	// Connects to STOMP server after 1 second
+	// Immediate connection didn't work
 	setTimeout(function() {
 		session.connect();
 	}, 1000);
@@ -996,12 +1009,12 @@ $(document).ready(function() {
 	
 	// Initial setting
 	if (utils.isDesktopSize()) {
-		// utils.chatAppend("큰 화면 전용");
 		resizeFuncs.setInitialBasicHeight();
+		basicEditor.setData($("#basicEditor").text());
 	} else {
-		// utils.chatAppend("작은 화면 전용");
 		resizeFuncs.setGapByTogglingClass();
 		resizeFuncs.setMobileHeight();
+		mobileEditor.setData($("#basicEditor").text());
 	}
 	
 	/*
