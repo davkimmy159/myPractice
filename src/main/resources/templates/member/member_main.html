@@ -76,11 +76,19 @@ h2 {
 	font-style: italic;
 	font-size: 20px;
 }
+
 .error_container .help-block {
 	margin-top: 2px;
 	margin-bottom: 2px;
 }
 
+td span.datetime {
+	font-size: 12px;
+}
+
+td span.owner {
+	font-size: 13px;
+}
 /*
 .glyphicon.form-control-feedback {
 	top: 25px;
@@ -297,31 +305,46 @@ h2 {
 								<div id="boardListTableContainer_tabContent1" class="tab-pane fade in active" role="tabpanel">
 									
 									<h2>
-										<span>My board list</span>
+										<span>My boards</span>
 									</h2>
-									
-									<table class="table table-hover">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>Title</th>
-												<th>Create</th>
-												<th>Last up</th>
-												<th>Up</th>
-												<th>Hits</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr th:each="board : ${userBoardList}" class="eachRowInTable">
-												<td th:text="${board.getId()}" class="eachBoardIdInTable">Number</td>
-												<td th:text="${board.getTitle()}">Title</td>
-												<td th:text="${board.getFormattedCreateDateString()}">Create date</td>
-												<td th:text="${board.getFormattedLastUpdateDateString()}">Last update date</td>
-												<td th:text="${board.getUpdateCount()}">Update count</td>
-												<td th:text="${board.getHitCount()}">Hits</td>
-											</tr>
-										</tbody>
-									</table>
+									<div class="table-responsive">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="hidden-xs">#</th>
+													<th>Title</th>
+													<th class="hidden-xs">Create</th>
+													<th class="hidden-xs">Last up</th>
+													<th>Hits</th>
+													<th>Up</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="board : ${userBoardList}" class="eachRowInTable">
+													<td th:text="${board.getId()}" class="eachBoardIdInTable hidden-xs">
+														<span>Number</span>
+													</td>
+													<td th:text="${board.getTitle()}">
+														<span>Title</span>
+													</td>
+													<td class="hidden-xs">
+														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
+													</td>
+													<td class="hidden-xs">
+														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
+													</td>
+													<td th:text="${board.getHitCount()}">
+														<span>Hits</span>
+													</td>
+													<td th:text="${board.getUpdateCount()}">
+														<span>Update count</span>
+													</td>
+													
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<!-- /.table-responsive -->
 										
 								</div>
 								<!-- /.tab-pane-->
@@ -332,30 +355,47 @@ h2 {
 										<span>All boards</span>
 									</h2>
 									
-									<table class="table table-hover">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>Title</th>
-												<th>Create</th>
-												<th>Last up</th>
-												<th>Up</th>
-												<th>Hits</th>
-												<th>Owner</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr th:each="board : ${allBoardList}" class="eachRowInTable">
-												<td th:text="${board.getId()}" class="eachBoardIdInTable">Number</td>
-												<td th:text="${board.getTitle()}">Title</td>
-												<td th:text="${board.getFormattedCreateDateString()}">Create date</td>
-												<td th:text="${board.getFormattedLastUpdateDateString()}">Last update date</td>
-												<td th:text="${board.getUpdateCount()}">Update count</td>
-												<td th:text="${board.getHitCount()}">Hits</td>
-												<td th:text="${board.getMember().getUsername()}">Owner</td>
-											</tr>
-										</tbody>
-									</table>
+									<div class="table-responsive">
+										<table class="table table-hover table-responsive">
+											<thead>
+												<tr>
+													<th class="hidden-xs">#</th>
+													<th>Title</th>
+													<th class="hidden-xs">Create</th>
+													<th class="hidden-xs">Last up</th>
+													<th>Hits</th>
+													<th>Up</th>
+													<th>Owner</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="board : ${allBoardList}" class="eachRowInTable">
+													<td th:text="${board.getId()}" class="eachBoardIdInTable hidden-xs">
+														<span>Number</span>
+													</td>
+													<td th:text="${board.getTitle()}">
+														<span>Title</span>
+													</td>
+													<td class="hidden-xs">
+														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
+													</td>
+													<td class="hidden-xs">
+														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
+													</td>
+													<td th:text="${board.getHitCount()}">
+														<span>Hits</span>
+													</td>
+													<td th:text="${board.getUpdateCount()}">
+														<span>Update count</span>
+													</td>
+													<td>
+														<span th:text="${board.getMember().getUsername()}" class="owner">Owner</span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<!-- /.table-responsive -->
 									
 								</div>
 								<!-- /.tab-pane-->

@@ -1,5 +1,7 @@
 package kr.co.ps119.event;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -10,17 +12,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.ps119.entity.Board;
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.entity.MemberAuthority;
 import kr.co.ps119.repository.AuthorityRepository;
 import kr.co.ps119.repository.BoardRepository;
-import kr.co.ps119.repository.CommentRepository;
 import kr.co.ps119.repository.MemberAuthorityRepository;
 import kr.co.ps119.repository.MemberRepository;
 
 @Service
 @Transactional
-public class TestAccountCreationEventListener implements ApplicationListener<ApplicationReadyEvent> {
+public class TestDataCreationEventListener implements ApplicationListener<ApplicationReadyEvent> {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -35,48 +37,80 @@ public class TestAccountCreationEventListener implements ApplicationListener<App
 	private AuthorityRepository authRepo;
 
 	@Autowired
+	private BoardRepository boardRepo;
+	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
 
-		Member entity1= new Member("mail1@mail.com", "testUser1", passwordEncoder.encode("password"));
-		
+		Member member1= new Member("mail1@mail.com", "testUser1", passwordEncoder.encode("password"));
 		MemberAuthority memAuth1A = new MemberAuthority();
 		memAuth1A.setAuthority(authRepo.findOne(1));
-		memAuth1A.setMember(entity1);
-		
+		memAuth1A.setMember(member1);
 		MemberAuthority memAuth1B = new MemberAuthority();
 		memAuth1B.setAuthority(authRepo.findOne(2));
-		memAuth1B.setMember(entity1);
+		memAuth1B.setMember(member1);
+		Board board1ofMember1 = new Board();
+		board1ofMember1.setTitle("title1");
+		board1ofMember1.setContent("content1");
+		board1ofMember1.setMember(member1);
+		Board board1ofMember2 = new Board();
+		board1ofMember2.setTitle("title2");
+		board1ofMember2.setContent("content2");
+		board1ofMember2.setMember(member1);
+		memberRepo.save(member1);
 		
-		memberRepo.save(entity1);
-		
-		Member entity2 = new Member("mail2@mail.com", "testUser2", passwordEncoder.encode("password"));
-		
+		Member member2 = new Member("mail2@mail.com", "testUser2", passwordEncoder.encode("password"));
 		MemberAuthority memAuth2 = new MemberAuthority();
 		memAuth2.setAuthority(authRepo.findOne(1));
-		memAuth2.setMember(entity2);
+		memAuth2.setMember(member2);
+		Board board2ofMember3 = new Board();
+		board2ofMember3.setTitle("title3");
+		board2ofMember3.setContent("content3");
+		board2ofMember3.setMember(member2);
+		memberRepo.save(member2);
 		
-		memberRepo.save(entity2);
-		
-		
-		Member entity3= new Member("mail3@mail.com", "testUser3", passwordEncoder.encode("password"));
-		
+		Member member3 = new Member("mail3@mail.com", "testUser3", passwordEncoder.encode("password"));
 		MemberAuthority memAuth3 = new MemberAuthority();
 		memAuth3.setAuthority(authRepo.findOne(1));
-		memAuth3.setMember(entity3);
+		memAuth3.setMember(member3);
+		Board board4ofMember3 = new Board();
+		board4ofMember3.setTitle("title4");
+		board4ofMember3.setContent("content4");
+		board4ofMember3.setMember(member3);
+		memberRepo.save(member3);
 		
-		memberRepo.save(entity3);
-
-		
-		Member entity4= new Member("mail4@mail.com", "testUser4", passwordEncoder.encode("password"));
-		
+		Member member4 = new Member("mail4@mail.com", "testUser4", passwordEncoder.encode("password"));
 		MemberAuthority memAuth4 = new MemberAuthority();
 		memAuth4.setAuthority(authRepo.findOne(1));
-		memAuth4.setMember(entity4);
+		memAuth4.setMember(member4);
+		Board board5ofMember4 = new Board();
+		board5ofMember4.setTitle("title5");
+		board5ofMember4.setContent("content5");
+		board5ofMember4.setMember(member4);
+		memberRepo.save(member4);
 		
-		memberRepo.save(entity4);
+		
+//		Board board2ofMember1 = new Board("title2", "content2", LocalDateTime.now(), LocalDateTime.now(), 2L, 5L);
+//		board2ofMember1.setMember(member1);
+//		boardRepo.save(board1ofMember1);
+		/*
+		boardRepo.save(board2ofMember1);
+		
+		Board board3ofMember2 = new Board("title3", "content3", LocalDateTime.now(), LocalDateTime.now(), 5L, 10L);
+		board3ofMember2.setMember(member2);
+		boardRepo.save(board3ofMember2);
+		
+		Board board4ofMember3 = new Board("title4", "content4", LocalDateTime.now(), LocalDateTime.now(), 3L, 3L);
+		board4ofMember3.setMember(member3);
+		boardRepo.save(board4ofMember3);
+		
+		Board board5ofMember4 = new Board("title5", "content5", LocalDateTime.now(), LocalDateTime.now(), 2L, 3L);
+		board5ofMember4.setMember(member4);
+		boardRepo.save(board5ofMember4);
+		*/
 		
 		
 		/*

@@ -30,7 +30,7 @@ public class BoardAjaxController {
 
 		System.out.println("Ajax communication");
 		
-		Long boardIdAfterUpdate = boardService.updateBoardContent(boardId, editorContent);
+		Long boardIdAfterUpdate = boardService.updateBoardDBContent(boardId, editorContent);
 		String resultMessage;
 		
 		if(boardIdAfterUpdate > 0) {

@@ -1,3 +1,6 @@
+// <![CDATA[
+// ]]>
+
 var jqObj = {
 	
 	editorContainer : $('#editorContainer'),
@@ -17,6 +20,30 @@ var basicEditor = CKEDITOR.replace('basicEditor', {
 	removePlugins: 'elementspath',
 	enterMode: CKEDITOR.ENTER_BR
 //	shiftEnterMode: CKEDITOR.ENTER_P
+	,
+	on: {
+		instanceReady : function() {
+			$("a.cke_toolbox_collapser").click(function() {
+				resizeFuncs.setBasicHeight();
+			});
+		},
+		
+		key : function(event) {
+			var keyCode = event.data.keyCode; 
+
+			// CTRL + ALT
+			if(keyCode == eventObj.ctrlAlt) {
+				$('#chatInput').focus();
+				
+			// CTRL + ENTER
+			} else if(keyCode == eventObj.ctrlEnter) {
+				$('#editorInputBtn').trigger('click'); 
+			}
+			keyCode = null;
+		}
+	}
+	
+	
 	/*
 	,
 	qtRows: 20, // Count of rows
@@ -35,6 +62,21 @@ var basicEditor = CKEDITOR.replace('basicEditor', {
 
 // mobileEditor settings (inline CKEditor)
 var mobileEditor = CKEDITOR.inline('mobileEditor', {
+	on: {
+		key : function(event) {
+			var keyCode = event.data.keyCode; 
+
+			// CTRL + ALT
+			if(keyCode == eventObj.ctrlAlt) {
+				$('#chatInput').focus();
+				
+			// CTRL + ENTER
+			} else if(keyCode == eventObj.ctrlEnter) {
+				$('#editorInputBtn').trigger('click'); 
+			}
+			keyCode = null;
+		}
+	}
 });
 
 // memoEditor settings (inline CKEditor)
@@ -629,7 +671,6 @@ var eventObj = {
 				
 				// Focus to basic editor
 				if(utils.isDesktopSize()) {
-					
 					basicEditor.focus();
 					
 				// Focus to mobile editor
@@ -654,70 +695,22 @@ var eventObj = {
 		});
 	},
 	
-	editorKeyEvent : function() {
-		
-		basicEditor.on('key', function(event){
-			editorKeyEventAssistant(event);
-		});
-		
-		mobileEditor.on('key', function(event){
-			editorKeyEventAssistant(event);
-		});
-		
-		function editorKeyEventAssistant(event) {
-			var keyCode = event.data.keyCode; 
+	ctrlAlt : CKEDITOR.CTRL + CKEDITOR.ALT + 18,
+	ctrlEnter : CKEDITOR.CTRL + 13,
+	
+	editorEvent : function() {
 
-//			utils.chatAppend(event.data.keyCode);
-			
-			// CTRL + ALT
-			if(keyCode == 5570578) {
-				$('#chatInput').focus();
-				
-			// CTRL + ENTER
-			} else if(keyCode == 1114125) {
-				$('#editorInputBtn').trigger('click'); 
-			}
-			keyCode = null;
-		};
-		
-		// <![CDATA[
-		// ]]>
-
-		// 예비 함수
-		
-		/*
-		 * basicEditor.on('contentDom', function() {
-		 * basicEditor.document.on('keydown', function(event) { //
-		 * notify.notify(event.data.getKey()); if(event.data.getKey() ==
-		 * 13) { notify.notify('enter clicked!');
-		 * $('#editorInputBtn').trigger('click'); } }); });
-		 * 
-		 * mobileEditor.on('contentDom', function() {
-		 * mobileEditor.document.on('keydown', function(event) { //
-		 * notify.notify(event.data.getKey()); if(event.data.getKey() ==
-		 * 13) { notify.notify('enter clicked!');
-		 * $('#editorInputBtn').trigger('click'); } }); });
-		 */
-		/*
-		 * basicEditor.on('key', function(event){ // code });
-		 * 
-		 * basicEditor.on('key', function (evt) { var kc =
-		 * evt.data.keyCode, csa = ~(CKEDITOR.CTRL | CKEDITOR.SHIFT |
-		 * CKEDITOR.ALT); //<![CDATA[ console.log(kc, kc & csa); // kc &
-		 * csa is what you need //]]> });
-		 * 
-		 * basicEditor.on('contentDom', function() {
-		 * basicEditor.editable().attachListener('keyup',
-		 * basicEditor.document, function( event ) { // code }); });
-		 * 
-		 * basicEditor.document.on('keydown', function(evt) {
-		 * notify.notify(evt.data.getKeystroke() + ', ' +
-		 * evt.data.getKey()); // code });
-		 */
 	},
 	
 	editorResizeCollapseEvent : function() {
-		
+		/*
+		basicEditor.on('contentDom', function() {
+		    basicEditor.document.on('click', function(event) {
+		        notify.notify("test", "test");
+		        notify.notify("test", CKEDITOR.CTRL);
+		    });
+		});
+		*/
 	},
 	
 	modalBasicSettings : {
@@ -971,13 +964,6 @@ var resizeFuncs = {
 // $(function() {
 $(document).ready(function() {
 	
-	basicEditor.on('contentDom', function() {
-	    basicEditor.document.on('keyup', function(event) {
-	        notify.notify("test", "test");
-	    });
-	});
-	
-	
 	// Connects to STOMP server after 1 second
 	// Immediate connection didn't work
 	setTimeout(function() {
@@ -1010,11 +996,11 @@ $(document).ready(function() {
 	// Initial setting
 	if (utils.isDesktopSize()) {
 		resizeFuncs.setInitialBasicHeight();
-		basicEditor.setData($("#basicEditor").text());
+		basicEditor.setData($("#boardContentFromServer").text());
 	} else {
 		resizeFuncs.setGapByTogglingClass();
 		resizeFuncs.setMobileHeight();
-		mobileEditor.setData($("#basicEditor").text());
+		mobileEditor.setData($("#boardContentFromServer").text());
 	}
 	
 	/*

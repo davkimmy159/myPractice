@@ -35,10 +35,6 @@ public class BoardService {
 	@Autowired
 	private CommentRepository commentRepo;
 	
-	private Principal getPrincipal(Principal principal) {
-		return principal;
-	}
-	
 	public Long createBoard(String boardName, String ownerUsername) {
 		Board board = new Board();
 		Member boardOwner = memberRepo.findByUsername(ownerUsername);
@@ -60,11 +56,13 @@ public class BoardService {
 		return createdBoardId;
 	}
 	
-	public Long updateBoardContent(Long boardId, String editorContent) {
+	public Long updateBoardDBContent(Long boardId, String editorContent) {
 		Board boardToBeUpdated = boardRepo.findOne(boardId);
 
+		Long updateCount = boardToBeUpdated.getUpdateCount() + 1L;
+		
 		boardToBeUpdated.setContent(editorContent);
-		boardToBeUpdated.setUpdateCount(boardToBeUpdated.getUpdateCount() + 1L);
+		boardToBeUpdated.setUpdateCount(updateCount);
 		boardToBeUpdated.setLastUpdateDate(LocalDateTime.now());
 		
 		Board boardAfterUpdate = boardRepo.save(boardToBeUpdated);
@@ -82,11 +80,16 @@ public class BoardService {
 	public void increaseBoardHits() {
 	}
 	
-	public Board findOne(Long boardId) {
+	public Board findOneWithUpdate(Long boardId, Principal principal) {
+		String jpql = "UPDATE Board AS board SET board.hitCount = board.hitCount + 1 WHERE board.id = :boardId";
 		Board board = boardRepo.findOne(boardId);
-		
+
 		if(board != null) {
-			
+			if(principal.getName() != board.getMember().getUsername()) {
+				em.createQuery(jpql)
+				  .setParameter("boardId", boardId)
+				  .executeUpdate();
+			}
 		} else {
 			board = Board.getEmptyBoard();
 		}

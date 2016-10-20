@@ -1,5 +1,7 @@
 package kr.co.ps119.controller;
 
+import java.security.Principal;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +77,12 @@ public class BoardController {
 	public String getBoard(
 			@PathVariable Long boardId,
 			HttpServletRequest request,
-			Model model) {
+			Model model,
+			Principal principal) {
 		
 		String returnPage = "redirect:/index";
 		
-		Board board = boardService.findOne(boardId);
+		Board board = boardService.findOneWithUpdate(boardId, principal);
 
 		// If board exists
 		if(!(board.isEmptyBoard())) {
