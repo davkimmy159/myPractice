@@ -92,7 +92,7 @@ public class BoardController {
 		// If board doesn't exist
 		} else {
 			FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
-			flashMap.put("boardExists", false);
+			flashMap.put("boardNonExistent", false);
 			
 		}
 		

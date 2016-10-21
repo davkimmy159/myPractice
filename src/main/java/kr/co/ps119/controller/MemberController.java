@@ -47,6 +47,7 @@ public class MemberController {
 		
 //		model.addFlashAttribute("boardList", boardList);
 		
+		// Should be replaced to immutable VO later
 		List<Board> userBoardList = boardService.findAllBoardsOfMemberByUsername(username);
 		List<Board> allBoardList = boardService.findAllBoards();
 
