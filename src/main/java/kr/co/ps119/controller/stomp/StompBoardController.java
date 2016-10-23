@@ -20,6 +20,7 @@ public class StompBoardController {
 		return chatMessage;
 	}
 	
+	
 	@MessageMapping("/chat/db_update_alarm/{boardId}")
 	@SendTo("/subscribe/chat/db_update_alarm/{boardId}")
 	public StompDBUpdateMessage handler3(StompDBUpdateMessage DBUpdateMessage) {
