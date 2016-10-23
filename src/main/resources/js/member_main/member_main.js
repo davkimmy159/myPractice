@@ -5,8 +5,7 @@ $("#createBoardModal").on("shown.bs.modal", function(event) {
 $(document).ready(function() {
 	
 	$("table#myBoardsList").bootstrapTable({
-		
-		striped : true,
+		classes : "table table-no-bordered",
 		showHeader : true,
 		showFooter : true
 	});

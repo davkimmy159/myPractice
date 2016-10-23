@@ -82,6 +82,14 @@ h2 {
 	margin-bottom: 2px;
 }
 
+table.table thead {
+}
+
+table.table tr th, table.table tr td {
+	border-left: none !important;
+	border-right: none !important;
+}
+
 td span.datetime {
 	font-size: 12px;
 }
@@ -308,41 +316,41 @@ td span.owner {
 										<span>My boards</span>
 									</h2>
 									<!-- <div class="table-responsive"> -->
-										<table id="myBoardsList" class="table-hover">
-											<thead>
-												<tr>
-													<th class="hidden-xs">#</th>
-													<th>Title</th>
-													<th class="hidden-xs">Create</th>
-													<th class="hidden-xs">Last up</th>
-													<th>Hits</th>
-													<th>Up</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="board : ${userBoardList}" class="eachRowInTable">
-													<td th:text="${board.getId()}" class="eachBoardIdInTable hidden-xs">
-														<span>Number</span>
-													</td>
-													<td th:text="${board.getTitle()}">
-														<span>Title</span>
-													</td>
-													<td class="hidden-xs">
-														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
-													</td>
-													<td class="hidden-xs">
-														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
-													</td>
-													<td th:text="${board.getHitCount()}">
-														<span>Hits</span>
-													</td>
-													<td th:text="${board.getUpdateCount()}">
-														<span>Update count</span>
-													</td>
-													
-												</tr>
-											</tbody>
-										</table>
+									<table id="myBoardsList" class="table-hover">
+										<thead>
+											<tr>
+												<th class="hidden-xs">#</th>
+												<th>Title</th>
+												<th class="hidden-xs">Create</th>
+												<th class="hidden-xs">Last up</th>
+												<th>Hits</th>
+												<th>Up</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="board : ${userBoardList}" class="eachRowInTable">
+												<td th:text="${board.getId()}" class="eachBoardIdInTable hidden-xs">
+													<span>Number</span>
+												</td>
+												<td th:text="${board.getTitle()}">
+													<span>Title</span>
+												</td>
+												<td class="hidden-xs">
+													<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
+												</td>
+												<td class="hidden-xs">
+													<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
+												</td>
+												<td th:text="${board.getHitCount()}">
+													<span>Hits</span>
+												</td>
+												<td th:text="${board.getUpdateCount()}">
+													<span>Update count</span>
+												</td>
+												
+											</tr>
+										</tbody>
+									</table>
 									<!-- </div> -->
 									<!-- /.table-responsive -->
 										
@@ -355,46 +363,46 @@ td span.owner {
 										<span>All boards</span>
 									</h2>
 									
-									<div class="table-responsive">
-										<table class="table table-hover">
-											<thead>
-												<tr>
-													<th class="hidden-xs">#</th>
-													<th>Title</th>
-													<th class="hidden-xs">Create</th>
-													<th class="hidden-xs">Last up</th>
-													<th>Hits</th>
-													<th>Up</th>
-													<th>Owner</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="board : ${allBoardList}" class="eachRowInTable">
-													<td th:text="${board.getId()}" class="eachBoardIdInTable hidden-xs">
-														<span>Number</span>
-													</td>
-													<td th:text="${board.getTitle()}">
-														<span>Title</span>
-													</td>
-													<td class="hidden-xs">
-														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
-													</td>
-													<td class="hidden-xs">
-														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
-													</td>
-													<td th:text="${board.getHitCount()}">
-														<span>Hits</span>
-													</td>
-													<td th:text="${board.getUpdateCount()}">
-														<span>Update count</span>
-													</td>
-													<td>
-														<span th:text="${board.getMember().getUsername()}" class="owner">Owner</span>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
+									<!-- <div class="table-responsive"> -->
+									<table class="table table-hover">
+										<thead>
+											<tr>
+												<th class="hidden-xs">#</th>
+												<th>Title</th>
+												<th class="hidden-xs">Create</th>
+												<th class="hidden-xs">Last up</th>
+												<th>Hits</th>
+												<th>Up</th>
+												<th>Owner</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="board : ${allBoardList}" class="eachRowInTable">
+												<td th:text="${board.getId()}" class="eachBoardIdInTable hidden-xs">
+													<span>Number</span>
+												</td>
+												<td th:text="${board.getTitle()}">
+													<span>Title</span>
+												</td>
+												<td class="hidden-xs">
+													<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
+												</td>
+												<td class="hidden-xs">
+													<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
+												</td>
+												<td th:text="${board.getHitCount()}">
+													<span>Hits</span>
+												</td>
+												<td th:text="${board.getUpdateCount()}">
+													<span>Update count</span>
+												</td>
+												<td>
+													<span th:text="${board.getMember().getUsername()}" class="owner">Owner</span>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<!-- </div> -->
 									<!-- /.table-responsive -->
 									
 								</div>
