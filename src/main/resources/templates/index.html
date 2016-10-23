@@ -37,6 +37,31 @@ span#loginIdDisplayDesktop {
 	font-size: 17px;
 	color: rgb(0, 0, 0);
 }
+
+span#indexMainTitle {
+	display: inline-block;
+	font-size: 40px;
+}
+
+span#titleEffect {
+	display: inline-block;
+	color: skyblue;
+	font-size: 60px;
+}
+
+#indexMainArticle p {
+	font-size: 20px;
+}
+
+#indexMainArticle p span:last-of-type {
+	font-size: 26px;
+}
+
+#indexMainArticle p span:last-of-type strong {
+	color: pink;
+	font-weight: 700;
+}
+
 </style>
 <title>index</title>
 </head>
@@ -48,9 +73,14 @@ span#loginIdDisplayDesktop {
 				<div id="" class="container-fluid">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colla-collapse-index">
-							<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
 						</button>
-						<a id="" class="navbar-brand btn" data-toggle="modal" data-target="#mainModal">IMColla</a>
+						<a id="IMCollaBtn" class="navbar-brand btn" data-toggle="modal" data-target="#mainModal">
+							IMColla
+						</a>
 					</div>
 
 					<!-- Collect the nav links, forms, and other content for toggling -->
@@ -58,6 +88,7 @@ span#loginIdDisplayDesktop {
 						<!-- navbar left -->
 						<ul class="nav navbar-nav">
 							<!-- dropdown -->
+							<!-- 
 							<li class="dropdown visible-sm-block"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
@@ -71,64 +102,26 @@ span#loginIdDisplayDesktop {
 									<li>
 										<a>test3</a>
 									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test4</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test5</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test6</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test7</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test8</a>
-									</li>
 								</ul>
+								 -->
 								<!-- /.dropdown-menu -->
 								
+							<!-- 
 							</li>
+							 -->
 							<!-- /.dropdown -->
 							
 							<li>
-								<a class="hidden-sm" href="/member/member_main.html" th:href="@{/member/member_main}">Main</a>
+								<a href="/member/member_main.html" th:href="@{/member/member_main}">Main</a>
 							</li>
 							<hr class="visible-xs-block" />
 							<li>
-								<a class="hidden-sm" href="">test2</a>
+								<a href="">test2</a>
 							</li>
 							<hr class="visible-xs-block" />
 							<li>
-								<a class="hidden-sm" href="">test3</a>
+								<a href="">test3</a>
 							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a class="hidden-sm" href="">test4</a>
-							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a class="hidden-sm" href="">test5</a>
-							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a class="hidden-sm" href="">test6</a>
-							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a class="hidden-sm" href="">test7</a>
-							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a class="hidden-sm" href="">test8</a>
-							</li>
-							
 							
 							<hr class="visible-xs-block" />
 							
@@ -181,34 +174,39 @@ span#loginIdDisplayDesktop {
 		</div>
 		<!-- /.row -->
 
-		<div id="" class="row">
+		<div id="mainRow" class="row">
 			<div id="" class="container-fluid col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
-				<div class="container-fluid">
-					<div class="jumbotron">
-						<div class="container-fluid">
-							<div class="well">
-								<div class="text-center">
-									<h1>Index</h1>
-									
-									<!-- 
-									<span class="form-group" th:if="${#authorization.getAuthentication()}">"${#authorization.getAuthentication()}"</span>
-									<br />
-									<span class="form-group" th:if="${#authorization.getAuthentication()}" th:text="${#authorization.getAuthentication()}"></span>
-									<br />
-									<br />
-									<span class="form-group" th:if="${#authorization.getAuthentication()}">"${#authorization.expression('hasAuthority('role_member')')}"</span>
-									<br />
-									<span th:text="${#authorization.expression('hasAuthority(''role_member'')')}"></span>
-									 -->
-									 
-									 
-									 
-								</div>
-							</div>
+				<!-- <div class="container-fluid"> -->
+				<div class="jumbotron">
+					<div class="well">
+						<div id="indexMainArticle" class="text-center">
+							<span id="indexMainTitle">Welcome to <span id="titleEffect">IMColla</span>&nbsp;!</span>
+							<p>
+								<span>바쁜 일상에 만나기 힘든가요?</span><br />
+								<span>빠르게 일을 끝내고 싶은가요?</span><br />
+								<span><strong>IMColla</strong>에서 만나세요!</span><br />
+							</p>
 						</div>
+							
+						
+							<!-- 
+							<span class="form-group" th:if="${#authorization.getAuthentication()}">"${#authorization.getAuthentication()}"</span>
+							<br />
+							<span class="form-group" th:if="${#authorization.getAuthentication()}" th:text="${#authorization.getAuthentication()}"></span>
+							<br />
+							<br />
+							<span class="form-group" th:if="${#authorization.getAuthentication()}">"${#authorization.expression('hasAuthority('role_member')')}"</span>
+							<br />
+							<span th:text="${#authorization.expression('hasAuthority(''role_member'')')}"></span>
+							 -->
+							 
+						
 					</div>
+					
 				</div>
+				<!-- </div> -->
 				<!-- /.container-fluid -->
+				
 			</div>
 			<!-- /.container-fluid -->
 		</div>
@@ -223,8 +221,18 @@ span#loginIdDisplayDesktop {
 	<div layout:fragment="customScript">
 		<script src="../js/utils.js" th:src="@{/js/utils.js}" type="text/javascript"></script>
 		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
+		<script src="../js/effect.js" th:src="@{/js/effect.js}" type="text/javascript"></script>
 		<script>
-		
+			
+			$(document).ready(function(){
+				setInterval(function() {
+					$('span#titleEffect').removeClass()
+										 .addClass('animated tada')
+										 .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+											$(this).removeClass();
+										});
+				}, 2500);
+			});
 		</script>
 	</div>
 </body>

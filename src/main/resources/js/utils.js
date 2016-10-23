@@ -24,6 +24,6 @@ $(document).ready(function() {
 			$("form#logoutForm").submit();
 		});	
 	} else {
-		notify.notify("Warning", "logout form doesn't exist!", "error");
+//		notify.notify("Warning", "logout form doesn't exist!", "error");
 	}
 });
