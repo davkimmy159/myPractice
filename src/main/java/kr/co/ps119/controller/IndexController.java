@@ -36,9 +36,9 @@ public class IndexController {
 		
 		Map<String, ?> flashMap = RequestContextUtils.getInputFlashMap(request);
 		if(flashMap != null) {
-			model.addAttribute("boardExists", (boolean)flashMap.get("boardExists"));
+			model.addAttribute("boardNonExistent", (boolean)flashMap.get("boardNonExistent"));
 		} else {
-			model.addAttribute("boardExists", false);
+			model.addAttribute("boardNonExistent", false);
 		}
 		
 		return "index";
