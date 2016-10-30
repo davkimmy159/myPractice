@@ -1,77 +1,285 @@
-$("#createBoardModal").on("shown.bs.modal", function(event) {
-	$("input[name='boardName']").focus();
-});
+bootstrapTable = {
+
+	myBoardListTable : $("table#myBoardList"),
+	allBoardListTable : $("table#allBoardList"),
+		
+	tableSetting : function() {
+		
+		/* Bootstrap table plugin settings for my board list */
+		$("table#myBoardList").bootstrapTable({
+			classes : "table table-no-bordered",
+		
+			showHeader : true,
+//			showFooter : true,
+		
+			showRefresh : true,
+			showToggle : true,
+			showColumns : true,
+			
+			search : true,
+			searchOnEnterKey : true,
+			
+			trimOnSearch : true,
+			searchTimeOut : 500,
+			
+			idField : "number",
+			
+			selectItemName : "selectedCheckbox",
+			
+			detailView : true,
+			detailFormFormatter : function(index, row, element) {
+				var format = "<span>test!!!</span>";
+				
+				return format;
+			},
+			
+			pagination : true,
+			pageSize : 10,
+			pageList : [10, 20, 30, 50, 80, 100],
+			
+			selectItemName : "selectedItem",
+			
+//			sidePagination : "server",
+			
+//			url : 'member/member_main',
+			/*
+			method : "GET",
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			cache : true,
+			*/
+			
+			/*
+			ajax : function(params) {
+			   
+				notify.notify(params);
+				
+		        setTimeout(function () {
+		            params.success({
+		            	total : params.data.total,
+		            	rows : params.data.boardList
+		            });
+		        }, 500);
+		    },
+		    */
+		    
+			/*
+			queryParams : function() {
+			    return {
+			        type: 'owner',
+			        sort: 'updated',
+			        direction: 'desc',
+			        per_page: 100,
+			        page: 1
+			    };
+			},
+			*/
+			
+			onPageChange : function(number, size) {
+				$("span.pagination-info").remove();
+				bootstrapTable.sideSetting.eachCellClickEvent();
+				
+				// Basic size
+				if (utils.isDesktopSize()) {
+					bootstrapTable.responsiveSetting.basicSize();	
+					
+				// Mobile size
+				} else {
+					bootstrapTable.responsiveSetting.mobileSize();
+				}
+			}
+		});
+		
+		/* Bootstrap table plugin settings for my board list */
+		$("table#allBoardList").bootstrapTable({
+			classes : "table table-no-bordered",
+		
+			showHeader : true,
+//			showFooter : true,
+		
+			showRefresh : true,
+			showToggle : true,
+			showColumns : true,
+			
+			search : true,
+			searchOnEnterKey : true,
+			
+			trimOnSearch : true,
+			searchTimeOut : 500,
+			
+			idField : "number",
+			
+			selectItemName : "selectedCheckbox",
+			
+			detailView : true,
+			detailFormFormatter : function(index, row, element) {
+				var format = "<span>test!!!</span>";
+				
+				return format;
+			},
+			
+			pagination : true,
+			pageSize : 10,
+			pageList : [10, 20, 30, 50, 80, 100],
+			
+			selectItemName : "selectedItem",
+			
+			onPageChange : function(number, size) {
+				$("span.pagination-info").remove();
+				
+				// Basic size
+				if (utils.isDesktopSize()) {
+					bootstrapTable.responsiveSetting.basicSize();	
+					
+				// Mobile size
+				} else {
+					bootstrapTable.responsiveSetting.mobileSize();
+				}
+				
+				bootstrapTable.sideSetting.setCheckboxDisabled();
+			}
+		});
+		
+		utils.executeAllFunctionMembers(this.sideSetting);
+	},
+	
+	sideSetting : {
+		initialSideSetting : function() {
+			$("input[type='checkbox'][data-field='number']").parent().parent("li").addClass("hidden-xs");
+			$("input[type='checkbox'][data-field='create']").parent().parent("li").addClass("hidden-xs");
+			$("input[type='checkbox'][data-field='last up']").parent().parent("li").addClass("hidden-xs");
+			
+			$(".search").removeClass("pull-right").addClass("pull-left").css("width", "140px");
+			
+			$("span.pagination-info").remove();
+		},
+		
+		setCheckboxDisabled : function() {
+			var loginUsername = $("span#loginUsername").text();
+			$.each($("table#allBoardList").find("tr"), function(index, element) {
+				if($(this).find("span.owner").text() != loginUsername) {
+					$(this).find($("input[type='checkbox'][name='selectedItem']")).prop('disabled', true);
+				}
+			});
+		},
+		
+		eachCellClickEvent : function() {
+			$("span.boardTitle").click(function() {
+				window.location = path.getFullContextPath() + "/board/" + $(this).parent().siblings(".eachBoardIdInTable").find("span").text();
+			});
+			
+			$("span[name='boardDownloadBtn'][class~='glyphicon']").click(function() {
+				notify.notify("test 1", $(this));
+			});
+			
+			$("span[name='boardSettingBtn'][class~='glyphicon']").click(function() {
+				notify.notify("test 2", $(this));
+			});
+			
+			$("span[name='boardDeleteBtn'][class~='glyphicon']").click(function() {
+				var boardId = $(this).parent().siblings(".eachBoardIdInTable").find("span").text();
+				ajax.deleteOneBoardFromBtn(boardId);
+			});
+			
+			$("button[name='deleteSelectedBoardBtn']").click(function() {
+				/*
+				var boardIds = $.map(bootstrapTable.myBoardListTable.bootstrapTable('getSelections'), function (row) {
+					notify.notify(row);
+	                return row;
+	            });
+				notify.notify(boardIds);
+				*/
+			});
+		}
+	},
+	
+	responsiveSetting : {
+		basicSize : function() {
+			$("div.pagination-detail").removeAttr("style");
+			$("div.pagination").removeAttr("style");
+			$("div.pagination-detail").removeClass("text-center");
+			$("div.pagination").removeClass("text-center");
+		},
+		
+		mobileSize : function() {
+			$("div.pagination-detail").css("width", "100%");
+			$("div.pagination").css("width", "100%");
+			$("div.pagination-detail").addClass("text-center");
+			$("div.pagination").addClass("text-center");
+		}
+	}
+};
+
+ajax = {
+	deleteOneBoardFromBtn : function(boardId) {
+		$.ajax({
+			url : '../ajax/board/deleteOneBoardFromBtn',
+			type : 'GET',
+			data : {
+				'boardId' : boardId
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify("Ajax 통신 성공 code : " + status + " message : " + data.message);
+				$("table#myBoardList").bootstrapTable("remove", {field: "number", values: boardId});
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+			}
+		});
+	},
+	
+	deleteSelectedBoard: function(boardIds) {
+		$.ajax({
+			url : '../ajax/board/deleteSelectedBoard',
+			type : 'GET',
+			data : {
+				'boardIds' : boardIds
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify("Ajax 통신 성공 code : " + status + " message : " + data.message);
+				bootstrapTable.myBoardListTable.bootstrapTable("remove", {field: "number", values: boardIds});
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+			}
+		});
+	},
+	
+}
 
 $(document).ready(function() {
 	
-	/* Bootstrap table plugin settings */
-	$("table#myBoardsList").bootstrapTable({
-		classes : "table table-no-bordered",
-		showHeader : true,
-//		showFooter : true,
-		showRefresh : true,
-		showToggle : true,
-		showColumns : true,
-		search : true,
-		searchOnEnterKey : true,
-		trimOnSearch : true,
-		searchTimeOut : 500,
-		idField : "number",
-		detailView : true,
-		detailFormFormatter : function(index, row, element) {
-			var format = "test!!!";
-			return format;
-		},
-		pagination : true,
-		pageSize : 10,
-		pageList : [10, 25, 50, 100],
-		selectItemName : "selectedItem",
+	bootstrapTable.tableSetting();
+	
+	utils.clientValidatorBtnEvent($("form#createBoardForm"));
+
+	// Initial setting
+	if (utils.isDesktopSize()) {
+	} else {
+		bootstrapTable.responsiveSetting.mobileSize();
+	}
+	
+	$(window).resize(function() {
 		
-		onClickCell : function(field, value, row, $element) {
-			if(field != "checkbox" && field != "utils") {
-				window.location = path.getFullContextPath() + "/board/" + $element.siblings(".eachBoardIdInTable").html();
+		// To basic from mobile
+		if (utils.isDesktopSize()) {
+			if($("div.pagination-detail").hasClass("text-center")) {
+				bootstrapTable.responsiveSetting.basicSize();	
+			}
+			
+		// To mobile from basic
+		} else {
+			if(!($("div.pagination-detail").hasClass("text-center"))) {
+				bootstrapTable.responsiveSetting.mobileSize();
 			}
 		}
-	});
-	
-	$("input[type='checkbox'][data-field='1']").parent().parent("li").addClass("hidden-xs");
-	$("input[type='checkbox'][data-field='3']").parent().parent("li").addClass("hidden-xs");
-	$("input[type='checkbox'][data-field='4']").parent().parent("li").addClass("hidden-xs");
-	
-	$(".search").removeClass("pull-right").addClass("pull-left").css("width", "150px");
-	
-	$(".pagination-info").remove();
-	
-	$(".fixed-table-pagination").addClass("text-center");
-
-	
-	
-	/*
-	$(".clickForJoin").click(function() {
-        window.location = path.getFullContextPath() + "/board/" + $(".clickForJoin").html();
-    });
-    */
-	
-	
-	// Shows 'create board' modal if board isn't created
-	if($(".error_container").find("span").text()) {
-		$("#createBoardModal").modal("show");
-	}
-	
-	/*
-	// Shows 'create board' modal if board doesn't exist (URL connection)
-	if($("#boardExists").val()) {
-		notify.notify("test", $("boardExists").val());
-		$("#createBoardModal").modal("show");
-	}
-	*/
-	
-	// Signals when input is wrong and submit button clicked on client side
-	$("form#createBoardForm").validator().on('submit', function(e) {
-		if (e.isDefaultPrevented()) {
-			notify.notify('Wrong input', '잘못된 입력이 있습니다.\n수정 후 다시 시도해주세요', 'error');
-		} else {
-			
-		}
-	});
+	}).resize();
 });

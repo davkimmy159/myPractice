@@ -34,10 +34,11 @@ public class BoardController {
 	public String createBoard(
 			@RequestParam String boardName,
 			@RequestParam String ownerUsername,
+			@RequestParam String currentRelativePath,
 			RedirectAttributes model) {
 		
 		// URL to be returned if there's any problem to create board
-		String returnPage = "redirect:/member/member_main";
+		String returnPage = "redirect:" + currentRelativePath;
 		
 		// Trims board name from client input
 		String trimmedBoardName = boardName.trim();
@@ -97,12 +98,5 @@ public class BoardController {
 		}
 		
 		return returnPage;
-	}
-	
-	@GetMapping(value = "deleteAll")
-	private String deleteAll() {
-		boardService.deleteAllBoardsOfMember();
-		
-		return "redirect:/member/member_main";
 	}
 }

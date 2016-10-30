@@ -38,23 +38,26 @@ span#loginIdDisplayDesktop {
 	color: rgb(0, 0, 0);
 }
 
-tr {
+/*
+td * {
 	cursor: pointer;
-} 
+}
+*/
 
-h2 {
-	margin-top: 0px;
+td .boardTitle:hover {
+	cursor: pointer;
+	text-decoration:underline;
 }
 
+td:last-child span {
+	cursor: pointer;
+}
 
-
-
+td span[name="boardSettingBtn"] {
+	margin-right: 8px;
+}
 
 .page-header {
-	margin-top: 0px;
-}
-
-.page-header h3 {
 	margin-top: 0px;
 }
 
@@ -118,6 +121,36 @@ td span.owner {
 #mainRow .panel-body {
 	padding: 5px;
 }
+
+.fixed-table-pagination div.pagination-detail {
+	margin-bottom: 0px;
+}
+
+.fixed-table-pagination div.pagination {
+	margin-bottom: 0px;
+}
+
+/* Responsive css */
+
+/* basic */
+@media screen and (min-width:768px) {
+	.bootstrap-table .fixed-table-toolbar .search .form-control {
+		margin-left: 0px;
+	}
+	.bootstrap-table .fixed-table-toolbar .columns.btn-group {
+		margin-right: 0px;
+	}
+}
+
+/* mobile */
+@media screen and (max-width:767px) {
+	.bootstrap-table .fixed-table-toolbar .search .form-control {
+		margin-left: 5px;
+	}
+	.bootstrap-table .fixed-table-toolbar .columns.btn-group {
+		margin-right: 5px;
+	}
+}
 </style>
 <title>Member main page</title>
 </head>
@@ -157,65 +190,26 @@ td span.owner {
 						<ul class="nav navbar-nav">
 							
 							<!-- category button list -->
-							<!-- For sm size view (the same as right below) -->
-							<li class="dropdown visible-sm-block">
-								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">sm dropdown 1<span class="caret"></span></a>
-								<ul class="dropdown-menu" role="menu">
-									<li>
-										<a>test</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test</a>
-									</li>
-								</ul>
-								<!-- /.dropdown-menu -->
-							</li>
-							
-							<li class="dropdown visible-sm-block">
-								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">sm dropdown 2<span class="caret"></span></a>
-								<ul class="dropdown-menu" role="menu">
-									<li>
-										<a>test</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test</a>
-									</li>
-								</ul>
-								<!-- /.dropdown-menu -->
-							</li>
-							<!-- /.dropdown.visible-sm-block -->
-							
-							<!-- category button list -->
 							<!-- For xs, md, lg size (the same as right above) -->
-							<li class="dropdown hidden-sm">
+							
+							<li class="active">
+								<a href="#boardListTableContainer_tabContent1" data-toggle="tab">My boards</a>
+							</li>
+							<li>
+								<a href="#boardListTableContainer_tabContent2" data-toggle="tab">All boards</a>
+							</li>
+							
+							<li class="dropdown">
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 									<span>dropdown</span><span class="caret"></span>
 								</a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
-										<a>test</a>
+										<a class="hidden-sm" href="../index.html" th:href="@{/index}">Index</a>
 									</li>
 									<li class="divider"></li>
 									<li>
-										<a>test</a>
+										<a class="hidden-sm" data-toggle="modal" data-target="#createBoardModal">Create</a>
 									</li>
 									<li class="divider"></li>
 									<li>
@@ -229,14 +223,7 @@ td span.owner {
 								<!-- /.dropdown-menu -->
 							</li>
 							<hr class="visible-xs-block" />
-							<li>
-								<a class="hidden-sm" href="../index.html" th:href="@{/index}">Index</a>
-							</li>
-							<hr class="visible-xs-block" />
-							<li>
-								<a class="hidden-sm" data-toggle="modal" data-target="#createBoardModal">Create</a>
-							</li>
-							<hr class="visible-xs-block" />
+							
 							
 							
 							<!-- user utility button -->
@@ -286,146 +273,134 @@ td span.owner {
 					
 				<div id="boardListTableContainer" class="row">
 				
-					<div class="panel panel-success">
-						
-						<div class="panel-heading">
-							<ul class="nav nav-pills">
-								<li class="active">
-									<a href="#boardListTableContainer_tabContent1" data-toggle="tab">My boards</a>
-								</li>
-								<li>
-									<a href="#boardListTableContainer_tabContent2" data-toggle="tab">All boards</a>
-								</li>
-								<li>
-									<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-								    	Dropdown <span class="caret"></span>
-								    </a>
-								    <ul class="dropdown-menu">
-									    <li>
-									    	<a href="">tset 1</a>
-									    </li>
-									    <li>
-									    	<a href="">test 2</a>
-									    </li>
-									    <li>
-									    	<a href="">test 3</a>
-									    </li>
-									    <li role="separator" class="divider"></li>
-									    <li>
-									    	<a href="">test 4</a>
-									    </li>
-								    </ul>
-								</li>
-							</ul>
-							<!-- /.nav nav-tabs -->
-						
-						</div>
-						<!-- /.panel-heading -->
-					
-						<div class="panel-body">
-							<div class="tab-content">
+					<div class="tab-content">
 							
-								<div id="boardListTableContainer_tabContent1" class="tab-pane fade in active" role="tabpanel">
-									
-									<!-- 
-									<h2 style="display: inline-block;">
-										<span class="hidden-xs">My boards</span>
-									</h2>
-									 -->
+						<div id="boardListTableContainer_tabContent1" class="tab-pane fade in active" role="tabpanel">
+								
+							<div class="panel panel-success">
+								
+								<div class="panel-heading">
+									<h3><strong><span>My boards</span></strong></h3>
+								</div>
+								<!-- /.panel-heading -->
+							
+								<div class="panel-body">
 									
 									<div class="table-responsive">
-										<table id="myBoardsList" class="table-hover">
+										<table id="myBoardList" class="table-hover">
 											<thead>
 												<tr>
 													<th data-checkbox="true" data-field="checkbox">checkbox</th>
 													<th class="hidden-xs" data-field="number">#</th>
 													<th data-field="title">Title</th>
-													<th class="hidden-xs" data-field="create">Create</th>
-													<th class="hidden-xs" data-field="last up">Last up</th>
 													<th data-field="hits">Hits</th>
 													<th data-field="up">Up</th>
+													<th class="hidden-xs" data-field="create">Create</th>
+													<th class="hidden-xs" data-field="last up">Last up</th>
 													<th data-field="utils">Utils</th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr th:each="board : ${userBoardList}">
 													<td data-checkbox="true"></td>
-													<td th:text="${board.getId()}" class="eachBoardIdInTable hidden-xs clickForJoin">
-														<span>Number</span>
-													</td>
-													<td th:text="${board.getTitle()}" class="clickForJoin">
-														<span>Title</span>
-													</td>
-													<td class="clickForJoin hidden-xs">
-														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
-													</td>
-													<td class="clickForJoin hidden-xs">
-														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
-													</td>
-													<td th:text="${board.getHitCount()}" class="clickForJoin">
-														<span>Hits</span>
-													</td>
-													<td th:text="${board.getUpdateCount()}" class="clickForJoin">
-														<span>Update count</span>
+													<td class="eachBoardIdInTable hidden-xs">
+														<span th:text="${board.getId()}">Number</span>
 													</td>
 													<td>
-														<span class="glyphicon glyphicon-download-alt"></span>
-														<span class="glyphicon glyphicon-cog"></span>
-														<span class="">&nbsp;</span>
-														<span class="glyphicon glyphicon-remove-circle" style="color: red;"></span>
+														<span class="boardTitle" th:text="${board.getTitle()}">Title</span>
+													</td>
+													<td>
+														<span th:text="${board.getHitCount()}">Hits</span>
+													</td>
+													<td>
+														<span th:text="${board.getUpdateCount()}">Update count</span>
+													</td>
+													<td class="hidden-xs">
+														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
+													</td>
+													<td class="hidden-xs">
+														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
+													</td>
+													<td>
+														<span name="boardDownloadBtn" class="glyphicon glyphicon-download-alt"></span>
+														<span name="boardSettingBtn" class="glyphicon glyphicon-cog"></span>
+														<span name="boardDeleteBtn" class="glyphicon glyphicon-remove-circle" style="color: red;"></span>
 													</td>
 												</tr>
 											</tbody>
 										</table>
 									</div>
 									<!-- /.table-responsive -->
-										
-								</div>
-								<!-- /.tab-pane-->
-						
-								<div id="boardListTableContainer_tabContent2" class="tab-pane fade in" role="tabpanel">
 									
-									<!-- 
-									<h2>
-										<span class="hidden-xs">All boards</span>
-									</h2>
-									 -->
+								</div>
+								<!-- /.panel-body -->
+								
+								<div class="panel-footer">
+									<button name="deleteSelectedBoardBtn" class="btn btn-danger" type="button">
+										<span>Delete checked</span>
+									</button>
+								</div>
+								
+							</div>
+							<!-- /.panel -->
+						
+						</div>
+						<!-- /.tab-pane-->
+								
+						<div id="boardListTableContainer_tabContent2" class="tab-pane fade in" role="tabpanel">
+								
+							<div class="panel panel-success">
+								
+								<div class="panel-heading">
+									<h3><strong><span>All boards</span></strong></h3>
+								</div>
+								<!-- /.panel-heading -->
+							
+								<div class="panel-body">
 									
 									<div class="table-responsive">
-										<table class="table table-hover">
+										<table id="allBoardList" class="table-hover">
 											<thead>
 												<tr>
-													<th class="hidden-xs">#</th>
-													<th>Title</th>
-													<th class="hidden-xs">Create</th>
-													<th class="hidden-xs">Last up</th>
-													<th>Hits</th>
-													<th>Up</th>
-													<th>Owner</th>
+													<th data-checkbox="true" data-field="checkbox">checkbox</th>
+													<th class="hidden-xs" data-field="number">#</th>
+													<th data-field="title">Title</th>
+													<th data-field="hits">Hits</th>
+													<th data-field="up">Up</th>
+													<th class="hidden-xs" data-field="create">Create</th>
+													<th class="hidden-xs" data-field="last up">Last up</th>
+													<th data-field="owner">Owner</th>
+													<th data-field="utils">Utils</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr th:each="board : ${allBoardList}" class="eachRowInTable">
-													<td th:text="${board.getId()}" class="eachBoardIdInTable hidden-xs clickForJoin">
-														<span>Number</span>
-													</td>
-													<td th:text="${board.getTitle()}" class="clickForJoin">
-														<span>Title</span>
-													</td>
-													<td class="clickForJoin hidden-xs">
-														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
-													</td>
-													<td class="clickForJoin hidden-xs">
-														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
-													</td>
-													<td th:text="${board.getHitCount()}" class="clickForJoin">
-														<span>Hits</span>
-													</td>
-													<td th:text="${board.getUpdateCount()}" class="clickForJoin">
-														<span>Update count</span>
+												<tr th:each="board : ${allBoardList}">
+													<td data-checkbox="true"></td>
+													<td class="eachBoardIdInTable hidden-xs">
+														<span th:text="${board.getId()}">Number</span>
 													</td>
 													<td>
-														<span th:text="${board.getMember().getUsername()}" class="owner clickForJoin">Owner</span>
+														<span th:text="${board.getTitle()}">Title</span>
+													</td>
+													<td>
+														<span th:text="${board.getHitCount()}">Hits</span>
+													</td>
+													<td>
+														<span th:text="${board.getUpdateCount()}">Update count</span>
+													</td>
+													<td class="hidden-xs">
+														<span class="datetime" th:text="${board.getFormattedCreateDateString()}">Create date</span>
+													</td>
+													<td class="hidden-xs">
+														<span class="datetime" th:text="${board.getFormattedLastUpdateDateString()}">Last update date</span>
+													</td>
+													<td>
+														<span class="owner" th:text="${board.getMember().getUsername()}">Owner</span>
+													</td>
+													<td>
+														<span name="boardDownloadBtn" class="glyphicon glyphicon-download-alt"></span>
+														<span name="boardSettingBtn" th:if="${board.getMember().getUsername() == principal.username}" class="glyphicon glyphicon-cog"></span>
+														<span name="boardDeleteBtn" class="glyphicon glyphicon-remove-circle" th:if="${board.getMember().getUsername() == principal.username}" style="color: red;"></span>
 													</td>
 												</tr>
 											</tbody>
@@ -434,221 +409,30 @@ td span.owner {
 									<!-- /.table-responsive -->
 									
 								</div>
-								<!-- /.tab-pane-->
-						
+								<!-- /.panel-body -->
+								
+								<div class="panel-footer">
+									<button name="deleteSelectedBoardBtn" class="btn btn-danger" type="button">
+										<span>Delete checked</span>
+									</button>
+								</div>
+								
 							</div>
-							<!-- /.tab-content -->
+							<!-- /.panel -->
+							
 						</div>
-						<!-- /.panel-body -->
-						
-						<div class="panel-footer">
-							<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#createBoardModal">
-								<span>Create</span>
-							</button>
-							<a class="btn btn-danger" type="button" href="#" th:href="@{/board/deleteAll}">
-								<span>Delete all</span>
-							</a>
-						</div>
-						
-						
-						
+						<!-- /.tab-pane-->
+								
 					</div>
-					<!-- /.panel -->
-						
+					<!-- /.tab-content -->
+					
 				</div>
 				<!-- /.row -->
 			</div>
 			<!-- /.container-fluid -->
 		</div>
 		<!-- /.row -->
-		
-<!-- ========================================================================================================================================== -->
 
-		<!-- Create board modal -->
-		<div id="createBoardModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-				
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-						</button>
-						
-						<!-- Nav tabs -->
-						<ul class="nav nav-pills" role="tablist">
-						
-							<li role="presentation" class="active">
-								<a href="#tabContent1" data-toggle="tab">
-									<span>test 1</span>
-								</a>
-							</li>
-							
-							<li role="presentation" class="">
-								<a href="#tabContent2" data-toggle="tab">
-									<span>test 2</span>
-								</a>
-							</li>
-							
-						</ul>
-						<!-- /.Nav tabs -->
-					</div>
-					<!-- /.modal-header -->
-					
-					<div class="modal-body">
-						<div class="tab-content">
-						
-							<div id="createBoardModal_tabContent1" class="tab-pane fade in active" role="tabpanel">
-								<div class="container-fluid">
-									<div class="panel panel-info">
-									
-										<div class="panel-heading">
-											<ul class="nav nav-pills" role="tablist">
-											
-												<li role="presentation" class="active">
-													<a href="#createBoardModal_tabContent1_test1" data-toggle="tab" role="tab">
-														<span class="glyphicon glyphicon-edit"></span>
-														&nbsp;
-														<span>test 1</span>
-													</a>
-												</li>
-												
-												<li role="presentation" class="">
-													<a href="#createBoardModal_tabContent1_test2" data-toggle="tab" role="tab">
-														<span class="glyphicon glyphicon-edit"></span>
-														&nbsp;
-														<span>test 2</span>
-													</a>
-												</li>
-												
-											</ul>
-											<!-- /.nav.nav-pills -->
-										</div>
-										<!-- /.panel-heading -->
-										
-										<div class="panel-body">
-											<div class="tab-content">
-											
-												<div id="createBoardModal_tabContent1_test1" class="tab-pane fade in active" role="tabpanel">
-													
-													<div class="error_container" th:if="${errorMessage}">
-													
-														<div class="alert alert-warning alert-dismissible fade in" th:if="${blankTitleInput}">
-															<button type="button" class="close" data-dismiss="alert">&times;</button>
-															<h3><span><Strong>Blank title input</Strong></span></h3>
-															<span th:text="${blankTitleInput}" class="wrong_title"></span><br />
-															<span th:text="${errorMessage}"></span>
-														</div>
-														
-														<div class="alert alert-warning alert-dismissible fade in" th:if="${wrongTitleInput}">
-															<button type="button" class="close" data-dismiss="alert">&times;</button>
-															<h3><span><Strong>Wrong title input</Strong></span></h3>
-															<span th:text="${wrongTitleInput}" class="wrong_title"></span><br />
-															<span th:text="${errorMessage}"></span>
-														</div>
-														
-														<div class="alert alert-warning alert-dismissible fade in" th:if="${serverError}">
-															<button type="button" class="close" data-dismiss="alert">&times;</button>
-															<h3><span><Strong>Server error</Strong></span></h3>
-															<span th:text="${serverError}" class="wrong_title"></span><br />
-															<span th:text="${errorMessage}"></span>
-														</div>
-														
-													</div>
-													
-													<div class="page-header">
-														<h3>
-															<span>Collaborate immediately</span>
-														</h3>
-													</div>
-													
-													<form id="createBoardForm" class="form-horizontal" action="" th:action="@{/board/create_board}" method='post'>
-													
-														<div class="form-group has-feedback">
-															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Title</label>
-															<div class="col-sm-9 col-md-10">
-																<input name="boardName" class="form-control" type="text" placeholder="Insert your room name here" th:value="${wrongTitleInput}" data-error="Title is invalid" />
-																<span class="glyphicon form-control-feedback"></span><!-- required="required" pattern="[a-zA-Z1-9!`~@#$%^&amp;*()-_+=]{1,200}"  -->
-																<div class="help-block">client-side : any </div>
-																<div class="help-block">server-side : 1 ~ 5 (no blank)</div><!-- Character range : 1 ~ 200 -->
-																<div class="help-block with-errors"></div>
-															</div>
-														</div>
-														
-														<div class="form-group">
-															<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Owner</label>
-															<div class="col-sm-9 col-md-10">
-																<input name="ownerUsername" class="form-control" type="text" th:value="${principal.username}" readonly="readonly" />
-															</div>
-														</div>
-														
-														<div class="pull-right">
-															<button type="submit" class="btn btn-primary">
-																<span>create</span>
-															</button>
-														</div>
-														<!-- /.pull-right -->
-														
-													</form>
-													
-												</div>
-												<!-- /.tab-pane -->
-												
-												<div id="createBoardModal_tabContent1_test2" class="tab-pane fade" role="tabpanel">
-													<form action="" method='post'>
-														<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
-														<div class="pull-right">
-															<button type="button" class="btn btn-primary">
-																<span>create</span>
-															</button>
-														</div>
-													</form>
-												</div>
-												<!-- /.tab-pane -->
-												
-											</div>
-											<!-- /.tab-content -->
-										</div>
-										<!-- /.panel-body -->
-										
-										<div class="panel-footer">
-											<button id="" class="btn btn-primary">
-												<span>test</span>
-											</button>
-										</div>
-										<!-- /.panel-footer -->
-										
-									</div>
-									<!-- /.panel -->
-								</div>
-								<!-- /.container-fluid -->
-							</div>
-							<!-- /#tabContent1 -->
-							
-							<!-- tab content 2 -->
-							<div id="createBoardModal_tabContent2" class="tab-pane fade" role="tabpanel">
-
-							</div>
-							<!-- /#tabContent2 -->
-							
-						</div>
-						<!-- /.tab-content -->
-					</div>
-					<!-- /.modal-body -->
-					
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">
-							<span>Close</span>
-						</button>
-					</div>
-					<!-- /.modal-footer -->
-					
-				</div>
-				<!-- /.modal-content -->
-			</div>
-			<!-- /.modal-dialog -->
-		</div>
-		<!-- /.modal -->
-		
 	</div>
 
 
@@ -658,7 +442,6 @@ td span.owner {
 	<!-- Custom Javascript -->
 	<div layout:fragment="customScript">
 		<script src="../js/utils.js" th:src="@{/js/utils.js}" type="text/javascript"></script>
-		<script src="../js/notify.js" th:src="@{/js/notify.js}" type="text/javascript"></script>
 		<script src="../js/effect.js" th:src="@{/js/effect.js}" type="text/javascript"></script>
 		<script src="../js/member/member_main.js" th:src="@{/js/member/member_main.js}" type="text/javascript"></script>
 	</div>

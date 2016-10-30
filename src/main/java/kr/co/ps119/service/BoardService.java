@@ -77,18 +77,19 @@ public class BoardService {
 		return boardIdAfterUpdate;
 	}
 	
-	public void increaseBoardHits() {
-	}
-	
 	public Board findOneWithUpdate(Long boardId, Principal principal) {
-		String jpql = "UPDATE Board AS board SET board.hitCount = board.hitCount + 1 WHERE board.id = :boardId";
+//		String jpql = "UPDATE Board AS board SET board.hitCount = board.hitCount + 1 WHERE board.id = :boardId";
 		Board board = boardRepo.findOne(boardId);
 
 		if(board != null) {
-			if(principal.getName() != board.getMember().getUsername()) {
+			if(!(principal.getName().equals(board.getMember().getUsername()))) {
+				board.setHitCount(board.getHitCount() + 1L);
+
+				/*
 				em.createQuery(jpql)
 				  .setParameter("boardId", boardId)
 				  .executeUpdate();
+				*/
 			}
 		} else {
 			board = Board.getEmptyBoard();
@@ -117,7 +118,7 @@ public class BoardService {
 		return boardList;
 	}
 	
-	public void deleteAllBoardsOfMember() {
-		boardRepo.deleteAll();
+	public void deleteOneBoardById(Long boardId) {
+		boardRepo.delete(boardId);
 	}
 }

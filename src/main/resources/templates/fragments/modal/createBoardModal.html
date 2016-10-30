@@ -1,0 +1,186 @@
+<!-- Create board modal -->
+<div th:fragment="createModalFragment" id="createBoardModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+		
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+				</button>
+				
+				<!-- Nav tabs -->
+				<ul class="nav nav-pills" role="tablist">
+				
+					<li role="presentation" class="active">
+						<a href="#tabContent1" data-toggle="tab">
+							<span>test 1</span>
+						</a>
+					</li>
+					
+					<li role="presentation" class="">
+						<a href="#tabContent2" data-toggle="tab">
+							<span>test 2</span>
+						</a>
+					</li>
+					
+				</ul>
+				<!-- /.Nav tabs -->
+			</div>
+			<!-- /.modal-header -->
+			
+			<div class="modal-body">
+				<div class="tab-content">
+				
+					<div id="createBoardModal_tabContent1" class="tab-pane fade in active" role="tabpanel">
+						<div class="container-fluid">
+							<div class="panel panel-info">
+							
+								<div class="panel-heading">
+									<ul class="nav nav-pills" role="tablist">
+									
+										<li role="presentation" class="active">
+											<a href="#createBoardModal_tabContent1_test1" data-toggle="tab" role="tab">
+												<span class="glyphicon glyphicon-edit"></span>
+												&nbsp;
+												<span>test 1</span>
+											</a>
+										</li>
+										
+										<li role="presentation" class="">
+											<a href="#createBoardModal_tabContent1_test2" data-toggle="tab" role="tab">
+												<span class="glyphicon glyphicon-edit"></span>
+												&nbsp;
+												<span>test 2</span>
+											</a>
+										</li>
+										
+									</ul>
+									<!-- /.nav.nav-pills -->
+								</div>
+								<!-- /.panel-heading -->
+								
+								<div class="panel-body">
+									<div class="tab-content">
+									
+										<div id="createBoardModal_tabContent1_test1" class="tab-pane fade in active" role="tabpanel">
+											
+											<div class="error_container" th:if="${errorMessage}">
+											
+												<div class="alert alert-warning alert-dismissible fade in" th:if="${blankTitleInput}">
+													<button type="button" class="close" data-dismiss="alert">&times;</button>
+													<h3><span><Strong>Blank title input</Strong></span></h3>
+													<span th:text="${blankTitleInput}" class="wrong_title"></span><br />
+													<span th:text="${errorMessage}"></span>
+												</div>
+												
+												<div class="alert alert-warning alert-dismissible fade in" th:if="${wrongTitleInput}">
+													<button type="button" class="close" data-dismiss="alert">&times;</button>
+													<h3><span><Strong>Wrong title input</Strong></span></h3>
+													<span th:text="${wrongTitleInput}" class="wrong_title"></span><br />
+													<span th:text="${errorMessage}"></span>
+												</div>
+												
+												<div class="alert alert-warning alert-dismissible fade in" th:if="${serverError}">
+													<button type="button" class="close" data-dismiss="alert">&times;</button>
+													<h3><span><Strong>Server error</Strong></span></h3>
+													<span th:text="${serverError}" class="wrong_title"></span><br />
+													<span th:text="${errorMessage}"></span>
+												</div>
+												
+											</div>
+											
+											<div class="page-header">
+												<h3>
+													<span>Collaborate immediately</span>
+												</h3>
+											</div>
+											
+											<form id="createBoardForm" class="form-horizontal" action="" th:action="@{/board/create_board}" method='post'>
+											
+												<div class="form-group has-feedback">
+													<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Title</label>
+													<div class="col-sm-9 col-md-10">
+														<input name="boardName" class="form-control" type="text" placeholder="Insert your room name here" th:value="${wrongTitleInput}" data-error="Title is invalid" />
+														<span class="glyphicon form-control-feedback"></span><!-- required="required" pattern="[a-zA-Z1-9!`~@#$%^&amp;*()-_+=]{1,200}"  -->
+														<div class="help-block">client-side : any </div>
+														<div class="help-block">server-side : 1 ~ 5 (no blank)</div><!-- Character range : 1 ~ 200 -->
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+												
+												<div class="form-group">
+													<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Owner</label>
+													<div class="col-sm-9 col-md-10">
+														<input name="ownerUsername" class="form-control" type="text" th:value="${principal.username}" readonly="readonly" />
+													</div>
+												</div>
+												
+												<input name="currentRelativePath" class="form-control" th:value="${#ctx.httpServletRequest.getServletPath()}" hidden="hidden" type="text" readonly="readonly" />
+												
+												<div class="pull-right">
+													<button type="submit" class="btn btn-primary">
+														<span>create</span>
+													</button>
+												</div>
+												<!-- /.pull-right -->
+												
+											</form>
+											
+										</div>
+										<!-- /.tab-pane -->
+										
+										<div id="createBoardModal_tabContent1_test2" class="tab-pane fade" role="tabpanel">
+											<form action="" method='post'>
+												<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
+												<div class="pull-right">
+													<button type="button" class="btn btn-primary">
+														<span>create</span>
+													</button>
+												</div>
+											</form>
+										</div>
+										<!-- /.tab-pane -->
+										
+									</div>
+									<!-- /.tab-content -->
+								</div>
+								<!-- /.panel-body -->
+								
+								<div class="panel-footer">
+									<button id="" class="btn btn-primary">
+										<span>test</span>
+									</button>
+								</div>
+								<!-- /.panel-footer -->
+								
+							</div>
+							<!-- /.panel -->
+						</div>
+						<!-- /.container-fluid -->
+					</div>
+					<!-- /#tabContent1 -->
+					
+					<!-- tab content 2 -->
+					<div id="createBoardModal_tabContent2" class="tab-pane fade" role="tabpanel">
+
+					</div>
+					<!-- /#tabContent2 -->
+					
+				</div>
+				<!-- /.tab-content -->
+			</div>
+			<!-- /.modal-body -->
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					<span>Close</span>
+				</button>
+			</div>
+			<!-- /.modal-footer -->
+			
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

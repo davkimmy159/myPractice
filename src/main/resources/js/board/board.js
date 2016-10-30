@@ -113,7 +113,7 @@ var session = {
 		this.dbUpdateAlarmSubscribe += $("input#boardId").val();
 		
 		// Sets nickname
-		this.nickname = $("#loginIdDisplayDesktop").text();
+		this.nickname = $("#loginUsername").text();
 		
 		// Sets board id
 		this.boardId = $("#boardId").val();
@@ -130,7 +130,7 @@ var session = {
 				session.stompClient.subscribe(session.chatSubscribe, function(messageData) {
 					var chatMessage = JSON.parse(messageData.body);
 
-					utils.chatAppend(chatMessage.chatAreaMessage);
+					boardUtils.chatAppend(chatMessage.chatAreaMessage);
 //					notify.notify(chatMessage.username, chatMessage.messageBody);
 					
 					if(session.nickname != chatMessage.username) {
@@ -142,7 +142,7 @@ var session = {
 				session.stompClient.subscribe(session.dbUpdateAlarmSubscribe, function(alarmMessage) {
 					var alarmMsgBody = JSON.parse(alarmMessage.body);
 					
-					utils.chatAppend(alarmMsgBody.chatAreaMessage);
+					boardUtils.chatAppend(alarmMsgBody.chatAreaMessage);
 //					notify.notify(alarmMsgBody.messageBody, ' by \'' + alarmMsgBody.username + '\'');
 					
 					if(session.nickname != alarmMsgBody.username) {
@@ -169,7 +169,7 @@ var session = {
 						mobileEditor.setData(contentDataBody.messageBody);
 					}
 					
-					utils.chatAppend(contentDataBody.chatAreaMessage);
+					boardUtils.chatAppend(contentDataBody.chatAreaMessage);
 //					notify.notify("Editor update", " by '" + contentDataBody.username + "'");
 					
 					if(session.nickname != contentDataBody.username) {
@@ -192,8 +192,8 @@ var session = {
 				});
 				session.stompClient.send(session.chatHandler, {}, joinMsg);
 				
-				utils.chatAppend("Error : Stomp  connection failed :");
-				utils.chatAppend(error);
+				boardUtils.chatAppend("Error : Stomp  connection failed :");
+				boardUtils.chatAppend(error);
 				notify.notify("Error", "Stomp connection failed", error);
 				session.disconnect();
 			}
@@ -231,7 +231,7 @@ var session = {
 	},
 	
 	reconnect : function() {
-		utils.chatAppend("Stomp reconnecting...");
+		boardUtils.chatAppend("Stomp reconnecting...");
 		notify.notify("Stomp reconnection", "Reconnecting...");
 		this.disconnect();
 		this.connect();
@@ -272,6 +272,28 @@ var session = {
 		}
 
 		session.stompClient.send(session.editorHandler, {}, JSON.stringify(editorContent));
+	},
+	
+	editorContentDBUpdate : function() {
+
+		// desktop
+		if (utils.isDesktopSize()) {
+			jqAjax.updateBoardDB(session.boardId, basicEditor.getData());
+			
+		// mobile
+		} else {
+			jqAjax.updateBoardDB(session.boardId, mobileEditor.getData());
+		}
+//		jqAjax.saveBoard(basicEditor.document.getBody().getText());
+
+		var dbUpdateMsg = JSON.stringify({
+			username : session.nickname,
+			messageBody : "DB content update"
+		});
+		
+		session.stompClient.send(session.dbUpdateAlarmHandler, {}, dbUpdateMsg);
+		
+		boardUtils.focusToEditor();
 	}
 };
 
@@ -297,7 +319,7 @@ var badge = {
 	}
 };
 
-var utils = {
+var boardUtils = {
 	
 	// chatArea append function
 	chatAppend : function(str) {
@@ -310,10 +332,6 @@ var utils = {
 		return session.socket && session.stompClient;
 	},
 	
-	isDesktopSize : function() {
-		return matchMedia("screen and (min-width: 768px)").matches;
-	},
-	
 	// focus move
 	focusToEditor : function() {
 		if (utils.isDesktopSize()) {
@@ -323,68 +341,10 @@ var utils = {
 		}	
 	},
 	
-	// detects sizes
-	editorSizeDetectFunc : function(basicEditorFunction, mobileEditorFunction) {
-		if(((typeof basicEditorFunction) == 'function') && ((typeof mobileEditorFunction) == 'function')) {
-			if (utils.isDesktopSize()) {
-				basicEditorFunction();
-			} else {
-				mobileEditorFunction();
-			}	
-		} else {
-			notify.notify("editorSizeDetectFunc error", "parameter is not function!");
-		}
-	},
-	
-	// session check v1
-	workWithSession : function(functionWithSession, functionWithoutSession) {
-		if(((typeof functionWithSession) == 'function') && ((typeof functionWithoutSession) == 'function')) {
-			if (utils.isSessionAlive()) {
-				functionWithSession();
-			} else {
-				functionWithoutSession();
-			}	
-		} else {
-			notify.notify("workWithSession error", "parameter is not function!");
-		}
-	},
-
-	// session check v2
-	workWithSession2 : function() {
-		if(!(session.socket || session.stompClient)) {
-			return notify.notify("workWithSession error", "parameter is not function!");	
-		}	
-	},
-	
-	toggleClassArrayFunc : function(array, str) {
-		for ( var ctr in array)
-			array[ctr].toggleClass(str);
-	},
-	
-	addClassFunc : function(array, str) {
-		for ( var ctr in array)
-			array[ctr].addClass(str);
-	},
-	
-	removeClassFunc : function(array, str) {
-		for ( var ctr in array)
-			array[ctr].removeClass(str);
-	},
-		
-	// Check if string is not both null and empty
-	checkStr : function(str) {
-		// <![CDATA[
-		if (((typeof str != "undefined") && (typeof str.valueOf() == "string")) && (str.length > 0))
-		// ]]>
-			return true;
-		else
-			return false;
-	},
-	
 	// veryfy chat input
 	verifyChatInput : function() {
-		if (utils.isSessionAlive()) {
-			if (this.checkStr($('#chatInput').val())) {
+		if (boardUtils.isSessionAlive()) {
+			if (utils.checkStr($('#chatInput').val())) {
 				session.chatMsgSend();
 				$('#chatInput').focus();
 			} else {
@@ -392,74 +352,8 @@ var utils = {
 			}
 		} else {
 			notify.notify('Join required', 'You need to join first!');
-//			$('#nicknameInput').focus();
 		}
 	},
-	
-	/*
-	// Verify and control Join condition
-	verifyJoin : function() {
-		if (!(session.socket) || !(session.stompClient)) {
-			if (this.checkStr($('#nicknameInput').val())) {
-				session.nickname = $('#nicknameInput').val();
-				$('#nicknameInput').val("");
-				
-				session.connect();
-				
-				$('#joinToggleBtn').html('Exit');
-				$('#joinToggleBtn').removeClass('btn-success');
-				$('#joinToggleBtn').addClass('btn-danger');
-				
-				$('#nicknameInput').val('');
-				$('#nicknameInput').prop("disabled", true);
-				$('#nicknameInput').attr('placeholder', session.nickname);
-				
-				// Hide navbar collapsible menus in mobile
-				if (!(utils.isDesktopSize())) {
-					if($('.navbar-toggle').css('display') !='none'){
-						$(".navbar-toggle").trigger( "click" );
-					}
-		        }
-				
-				// AJAX
-				// Sends nickname to server to save in DB and refresh member table
-				// jqAjax.insertRefresh();
-				
-				// Focus back to chat input
-				$('#chatInput').focus();
-			} else {
-				$('#nicknameInput').attr('placeholder', 'Worng! type again!');
-				$('#nicknameInput').focus();
-			}
-		} else {
-			if(this.nickname) {
-				this.nickname = null;
-			};
-			
-			session.disconnect();
-			
-			$('#joinToggleBtn').html('Join');
-			$('#joinToggleBtn').removeClass('btn-danger');
-			$('#joinToggleBtn').addClass('btn-success');
-			
-			$('#nicknameInput').val('');
-			$('#nicknameInput').prop("disabled", false);
-			$('#nicknameInput').attr('placeholder', 'Type nickname');
-			
-			// Hide navbar content (in effect only in mobile mode)
-			if (!(utils.isDesktopSize())) {
-				if($('.navbar-toggle').css('display') !='none'){
-					$(".navbar-toggle").trigger( "click" );
-				}
-	        }
-			
-			// jqAjax.deleteRefresh();
-			
-			// Focus back to nickname input
-			$('#nicknameInput').focus();
-		}
-	},
-	*/
 	
 	showHeight : function() {
 		// Each height
@@ -479,13 +373,6 @@ var utils = {
 	}
 };
 
-/*
-eventFunc.collapseBtnFocusMove();
-chatInputKeyEvent();
-badgeEvent();
-toggleChatNotifyEvent();
-toggleJoinEvent();
-*/
 var eventObj = {
 	
 	mobileEditorToolbarHide : function() {
@@ -494,24 +381,6 @@ var eventObj = {
 		});
 	},
 		
-	
-	/*
-	// For focus on nickname input on mobile view
-	collapseBtnFocusMove : function() {
-		$('#collapseBtn').click(function() {
-			// <![CDATA[
-			if (!(utils.isDesktopSize()) && !(session.socket)) {
-			// ]]>
-				setTimeout(function() {
-					$('#nicknameInput').focus();
-				}, 500);
-			}
-		});
-	},
-	*/
-	
-
-	
 	badgeEvent : function() {
 		// Badge event function
 		$('#chatArea').focus(function(event) {
@@ -537,27 +406,13 @@ var eventObj = {
 	},
 	
 	/*
-	toggleJoinEvent : function() {
-		// Toggle join (button)
-		$('#joinToggleBtn').click(function() {
-			utils.verifyJoin();
-		});
-		// Toggle join (input text)
-		$('#nicknameInput').keypress(function(event) {
-			if (event.keyCode === 13)
-				utils.verifyJoin();
-		});
-	},
-	*/
-	
-	/*
 	windowOutEvent : function() {
 		// Logout, close event with 'esc' key on browser window
 		$(window).keydown(function(event) {
 			if (event.keyCode == 27) {
-				utils.chatAppend('esc!!');
+				boardUtils.chatAppend('esc!!');
 				if (session.socket) {
-					// utils.chatAppend('Exit now!');
+					// boardUtils.chatAppend('Exit now!');
 					$('#joinToggleBtn').html('Join');
 					$('#joinToggleBtn').removeClass('btn-danger');
 					$('#joinToggleBtn').addClass('btn-success');
@@ -577,72 +432,30 @@ var eventObj = {
 	
 	showHeightsEvent : function() {
 		$('#showHeights').click(function() {
-			utils.showHeight();
+			boardUtils.showHeight();
 		});
 	},
 	
 	editorInputSendEvent : function() {
 		$('#editorInputBtn').click(function() {
-			if (utils.isSessionAlive()) {
+			if (boardUtils.isSessionAlive()) {
 				session.editorContentSend();
 				
-				utils.focusToEditor();
+				boardUtils.focusToEditor();
 			} else {
 				notify.notify('Join required', 'You need to join first!');
-//				$('#nicknameInput').focus();
 			}
 		});
 	},
 	
 	editorSaveEvent : function() {
 		$('#editorSaveBtn').click(function() {
-			if (utils.isSessionAlive()) {
+			if (boardUtils.isSessionAlive()) {
 				
-				// desktop
-				if (utils.isDesktopSize()) {
-					jqAjax.updateBoardDB(session.boardId, basicEditor.getData());
-					
-				// mobile
-				} else {
-					jqAjax.updateBoardDB(session.boardId, mobileEditor.getData());
-				}
-//				jqAjax.saveBoard(basicEditor.document.getBody().getText());
-
-				var dbUpdateMsg = JSON.stringify({
-					username : session.nickname,
-					messageBody : "DB content update"
-				});
+				session.editorContentDBUpdate();
+				session.editorContentSend();
 				
-				session.stompClient.send(session.dbUpdateAlarmHandler, {}, dbUpdateMsg);
-				
-				utils.focusToEditor();
-			} else {
-				notify.notify('Join required', 'You need to join first!');
-//				$('#nicknameInput').focus();
 			}
-			
-			/*
-			Array.prototype
-				 .map
-				 .call(basicEditor.document.getBody().$.childNodes, function(item) {
-					 return item.innerText;
-				 })
-				 .join("\n");
-			*/
-		});
-	},
-	
-	editorDelEvent : function() {
-		$('#listDelBtn').click(function() {
-//			jqAjax.deleteAllBoards();
-			
-			var dbUpdateMsg = JSON.stringify({
-				username : session.nickname,
-				messageBody : "All contents have been deleted"
-			});
-			
-			session.stompClient.send(session.dbUpdateAlarm, {}, dbUpdateMsg);
-			
 		});
 	},
 	
@@ -656,7 +469,7 @@ var eventObj = {
 			
 			// ENTER
 			if (event.which === 13) {
-				utils.verifyChatInput();
+				boardUtils.verifyChatInput();
 				
 			// CTRL
 			} else if (event.which == 17) {
@@ -679,7 +492,7 @@ var eventObj = {
 				}
 			}
 			
-//			utils.chatAppend("Ctrl : " + isCtrl);
+//			boardUtils.chatAppend("Ctrl : " + isCtrl);
 		});
 		
 		// Toggle isCtrl false
@@ -691,27 +504,12 @@ var eventObj = {
 		
 		// Focus back to chatInput on clicking chatInputBtn
 		$('#chatInputBtn').click(function() {
-			utils.verifyChatInput();
+			boardUtils.verifyChatInput();
 		});
 	},
 	
 	ctrlAlt : CKEDITOR.CTRL + CKEDITOR.ALT + 18,
 	ctrlEnter : CKEDITOR.CTRL + 13,
-	
-	editorEvent : function() {
-
-	},
-	
-	editorResizeCollapseEvent : function() {
-		/*
-		basicEditor.on('contentDom', function() {
-		    basicEditor.document.on('click', function(event) {
-		        notify.notify("test", "test");
-		        notify.notify("test", CKEDITOR.CTRL);
-		    });
-		});
-		*/
-	},
 	
 	modalBasicSettings : {
 		// necessary for nested modal scroll focus (!!!important!!!)
@@ -733,26 +531,6 @@ var eventObj = {
 		}
 	}
 };
-
-/*
-var pnotifyFunc = {
-		
-	toggleChatNotify : function() {
-		
-		var str = 'data-original-title';
-		
-		notify.toggle = !notify.toggle;
-		$('#chatNotifyToggle').toggleClass('glyphicon-eye-close');
-		$('#chatNotifyToggle').toggleClass('glyphicon-eye-open');
-		if(notify.toggle) {
-			$('#chatNotifyToggleBtn').attr(str, 'Hide chat notification!').tooltip('hide');			        
-		}
-		else {
-			$('#chatNotifyToggleBtn').attr(str, 'Show chat notification!').tooltip('hide');
-		}
-	}
-};
-*/
 
 /*
 var xeditableFunc = {
@@ -846,54 +624,6 @@ var xeditableFunc = {
 };
 */
 
-/*
-var tooltipFunc = {
-
-	tooltipApply : function() {
-		// $('#example').tooltip(options)
-		
-		$('#joinToggleBtn').tooltip({
-			title : "Type your name and Join",
-			placement : "bottom",
-			container : "body"
-		});
-
-		$('#basicStatus').tooltip({
-			title : "Hide toolbar!",
-			placement : "bottom"
-		});
-		
-		$('#mobileStatus').tooltip({
-			title : "Hide toolbar!", 
-			placement : "bottom"
-		});
-		
-		$('#editorInputBtn').tooltip({
-			title : '"CTRL + ENTER" or "CTRL + SHIFT"',
-			placement : "top",
-			container : "body"
-		});
-		
-		$('#toolbarToggleBtn').tooltip({
-			title : "Hide toolbar!",
-			placement : "top",
-			container : "body"
-		});
-		
-		$('#chatNotifyToggleBtn').tooltip({
-			title : "Hide chat notification!",  
-			placement : "top",
-			container : "body"
-		});
-
-	},
-		
-	tooltipActivate : function() {
-		$('[data-toggle="tooltip"]').tooltip();
-	}
-};
-*/
-
 var resizeFuncs = {
 	
 	// arrays to set different sets between basic and mobile
@@ -970,11 +700,7 @@ $(document).ready(function() {
 		session.connect();
 	}, 1000);
 
-	$.each(eventObj, function(index, element) {
-		if((typeof element) == 'function') {
-			element();
-		}
-	});
+	utils.executeAllFunctionMembers(eventObj);
 	
 	for(var ctr in BCModalSet) {
 		if((typeof BCModalSet[ctr]) == 'function') {

@@ -68,36 +68,33 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 		memAuth4.setAuthority(authRepo.findOne(1));
 		memAuth4.setMember(member4);
 
-		for(int i = 2; i <= 4; i++) {
-			for(int j = 1; j <= 2; j++) {
-				Board board = new Board();
-				board.setTitle("title " + i + "-" + j);
-				
-				switch(i) {
-					case 2:
-						board.setMember(member2);
-						break;
-					case 3:
-						board.setMember(member3);
-						break;
-					case 4:
-						board.setMember(member4);
-						break;
-				}
-			}
-		}
-		
-		for(int i = 1; i <= 250; i++) {
-			Board board = new Board();
-			board.setTitle("title " + i);
-			board.setMember(member1);
-		}
-		
 		memberRepo.save(member1);
 		memberRepo.save(member2);
 		memberRepo.save(member3);
 		memberRepo.save(member4);
 		
+		for(int i = 1; i <= 250; i++) {
+			Board board = new Board();
+			board.setTitle("title " + i);
+			
+			switch(i % 4) {
+				case 1:
+					board.setMember(member1);
+					break;
+				case 2:
+					board.setMember(member2);
+					break;
+				case 3:
+					board.setMember(member3);
+					break;
+				case 0:
+					board.setMember(member4);
+					break;
+			}
+			boardRepo.save(board);
+		}
+		
+
 		
 		/*
 		INSERT INTO board(title, content, create_date, member_id) VALUES('title_1', 'content', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 1);
