@@ -72,9 +72,15 @@ public class BoardAjaxController {
 	}
 	
 	@GetMapping(value = "deleteSelectedBoard") 
-	public Map<String, Object> deleteSelectedBoard(List<Long> boardIds) {
-		for(Long boardId : boardIds) {
-			boardService.deleteOneBoardById(boardId);	
+	public Map<String, Object> deleteSelectedBoard(
+			@RequestParam("boardIds[]") String boardIds[]) {
+		System.out.println(boardIds);
+		System.out.println(boardIds.length);
+		
+
+		for(String boardId : boardIds) {
+//			boardService.deleteOneBoardById(Long.valueOf(boardId));
+			System.out.println(boardId);
 		}
 		
 		Map<String, Object> jsonObject = new HashMap<>();

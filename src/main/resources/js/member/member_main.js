@@ -168,27 +168,26 @@ bootstrapTable = {
 				window.location = path.getFullContextPath() + "/board/" + $(this).parent().siblings(".eachBoardIdInTable").find("span").text();
 			});
 			
-			$("span[name='boardDownloadBtn'][class~='glyphicon']").click(function() {
+			$("span.boardDownloadBtn").click(function() {
 				notify.notify("test 1", $(this));
 			});
 			
-			$("span[name='boardSettingBtn'][class~='glyphicon']").click(function() {
+			$("span.boardSettingBtn").click(function() {
 				notify.notify("test 2", $(this));
 			});
 			
-			$("span[name='boardDeleteBtn'][class~='glyphicon']").click(function() {
+			$("span.boardDeleteBtn").click(function() {
 				var boardId = $(this).parent().siblings(".eachBoardIdInTable").find("span").text();
 				ajax.deleteOneBoardFromBtn(boardId);
+				$(this).parent().parent().remove();
 			});
 			
 			$("button[name='deleteSelectedBoardBtn']").click(function() {
-				/*
 				var boardIds = $.map(bootstrapTable.myBoardListTable.bootstrapTable('getSelections'), function (row) {
-					notify.notify(row);
-	                return row;
+	                notify.notify(Object.keys(row));
+					return row;
 	            });
-				notify.notify(boardIds);
-				*/
+				ajax.deleteSelectedBoard(boardIds);
 			});
 		}
 	},
@@ -224,7 +223,7 @@ ajax = {
 			// processData: false,
 			success : function(data, status) {
 				notify.notify("Ajax 통신 성공 code : " + status + " message : " + data.message);
-				$("table#myBoardList").bootstrapTable("remove", {field: "number", values: boardId});
+//				$("table#myBoardList").bootstrapTable("remove", {field: "number", values: boardId});
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
@@ -232,7 +231,7 @@ ajax = {
 		});
 	},
 	
-	deleteSelectedBoard: function(boardIds) {
+	deleteSelectedBoard : function(boardIds) {
 		$.ajax({
 			url : '../ajax/board/deleteSelectedBoard',
 			type : 'GET',
@@ -245,7 +244,8 @@ ajax = {
 			// processData: false,
 			success : function(data, status) {
 				notify.notify("Ajax 통신 성공 code : " + status + " message : " + data.message);
-				bootstrapTable.myBoardListTable.bootstrapTable("remove", {field: "number", values: boardIds});
+				bootstrapTable.myBoardListTable.bootstrapTable("getSelections").remove();
+//				bootstrapTable.myBoardListTable.bootstrapTable("remove", {field: "number", values: boardIds});
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);

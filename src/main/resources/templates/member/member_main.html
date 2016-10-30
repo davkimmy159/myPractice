@@ -322,9 +322,9 @@ td span.owner {
 														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
 													</td>
 													<td>
-														<span name="boardDownloadBtn" class="glyphicon glyphicon-download-alt"></span>
-														<span name="boardSettingBtn" class="glyphicon glyphicon-cog"></span>
-														<span name="boardDeleteBtn" class="glyphicon glyphicon-remove-circle" style="color: red;"></span>
+														<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>
+														<span class="boardSettingBtn glyphicon glyphicon-cog"></span>
+														<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" style="color: red;"></span>
 													</td>
 												</tr>
 											</tbody>
@@ -380,7 +380,7 @@ td span.owner {
 														<span th:text="${board.getId()}">Number</span>
 													</td>
 													<td>
-														<span th:text="${board.getTitle()}">Title</span>
+														<span class="boardTitle" th:text="${board.getTitle()}">Title</span>
 													</td>
 													<td>
 														<span th:text="${board.getHitCount()}">Hits</span>
@@ -398,9 +398,9 @@ td span.owner {
 														<span class="owner" th:text="${board.getMember().getUsername()}">Owner</span>
 													</td>
 													<td>
-														<span name="boardDownloadBtn" class="glyphicon glyphicon-download-alt"></span>
-														<span name="boardSettingBtn" th:if="${board.getMember().getUsername() == principal.username}" class="glyphicon glyphicon-cog"></span>
-														<span name="boardDeleteBtn" class="glyphicon glyphicon-remove-circle" th:if="${board.getMember().getUsername() == principal.username}" style="color: red;"></span>
+														<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>
+														<span class="boardSettingBtn glyphicon glyphicon-cog" th:if="${board.getMember().getUsername() == principal.username}"></span>
+														<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" th:if="${board.getMember().getUsername() == principal.username}" style="color: red;"></span>
 													</td>
 												</tr>
 											</tbody>
