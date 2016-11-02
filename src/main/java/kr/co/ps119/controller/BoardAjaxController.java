@@ -1,13 +1,15 @@
 package kr.co.ps119.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.ps119.entity.Board;
+import kr.co.ps119.entity.Member;
+import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.service.BoardService;
+import kr.co.ps119.service.MemberService;
 import kr.co.ps119.vo.BoardVO;
 
 @RestController
@@ -26,7 +31,14 @@ import kr.co.ps119.vo.BoardVO;
 public class BoardAjaxController {
 
 	@Autowired
+	private MemberService memberService;
+	
+	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private BoardRepository boardRepo;
+	
 	
 	@GetMapping(value = "updateBoardDB")
 	public Map<String, Object> updateBoardDB(
@@ -53,18 +65,35 @@ public class BoardAjaxController {
 	}
 	
 	@GetMapping(value = "test")
-	public Map<String, Object> test(Principal principal) {
+	public Map<String, Object> test(
+			Principal principal,
+			int limit,
+			int offset,
+			String search,
+			String sort,
+			String order) {
 		
-		List<Board> dbList = boardService.findAllBoardsOfMemberByUsername(principal.getName());
-		List<BoardVO> viewList = new ArrayList<>();
+		System.out.println("limit : " + limit);
+		System.out.println("offset : " + offset);
+		System.out.println("search : " + search);
+		System.out.println("sort : " + sort);
+		System.out.println("order : " + order);
+		
+		Member member = memberService.findByUsername(principal.getName());
+		
+		PageRequest pageRequest = new PageRequest(0, limit, new Sort(Direction.ASC, "id"));
+		
+//		List<Board> dbList = boardService.findAllBoardsOfMemberByUsername(principal.getName());
+		List<Board> dbList = boardRepo. queryFirst10ByMemberId(member.getId(), pageRequest);
+		List<BoardVO> viewList;
 		
 		Map<String, Object> jsonObject = new HashMap<>();
 			
-		for(Board board : dbList) {
-			viewList.add(new BoardVO(board.getId(), board.getTitle(),board.getContent(), board.getCreateDate(), board.getLastUpdateDate(), board.getUpdateCount(), board.getHitCount(), board.getMember().getUsername()));
-		}
+		viewList = dbList.stream()
+						 .map(board -> new BoardVO(board.getId(), board.getTitle(),board.getContent(), board.getCreateDate(), board.getLastUpdateDate(), board.getUpdateCount(), board.getHitCount(), board.getMember().getUsername()))
+						 .collect(Collectors.toList());
 		
-		jsonObject.put("total", dbList.size());
+		jsonObject.put("total", viewList.size());
 		jsonObject.put("rows", viewList);
 		
 		return jsonObject;

@@ -49,4 +49,8 @@ public class MemberService {
 	@Autowired
 	private 
 	*/
+	
+	public Member findByUsername(String username) {
+		return memberRepo.findByUsername(username);
+	}
 }

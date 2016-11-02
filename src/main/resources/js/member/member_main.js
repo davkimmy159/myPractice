@@ -7,8 +7,21 @@ bootstrapTable = {
 		
 		/* Bootstrap table plugin settings for my board list */
 		$("table#myBoardList").bootstrapTable({
+			
 			url : path.getContextPath() + "/ajax/board/test",
 			sidePagination : "server",
+			contentType	: 'application/json; charset=utf-8',
+			queryParamsType : "limit",
+			queryParams : function(params) {
+			    params.limit = 10;
+				return params;
+			    	/*
+			    	offset,
+			    	search,
+			    	sort,
+			    	order
+			    	*/
+			},
 			
 			classes : "table table-no-bordered",
 		

@@ -77,7 +77,7 @@ public class BoardService {
 		return boardIdAfterUpdate;
 	}
 	
-	public Board findOneWithUpdate(Long boardId, Principal principal) {
+	public Board findOneWithAddHitCount(Long boardId, Principal principal) {
 //		String jpql = "UPDATE Board AS board SET board.hitCount = board.hitCount + 1 WHERE board.id = :boardId";
 		Board board = boardRepo.findOne(boardId);
 

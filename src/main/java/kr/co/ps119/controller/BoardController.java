@@ -83,7 +83,7 @@ public class BoardController {
 		
 		String returnPage = "redirect:/index";
 		
-		Board board = boardService.findOneWithUpdate(boardId, principal);
+		Board board = boardService.findOneWithAddHitCount(boardId, principal);
 
 		// If board exists
 		if(!(board.isEmptyBoard())) {
