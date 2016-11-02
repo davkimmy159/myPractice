@@ -150,16 +150,17 @@
 											<thead>
 												<tr>
 													<th data-checkbox="true" data-field="checkbox">checkbox</th>
-													<th class="hidden-xs" data-field="number" data-sortable="true">#</th>
+													<th class="hidden-xs" data-field="id" data-sortable="true">#</th>
 													<th data-field="title" data-sortable="true">Title</th>
-													<th data-field="hits" data-sortable="true">Hits</th>
-													<th data-field="up" data-sortable="true">Up</th>
-													<th class="hidden-xs hidden-sm" data-field="create" data-sortable="true">Create</th>
-													<th class="hidden-xs hidden-sm" data-field="last up" data-sortable="true">Last up</th>
+													<th data-field="hitCount" data-sortable="true">Hits</th>
+													<th data-field="updateCount" data-sortable="true">Up</th>
+													<th class="hidden-xs hidden-sm" data-field="createDate" data-sortable="true">Create</th>
+													<th class="hidden-xs hidden-sm" data-field="lastUpdateDate" data-sortable="true">Last up</th>
 													<th data-field="utils">Utils</th>
 												</tr>
 											</thead>
 											<tbody>
+											<!-- 
 												<tr th:each="board : ${userBoardList}" th:with="boardUrl = '/board/' + ${board.getId()}">
 													<td></td>
 													<td class="eachBoardIdInTable hidden-xs">
@@ -188,6 +189,7 @@
 														<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" style="color: red;"></span>
 													</td>
 												</tr>
+												 -->
 											</tbody>
 										</table>
 									</div>
@@ -220,6 +222,7 @@
 								<div class="panel-body">
 									
 									<div class="table-responsive">
+									<!-- 
 										<table id="allBoardList" class="table-hover">
 											<thead>
 												<tr>
@@ -261,13 +264,12 @@
 													<td>
 														<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>
 														<span class="boardSettingBtn glyphicon glyphicon-cog" th:if="${board.getMember().getUsername() == principal.username}"></span>
-														<a>
-															<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" th:if="${board.getMember().getUsername() == principal.username}" style="color: red;"></span>
-														</a>
+														<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" th:if="${board.getMember().getUsername() == principal.username}" style="color: red;"></span>
 													</td>
 												</tr>
 											</tbody>
 										</table>
+										 -->
 									</div>
 									<!-- /.table-responsive -->
 									

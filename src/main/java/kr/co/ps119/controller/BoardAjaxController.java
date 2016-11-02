@@ -1,5 +1,8 @@
 package kr.co.ps119.controller;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.ps119.entity.Board;
 import kr.co.ps119.service.BoardService;
+import kr.co.ps119.vo.BoardVO;
 
 @RestController
 @RequestMapping(
@@ -48,6 +52,25 @@ public class BoardAjaxController {
 		return jsonObject;
 	}
 	
+	@GetMapping(value = "test")
+	public Map<String, Object> test(Principal principal) {
+		
+		List<Board> dbList = boardService.findAllBoardsOfMemberByUsername(principal.getName());
+		List<BoardVO> viewList = new ArrayList<>();
+		
+		Map<String, Object> jsonObject = new HashMap<>();
+			
+		for(Board board : dbList) {
+			viewList.add(new BoardVO(board.getId(), board.getTitle(),board.getContent(), board.getCreateDate(), board.getLastUpdateDate(), board.getUpdateCount(), board.getHitCount(), board.getMember().getUsername()));
+		}
+		
+		jsonObject.put("total", dbList.size());
+		jsonObject.put("rows", viewList);
+		
+		return jsonObject;
+	}
+	
+	/*
 	@GetMapping(value = "getBoardListOfMemberFromDBByUsername")
 	public Map<String, Object> getBoardListOfMemberFromDBByUsername(String username) {
 		List<Board> boardList = boardService.findAllBoardsOfMemberByUsername(username);
@@ -89,4 +112,5 @@ public class BoardAjaxController {
 		
 		return jsonObject;
 	}
+	*/
 }

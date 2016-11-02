@@ -7,6 +7,9 @@ bootstrapTable = {
 		
 		/* Bootstrap table plugin settings for my board list */
 		$("table#myBoardList").bootstrapTable({
+			url : path.getContextPath() + "/ajax/board/test",
+			sidePagination : "server",
+			
 			classes : "table table-no-bordered",
 		
 			showHeader : true,
@@ -22,8 +25,8 @@ bootstrapTable = {
 			trimOnSearch : true,
 			searchTimeOut : 500,
 			
-			idField : "number",
-			uniqueId : "number",
+			idField : "id",
+			uniqueId : "id",
 			
 			selectItemName : "rowCheckbox",
 			
@@ -36,11 +39,8 @@ bootstrapTable = {
 			
 			pagination : true,
 			pageSize : 10,
-			pageList : [10, 20, 30, 50, 80, 100],
+			pageList : [10, 20, 30, 50, 80, 100]
 			
-//			sidePagination : "server",
-			
-//			url : 'member/member_main',
 			/*
 			method : "GET",
 			contentType : 'application/json; charset=utf-8',
@@ -73,25 +73,16 @@ bootstrapTable = {
 			    };
 			},
 			*/
-			
+			/*
 			onPageChange : function(number, size) {
-				$("span.pagination-info").remove();
-				bootstrapTable.sideSetting.eachCellClickEvent();
-				
-				// Basic size
-				if (utils.isDesktopSize()) {
-					bootstrapTable.responsiveSetting.basicSize();	
-					
-				// Mobile size
-				} else {
-					bootstrapTable.responsiveSetting.mobileSize();
-				}
+				bootstrapTable.common.event.onPageChange(number, size);
 			}
-			
+			*/
 		});
 		
 		/* Bootstrap table plugin settings for my board list */
 		$("table#allBoardList").bootstrapTable({
+			/*
 			classes : "table table-no-bordered",
 		
 			showHeader : true,
@@ -122,24 +113,17 @@ bootstrapTable = {
 			pagination : true,
 			pageSize : 10,
 			pageList : [10, 20, 30, 50, 80, 100],
-			
+
 			onPageChange : function(number, size) {
-				$("span.pagination-info").remove();
-				
-				// Basic size
-				if (utils.isDesktopSize()) {
-					bootstrapTable.responsiveSetting.basicSize();	
-					
-				// Mobile size
-				} else {
-					bootstrapTable.responsiveSetting.mobileSize();
-				}
+				bootstrapTable.common.event.onPageChange(number, size);
 			}
+			*/
 		});
 		
-		utils.executeAllFunctionMembers(this.sideSetting);
+//		utils.executeAllFunctionMembers(this.sideSetting);
 	},
 	
+	/*
 	sideSetting : {
 		initialSideSetting : function() {
 			$("input[type='checkbox'][data-field='number']").parent().parent("li").addClass("hidden-xs");
@@ -163,17 +147,21 @@ bootstrapTable = {
 			$("span.boardDeleteBtn").click(function() {
 				var boardId = $(this).parent().siblings(".eachBoardIdInTable").find("span").text();
 
-				ajax.deleteOneBoardFromBtn(boardId);
+				$(".eachBoardIdInTable").filter(function() {
+					 return $(this).find("span").text() == boardId;
+				}).parent().remove();
 				
-//				$(this).parent().parent().remove();
+//				ajax.deleteOneBoardFromBtn(boardId);
 			});
 			
 			$("button[name='deleteSelectedBoardBtn']").click(function() {
 				var boardIds = $.map(bootstrapTable.myBoardListTable.bootstrapTable('getSelections'), function (row) {
-	                notify.notify(Object.keys(row));
-					return row;
+	                notify.notify($.parseHTML(row.number)[1].innerHTML);
+					return $.parseHTML(row.number)[1].innerHTML;
 	            });
-				ajax.deleteSelectedBoard(boardIds);
+				notify.notify("boardIds", boardIds);
+				bootstrapTable.myBoardListTable.bootstrapTable("remove", {field: "number", values: boardIds});
+//				ajax.deleteSelectedBoard(boardIds);
 			});
 		}
 	},
@@ -201,10 +189,32 @@ bootstrapTable = {
                 disabled: true
             };
         }
+	},
+	*/
+	common : {
+		/*
+		event : {
+			onPageChange : function(number, size) {
+				$("span.pagination-info").remove();
+				bootstrapTable.sideSetting.eachCellClickEvent();
+				
+				// Basic size
+				if (utils.isDesktopSize()) {
+					bootstrapTable.responsiveSetting.basicSize();	
+					
+				// Mobile size
+				} else {
+					bootstrapTable.responsiveSetting.mobileSize();
+				}
+			}
+		}
+		*/
 	}
 };
 
 ajax = {
+		/*
+}
 	deleteOneBoardFromBtn : function(boardId) {
 		$.ajax({
 			url : '../ajax/board/deleteOneBoardFromBtn',
@@ -218,8 +228,6 @@ ajax = {
 			// processData: false,
 			success : function(data, status) {
 				notify.notify("Ajax 통신 성공 code : " + status + " message : " + data.message);
-				notify.notify(boardId, typeof boardId);
-				bootstrapTable.myBoardListTable.bootstrapTable("removeByUniqueId", boardId);
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
@@ -248,7 +256,7 @@ ajax = {
 			}
 		});
 	}
-	
+	*/
 };
 
 $(document).ready(function() {
@@ -256,7 +264,7 @@ $(document).ready(function() {
 	bootstrapTable.tableSetting();
 	
 	utils.clientValidatorBtnEvent($("form#createBoardForm"));
-
+/*
 	// Initial setting
 	if (utils.isDesktopSize()) {
 		
@@ -279,4 +287,5 @@ $(document).ready(function() {
 			}
 		}
 	}).resize();
+*/
 });

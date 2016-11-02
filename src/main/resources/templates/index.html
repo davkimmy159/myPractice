@@ -88,7 +88,7 @@ span#titleEffect {
 						<!-- navbar left -->
 						<ul class="nav navbar-nav">
 							<!-- dropdown -->
-							<!-- 
+							<!--
 							<li class="dropdown visible-sm-block"><a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
@@ -105,12 +105,12 @@ span#titleEffect {
 								</ul>
 								 -->
 								<!-- /.dropdown-menu -->
-								
-							<!-- 
+
+							<!--
 							</li>
 							 -->
 							<!-- /.dropdown -->
-							
+
 							<li>
 								<a href="/member/member_main.html" th:href="@{/member/member_main}">Main</a>
 							</li>
@@ -122,22 +122,22 @@ span#titleEffect {
 							<li>
 								<a href="">test3</a>
 							</li>
-							
+
 							<hr class="visible-xs-block" />
-							
+
 							<li th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')}">
 								<ul th:replace="fragments/userUtilityButtons :: userUtilityButtonMobileFragment"></ul>
 							</li>
 						</ul>
 
-			
-			
+
+
 						<div th:if="${#authorization.expression('hasAuthority(''ROLE_ANONYMOUS'')')}" class="navbar-form navbar-right" role="join">
-						    
+
 							<div class="form-group">
 								<input id="" type="text" class="form-control" placeholder="Search IMColla" />
 							</div>
-							
+
 							<div class="btn-group">
 								<a class="hidden-xs" href="/login/login.html" th:href="@{/login/login}">
 									<button class="btn btn-default" type="button">
@@ -145,15 +145,15 @@ span#titleEffect {
 									</button>
 								</a>
 								</div>
-							
+
 							<div class="btn-group">
 								<a class="hidden-xs" href="new_account/registration_input_form.html" th:href="@{/new_account/registration_input_form}">
 									<button class="btn btn-success" type="button">
 										<span>Sign up</span>
-									</button>	
+									</button>
 								</a>
 							</div>
-							
+
 							<div id="signBtnsDiv" class="row visible-xs-block">
 								<div class="col-xs-6" style="margin-top: -15px; margin-bottom: -5px">
 									<a href="/login/login.html" th:href="@{/login/login}">
@@ -171,12 +171,12 @@ span#titleEffect {
 								</div>
 							</div>
 						</div>
-						 
+
 						<ul th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')}" class="nav navbar-nav navbar-right">
 							<li th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')}" th:replace="fragments/userUtilityButtons :: userUtilityButtonDesktopFragment1"></li>
 							<li th:if="${#authorization.expression('hasAuthority(''ROLE_MEMBER'')')}" th:replace="fragments/userUtilityButtons :: userUtilityButtonDesktopFragment2"></li>
 						</ul>
-						
+
 					</div>
 					<!-- /.navbar-collapse -->
 				</div>
@@ -199,9 +199,9 @@ span#titleEffect {
 								<span><strong>IMColla</strong>에서 만나세요!</span><br />
 							</p>
 						</div>
-							
-						
-							<!-- 
+
+
+							<!--
 							<span class="form-group" th:if="${#authorization.getAuthentication()}">"${#authorization.getAuthentication()}"</span>
 							<br />
 							<span class="form-group" th:if="${#authorization.getAuthentication()}" th:text="${#authorization.getAuthentication()}"></span>
@@ -211,19 +211,19 @@ span#titleEffect {
 							<br />
 							<span th:text="${#authorization.expression('hasAuthority(''role_member'')')}"></span>
 							 -->
-							 
-						
+
+
 					</div>
-					
+
 				</div>
 				<!-- </div> -->
 				<!-- /.container-fluid -->
-				
+
 			</div>
 			<!-- /.container-fluid -->
 		</div>
 		<!-- /.row -->
-		
+
 	</div>
 
 
@@ -234,7 +234,7 @@ span#titleEffect {
 		<script src="../js/utils.js" th:src="@{/js/utils.js}" type="text/javascript"></script>
 		<script src="../js/effect.js" th:src="@{/js/effect.js}" type="text/javascript"></script>
 		<script>
-			
+
 			$(document).ready(function(){
 				setInterval(function() {
 					$('span#titleEffect').removeClass()

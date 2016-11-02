@@ -1,8 +1,9 @@
 package kr.co.ps119.vo;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
-import kr.co.ps119.entity.Member;
+import kr.co.ps119.utils.Utility;
 
 public class BoardVO {
 
@@ -12,22 +13,29 @@ public class BoardVO {
 	
 	private final String content;
 	
-	private final Date createDate;
+	private final LocalDateTime createDate;
 	
-	private final Date lastUpdateDate;
+	private final LocalDateTime lastUpdateDate;
 	
 	private final Long updateCount;
 
-	private final Member member;
+	private final Long hitCount;
+	
+	private final String username;
 
-	public BoardVO(Long id, String title, String content, Date createDate, Date lastUpdateDate, Long updateCount, Member member) {
+	public BoardVO(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long hitCount, Long updateCount) {
+		this(id, title, content, createDate, lastUpdateDate, updateCount, hitCount, "");
+	}
+	
+	public BoardVO(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long hitCount, Long updateCount, String username) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.createDate = createDate;
 		this.lastUpdateDate = lastUpdateDate;
 		this.updateCount = updateCount;
-		this.member = member;
+		this.hitCount = hitCount;
+		this.username = username;
 	}
 
 	public Long getId() {
@@ -41,20 +49,24 @@ public class BoardVO {
 	public String getContent() {
 		return content;
 	}
-
-	public Date getCreateDate() {
-		return new Date(createDate.getTime());
+	
+	public String getCreateDate() {
+		return createDate.format(Utility.getDateTimeFormatter());
 	}
 
-	public Date getLastUpdateDate() {
-		return new Date(lastUpdateDate.getTime());
+	public String getLastUpdateDate() {
+		return lastUpdateDate.format(Utility.getDateTimeFormatter());
 	}
 
 	public Long getUpdateCount() {
 		return updateCount;
 	}
+	
+	public Long getHitCount() {
+		return hitCount;
+	}
 
-	public Member getMember() {
-		return member;
+	public String getUsername() {
+		return username;
 	}
 }

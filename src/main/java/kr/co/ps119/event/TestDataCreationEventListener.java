@@ -67,11 +67,17 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 		MemberAuthority memAuth4 = new MemberAuthority();
 		memAuth4.setAuthority(authRepo.findOne(1));
 		memAuth4.setMember(member4);
+		
+		Member member5 = new Member("mail5@mail.com", "testUser5", passwordEncoder.encode("password"));
+		MemberAuthority memAuth5 = new MemberAuthority();
+		memAuth5.setAuthority(authRepo.findOne(1));
+		memAuth5.setMember(member5);
 
 		memberRepo.save(member1);
 		memberRepo.save(member2);
 		memberRepo.save(member3);
 		memberRepo.save(member4);
+		memberRepo.save(member5);
 		
 		for(int i = 1; i <= 250; i++) {
 			Board board = new Board();
