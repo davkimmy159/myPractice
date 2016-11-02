@@ -23,8 +23,9 @@ bootstrapTable = {
 			searchTimeOut : 500,
 			
 			idField : "number",
+			uniqueId : "number",
 			
-			selectItemName : "selectedCheckbox",
+			selectItemName : "rowCheckbox",
 			
 			detailView : true,
 			detailFormFormatter : function(index, row, element) {
@@ -36,8 +37,6 @@ bootstrapTable = {
 			pagination : true,
 			pageSize : 10,
 			pageList : [10, 20, 30, 50, 80, 100],
-			
-			selectItemName : "selectedItem",
 			
 //			sidePagination : "server",
 			
@@ -88,6 +87,7 @@ bootstrapTable = {
 					bootstrapTable.responsiveSetting.mobileSize();
 				}
 			}
+			
 		});
 		
 		/* Bootstrap table plugin settings for my board list */
@@ -108,8 +108,9 @@ bootstrapTable = {
 			searchTimeOut : 500,
 			
 			idField : "number",
+			uniqueId : "number",
 			
-			selectItemName : "selectedCheckbox",
+			selectItemName : "rowCheckbox",
 			
 			detailView : true,
 			detailFormFormatter : function(index, row, element) {
@@ -122,8 +123,6 @@ bootstrapTable = {
 			pageSize : 10,
 			pageList : [10, 20, 30, 50, 80, 100],
 			
-			selectItemName : "selectedItem",
-			
 			onPageChange : function(number, size) {
 				$("span.pagination-info").remove();
 				
@@ -135,8 +134,6 @@ bootstrapTable = {
 				} else {
 					bootstrapTable.responsiveSetting.mobileSize();
 				}
-				
-				bootstrapTable.sideSetting.setCheckboxDisabled();
 			}
 		});
 		
@@ -146,28 +143,15 @@ bootstrapTable = {
 	sideSetting : {
 		initialSideSetting : function() {
 			$("input[type='checkbox'][data-field='number']").parent().parent("li").addClass("hidden-xs");
-			$("input[type='checkbox'][data-field='create']").parent().parent("li").addClass("hidden-xs");
-			$("input[type='checkbox'][data-field='last up']").parent().parent("li").addClass("hidden-xs");
+			$("input[type='checkbox'][data-field='create']").parent().parent("li").addClass("hidden-xs hidden-sm");
+			$("input[type='checkbox'][data-field='last up']").parent().parent("li").addClass("hidden-xs hidden-sm");
 			
 			$(".search").removeClass("pull-right").addClass("pull-left").css("width", "140px");
 			
 			$("span.pagination-info").remove();
 		},
 		
-		setCheckboxDisabled : function() {
-			var loginUsername = $("span#loginUsername").text();
-			$.each($("table#allBoardList").find("tr"), function(index, element) {
-				if($(this).find("span.owner").text() != loginUsername) {
-					$(this).find($("input[type='checkbox'][name='selectedItem']")).prop('disabled', true);
-				}
-			});
-		},
-		
 		eachCellClickEvent : function() {
-			$("span.boardTitle").click(function() {
-				window.location = path.getFullContextPath() + "/board/" + $(this).parent().siblings(".eachBoardIdInTable").find("span").text();
-			});
-			
 			$("span.boardDownloadBtn").click(function() {
 				notify.notify("test 1", $(this));
 			});
@@ -178,8 +162,10 @@ bootstrapTable = {
 			
 			$("span.boardDeleteBtn").click(function() {
 				var boardId = $(this).parent().siblings(".eachBoardIdInTable").find("span").text();
+
 				ajax.deleteOneBoardFromBtn(boardId);
-				$(this).parent().parent().remove();
+				
+//				$(this).parent().parent().remove();
 			});
 			
 			$("button[name='deleteSelectedBoardBtn']").click(function() {
@@ -206,6 +192,15 @@ bootstrapTable = {
 			$("div.pagination-detail").addClass("text-center");
 			$("div.pagination").addClass("text-center");
 		}
+	},
+	
+	// For 'data-formatter' attribute in checkbox td in bootstrap table
+	checkboxFormatter : function(value, row, index) {
+		if($("span#loginUsername").text() != $.parseHTML(row.owner)[1].innerHTML) {
+            return {
+                disabled: true
+            };
+        }
 	}
 };
 
@@ -223,7 +218,8 @@ ajax = {
 			// processData: false,
 			success : function(data, status) {
 				notify.notify("Ajax 통신 성공 code : " + status + " message : " + data.message);
-//				$("table#myBoardList").bootstrapTable("remove", {field: "number", values: boardId});
+				notify.notify(boardId, typeof boardId);
+				bootstrapTable.myBoardListTable.bootstrapTable("removeByUniqueId", boardId);
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
@@ -251,9 +247,9 @@ ajax = {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
 			}
 		});
-	},
+	}
 	
-}
+};
 
 $(document).ready(function() {
 	
@@ -263,6 +259,7 @@ $(document).ready(function() {
 
 	// Initial setting
 	if (utils.isDesktopSize()) {
+		
 	} else {
 		bootstrapTable.responsiveSetting.mobileSize();
 	}
@@ -272,7 +269,7 @@ $(document).ready(function() {
 		// To basic from mobile
 		if (utils.isDesktopSize()) {
 			if($("div.pagination-detail").hasClass("text-center")) {
-				bootstrapTable.responsiveSetting.basicSize();	
+				bootstrapTable.responsiveSetting.basicSize();
 			}
 			
 		// To mobile from basic

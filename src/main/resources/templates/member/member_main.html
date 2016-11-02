@@ -8,150 +8,9 @@
 <!-- sockjs.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.0/sockjs.min.js" type="text/javascript"></script>
 
-<style type="text/css">
-body {
-	padding-top : 60px;
-}
+<!-- custom css -->
+<link href="../css/member/member_main.css" th:href="@{/css/member/member_main.css}" rel="stylesheet" type="text/css" />
 
-hr {
-	margin : 2px;
-	border-color : #151515;
-}
-
-li {
-	cursor: pointer;
-}
-
-li.dropdown-header {
-	cursor: default;
-}
-
-span#loginIdDisplayMobile {
-	font-style: italic;
-	font-size: 17px;
-	color: rgb(255, 255, 255);
-}
-
-span#loginIdDisplayDesktop {
-	font-style: italic;
-	font-size: 17px;
-	color: rgb(0, 0, 0);
-}
-
-/*
-td * {
-	cursor: pointer;
-}
-*/
-
-td .boardTitle:hover {
-	cursor: pointer;
-	text-decoration:underline;
-}
-
-td:last-child span {
-	cursor: pointer;
-}
-
-td span[name="boardSettingBtn"] {
-	margin-right: 8px;
-}
-
-.page-header {
-	margin-top: 0px;
-}
-
-#create_board_usernamename_input {
-	color: blue;
-	font-weight: 700;
-}
-
-.error_container .alert {
-	padding-top: 10px;
-}
-
-.error_container h3 {
-	margin-top: 5px;
-}
-
-.error_container span.wrong_title {
-	color: red;
-	font-style: italic;
-	font-size: 20px;
-}
-
-.error_container .help-block {
-	margin-top: 2px;
-	margin-bottom: 2px;
-}
-
-table.table thead {
-}
-
-table.table tr th, table.table tr td {
-	border-left: none !important;
-	border-right: none !important;
-}
-
-td span.datetime {
-	font-size: 12px;
-}
-
-td span.owner {
-	font-size: 13px;
-}
-/*
-.glyphicon.form-control-feedback {
-	top: 25px;
-}
-*/
-
-.glyphicon {
-	font-size: 16.5px;
-}
-
-#columnShowToggle li {
-	display: block;
-	padding: 3px 10px;
-	clear: both;
-	font-weight: normal;
-	line-height: 1.428571429;
-}
-
-#mainRow .panel-body {
-	padding: 5px;
-}
-
-.fixed-table-pagination div.pagination-detail {
-	margin-bottom: 0px;
-}
-
-.fixed-table-pagination div.pagination {
-	margin-bottom: 0px;
-}
-
-/* Responsive css */
-
-/* basic */
-@media screen and (min-width:768px) {
-	.bootstrap-table .fixed-table-toolbar .search .form-control {
-		margin-left: 0px;
-	}
-	.bootstrap-table .fixed-table-toolbar .columns.btn-group {
-		margin-right: 0px;
-	}
-}
-
-/* mobile */
-@media screen and (max-width:767px) {
-	.bootstrap-table .fixed-table-toolbar .search .form-control {
-		margin-left: 5px;
-	}
-	.bootstrap-table .fixed-table-toolbar .columns.btn-group {
-		margin-right: 5px;
-	}
-}
-</style>
 <title>Member main page</title>
 </head>
 <body>
@@ -291,23 +150,25 @@ td span.owner {
 											<thead>
 												<tr>
 													<th data-checkbox="true" data-field="checkbox">checkbox</th>
-													<th class="hidden-xs" data-field="number">#</th>
-													<th data-field="title">Title</th>
-													<th data-field="hits">Hits</th>
-													<th data-field="up">Up</th>
-													<th class="hidden-xs" data-field="create">Create</th>
-													<th class="hidden-xs" data-field="last up">Last up</th>
+													<th class="hidden-xs" data-field="number" data-sortable="true">#</th>
+													<th data-field="title" data-sortable="true">Title</th>
+													<th data-field="hits" data-sortable="true">Hits</th>
+													<th data-field="up" data-sortable="true">Up</th>
+													<th class="hidden-xs hidden-sm" data-field="create" data-sortable="true">Create</th>
+													<th class="hidden-xs hidden-sm" data-field="last up" data-sortable="true">Last up</th>
 													<th data-field="utils">Utils</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr th:each="board : ${userBoardList}">
-													<td data-checkbox="true"></td>
+												<tr th:each="board : ${userBoardList}" th:with="boardUrl = '/board/' + ${board.getId()}">
+													<td></td>
 													<td class="eachBoardIdInTable hidden-xs">
 														<span th:text="${board.getId()}">Number</span>
 													</td>
 													<td>
-														<span class="boardTitle" th:text="${board.getTitle()}">Title</span>
+														<a href="" th:href="@{${boardUrl}}">
+															<span class="boardTitle" th:text="${board.getTitle()}">Title</span>
+														</a>
 													</td>
 													<td>
 														<span th:text="${board.getHitCount()}">Hits</span>
@@ -315,10 +176,10 @@ td span.owner {
 													<td>
 														<span th:text="${board.getUpdateCount()}">Update count</span>
 													</td>
-													<td class="hidden-xs">
+													<td class="hidden-xs hidden-sm">
 														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
 													</td>
-													<td class="hidden-xs">
+													<td class="hidden-xs hidden-sm">
 														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
 													</td>
 													<td>
@@ -362,20 +223,20 @@ td span.owner {
 										<table id="allBoardList" class="table-hover">
 											<thead>
 												<tr>
-													<th data-checkbox="true" data-field="checkbox">checkbox</th>
-													<th class="hidden-xs" data-field="number">#</th>
-													<th data-field="title">Title</th>
-													<th data-field="hits">Hits</th>
-													<th data-field="up">Up</th>
-													<th class="hidden-xs" data-field="create">Create</th>
-													<th class="hidden-xs" data-field="last up">Last up</th>
-													<th data-field="owner">Owner</th>
+													<th data-checkbox="true" data-field="checkbox" data-formatter="bootstrapTable.checkboxFormatter">checkbox</th>
+													<th class="hidden-xs" data-field="number" data-sortable="true">#</th>
+													<th data-field="title" data-sortable="true">Title</th>
+													<th data-field="hits" data-sortable="true">Hits</th>
+													<th data-field="up" data-sortable="true">Up</th>
+													<th class="hidden-xs hidden-sm" data-field="create" data-sortable="true">Create</th>
+													<th class="hidden-xs hidden-sm" data-field="last up" data-sortable="true">Last up</th>
+													<th data-field="owner" data-sortable="true">Owner</th>
 													<th data-field="utils">Utils</th>
 												</tr>
 											</thead>
 											<tbody>
 												<tr th:each="board : ${allBoardList}">
-													<td data-checkbox="true"></td>
+													<td></td>
 													<td class="eachBoardIdInTable hidden-xs">
 														<span th:text="${board.getId()}">Number</span>
 													</td>
@@ -388,10 +249,10 @@ td span.owner {
 													<td>
 														<span th:text="${board.getUpdateCount()}">Update count</span>
 													</td>
-													<td class="hidden-xs">
+													<td class="hidden-xs hidden-sm">
 														<span class="datetime" th:text="${board.getFormattedCreateDateString()}">Create date</span>
 													</td>
-													<td class="hidden-xs">
+													<td class="hidden-xs hidden-sm">
 														<span class="datetime" th:text="${board.getFormattedLastUpdateDateString()}">Last update date</span>
 													</td>
 													<td>
@@ -400,7 +261,9 @@ td span.owner {
 													<td>
 														<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>
 														<span class="boardSettingBtn glyphicon glyphicon-cog" th:if="${board.getMember().getUsername() == principal.username}"></span>
-														<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" th:if="${board.getMember().getUsername() == principal.username}" style="color: red;"></span>
+														<a>
+															<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" th:if="${board.getMember().getUsername() == principal.username}" style="color: red;"></span>
+														</a>
 													</td>
 												</tr>
 											</tbody>

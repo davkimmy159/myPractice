@@ -138,23 +138,35 @@ span#titleEffect {
 								<input id="" type="text" class="form-control" placeholder="Search IMColla" />
 							</div>
 							
+							<div class="btn-group">
+								<a class="hidden-xs" href="/login/login.html" th:href="@{/login/login}">
+									<button class="btn btn-default" type="button">
+										<span>Sign in</span>
+									</button>
+								</a>
+								</div>
 							
-							<a class="btn btn-default hidden-xs" href="/login/login.html" th:href="@{/login/login}" type="button">
-								<span>Sign in</span>
-							</a>
-							<a class="btn btn-success hidden-xs" href="new_account/registration_input_form.html" th:href="@{/new_account/registration_input_form}" type="button">
-								<span>Sign up</span>
-							</a>
+							<div class="btn-group">
+								<a class="hidden-xs" href="new_account/registration_input_form.html" th:href="@{/new_account/registration_input_form}">
+									<button class="btn btn-success" type="button">
+										<span>Sign up</span>
+									</button>	
+								</a>
+							</div>
 							
 							<div id="signBtnsDiv" class="row visible-xs-block">
-								<div class="col-xs-6">
-									<a class="btn btn-default btn-block" href="/login/login.html" th:href="@{/login/login}" type="button">
-										<span>Sign in</span>
+								<div class="col-xs-6" style="margin-top: -15px; margin-bottom: -5px">
+									<a href="/login/login.html" th:href="@{/login/login}">
+										<button class="btn btn-default btn-block" type="button">
+											<span>Sign in</span>
+										</button>
 									</a>
 								</div>
-								<div class="col-xs-6">
-									<a class="btn btn-success btn-block" href="new_account/registration_input_form.html" th:href="@{/new_account/registration_input_form}" type="button">
-										<span>Sign up</span>
+								<div class="col-xs-6" style="margin-top: -15px; margin-bottom: -5px">
+									<a href="new_account/registration_input_form.html" th:href="@{/new_account/registration_input_form}">
+										<button class="btn btn-success btn-block" type="button">
+											<span>Sign up</span>
+										</button>
 									</a>
 								</div>
 							</div>

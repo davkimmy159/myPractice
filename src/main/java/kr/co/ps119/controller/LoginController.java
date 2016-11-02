@@ -27,6 +27,7 @@ public class LoginController {
 		return "login/login";
 	}
 
+	/*
 	// Controller method, not under authentication
 	@GetMapping(value = "login_after_registraiton")
 	public String requestHandler(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -41,4 +42,5 @@ public class LoginController {
 		// ... do normal processing
 		return "/member/member_main";  
 	}
+	*/
 }
