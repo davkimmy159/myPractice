@@ -98,17 +98,6 @@ public class BoardService {
 		return board;
 	}
 	
-	public List<Board> findAllBoardsOfMemberByUsername(String username) {
-		String jpql = "SELECT board FROM Board AS board WHERE board.member = :member";
-		Member member = memberRepo.findByUsername(username);
-		
-		List<Board> boardList = em.createQuery(jpql, Board.class)
-								  .setParameter("member", member)
-								  .getResultList();
-		
-		return boardList;
-	}
-	
 	public List<Board> findAllBoards() {
 		String jpql = "SELECT board FROM Board AS board";
 		
@@ -116,6 +105,25 @@ public class BoardService {
 								  .getResultList();
 
 		return boardList;
+	}
+	
+	public Long getTotalCountOfBoards() {
+		String jpql = "SELECT COUNT(*) FROM Board AS board";
+		
+		Long total = em.createQuery(jpql, Long.class)
+					   .getSingleResult();
+
+		return total;
+	}
+	
+	public Long getTotalCountOfBoards(Long memberId) {
+		String jpql = "SELECT COUNT(*) FROM Board AS board WHERE board.member.id = :memberId";
+		
+		Long total = em.createQuery(jpql, Long.class)
+					   .setParameter("memberId", memberId)
+					   .getSingleResult();
+
+		return total;
 	}
 	
 	public void deleteOneBoardById(Long boardId) {

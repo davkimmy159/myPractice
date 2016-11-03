@@ -49,12 +49,6 @@ public class MemberController {
 		
 		// Should be replaced to immutable VO later
 		
-		List<Board> userBoardList = boardService.findAllBoardsOfMemberByUsername(username);
-		List<Board> allBoardList = boardService.findAllBoards();
-
-		model.addAttribute("userBoardList", userBoardList);
-		model.addAttribute("allBoardList", allBoardList);
-		
 		return "member/member_main";
 	}
 }

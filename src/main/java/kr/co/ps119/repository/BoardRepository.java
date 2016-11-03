@@ -15,5 +15,5 @@ import kr.co.ps119.entity.Board;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	public List<Board> findByMemberId(Long memberId);
-	public List<Board> queryFirst10ByMemberId(Long memberId, Pageable pageable);
+	public List<Board> findByMemberId(Long memberId, Pageable pageable);
 }

@@ -74,7 +74,7 @@ public class BoardController {
 		return returnPage;
 	}
 
-	@PostMapping(value = "{boardId}")
+	@GetMapping(value = "{boardId}")
 	public String getBoard(
 			@PathVariable Long boardId,
 			HttpServletRequest request,
@@ -92,9 +92,11 @@ public class BoardController {
 
 		// If board doesn't exist
 		} else {
+			/*
 			FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
 			flashMap.put("boardNonExistent", false);
-			
+			*/
+			model.addAttribute("boardNonExistent", false);
 		}
 		
 		return returnPage;

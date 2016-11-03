@@ -64,55 +64,62 @@ public class BoardAjaxController {
 		return jsonObject;
 	}
 	
-	@GetMapping(value = "test")
-	public Map<String, Object> test(
+	@GetMapping(value = "getBoardOfMember")
+	public Map<String, Object> getBoardOfMember(
 			Principal principal,
 			int limit,
 			int offset,
-			String search,
+//			String search,
 			String sort,
 			String order) {
 		
+		/*
 		System.out.println("limit : " + limit);
 		System.out.println("offset : " + offset);
-		System.out.println("search : " + search);
+//		System.out.println("search : " + search);
 		System.out.println("sort : " + sort);
 		System.out.println("order : " + order);
+		*/
 		
 		Member member = memberService.findByUsername(principal.getName());
 		
-		PageRequest pageRequest = new PageRequest(0, limit, new Sort(Direction.ASC, "id"));
+		Sort sorter;
 		
-//		List<Board> dbList = boardService.findAllBoardsOfMemberByUsername(principal.getName());
-		List<Board> dbList = boardRepo. queryFirst10ByMemberId(member.getId(), pageRequest);
+		if("asc".equals(order)) {
+			sorter = new Sort(Direction.ASC, sort);
+		} else {
+			sorter = new Sort(Direction.DESC, sort);
+		}
+		
+		// Initial offset becomes
+		PageRequest pageRequest = new PageRequest(offset / limit, limit, sorter);
+		
+		Long total = boardService.getTotalCountOfBoards(member.getId());
+		
+//		System.out.println("total : " + total);
+		
+		List<Board> dbList = boardRepo.findByMemberId(member.getId(), pageRequest);
 		List<BoardVO> viewList;
 		
+//		System.out.println("dbList : " + dbList.size());
+		
 		Map<String, Object> jsonObject = new HashMap<>();
-			
+		
 		viewList = dbList.stream()
 						 .map(board -> new BoardVO(board.getId(), board.getTitle(),board.getContent(), board.getCreateDate(), board.getLastUpdateDate(), board.getUpdateCount(), board.getHitCount(), board.getMember().getUsername()))
 						 .collect(Collectors.toList());
 		
-		jsonObject.put("total", viewList.size());
+//		System.out.println("viewList : " + viewList.size());
+		
+		jsonObject.put("total", total);
 		jsonObject.put("rows", viewList);
 		
-		return jsonObject;
-	}
-	
-	/*
-	@GetMapping(value = "getBoardListOfMemberFromDBByUsername")
-	public Map<String, Object> getBoardListOfMemberFromDBByUsername(String username) {
-		List<Board> boardList = boardService.findAllBoardsOfMemberByUsername(username);
-		
-		Map<String, Object> jsonObject = new HashMap<>();
-		
-		jsonObject.put("total", boardList.size());
-		jsonObject.put("boardList", boardList);
+//		System.out.println("");
 		
 		return jsonObject;
 	}
 	
-	@GetMapping(value = "deleteOneBoardFromBtn") 
+	@GetMapping(value = "deleteOneBoard") 
 	public Map<String, Object> deleteOneBoardFromBtn(Long boardId) {
 		boardService.deleteOneBoardById(boardId);
 		
@@ -126,18 +133,28 @@ public class BoardAjaxController {
 	@GetMapping(value = "deleteSelectedBoard") 
 	public Map<String, Object> deleteSelectedBoard(
 			@RequestParam("boardIds[]") String boardIds[]) {
-		System.out.println(boardIds);
-		System.out.println(boardIds.length);
 		
-
 		for(String boardId : boardIds) {
-//			boardService.deleteOneBoardById(Long.valueOf(boardId));
-			System.out.println(boardId);
+			boardService.deleteOneBoardById(Long.valueOf(boardId));
+			System.out.println("boardId : " + boardId);
 		}
 		
 		Map<String, Object> jsonObject = new HashMap<>();
 		
 		jsonObject.put("message", "Selected board are deleted");
+		
+		return jsonObject;
+	}
+	
+	/*
+	@GetMapping(value = "getBoardListOfMemberFromDBByUsername")
+	public Map<String, Object> getBoardListOfMemberFromDBByUsername(String username) {
+		List<Board> boardList = boardService.findAllBoardsOfMemberByUsername(username);
+		
+		Map<String, Object> jsonObject = new HashMap<>();
+		
+		jsonObject.put("total", boardList.size());
+		jsonObject.put("boardList", boardList);
 		
 		return jsonObject;
 	}

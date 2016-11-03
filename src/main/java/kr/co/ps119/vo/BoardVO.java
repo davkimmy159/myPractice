@@ -23,11 +23,11 @@ public class BoardVO {
 	
 	private final String username;
 
-	public BoardVO(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long hitCount, Long updateCount) {
+	public BoardVO(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long updateCount, Long hitCount) {
 		this(id, title, content, createDate, lastUpdateDate, updateCount, hitCount, "");
 	}
 	
-	public BoardVO(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long hitCount, Long updateCount, String username) {
+	public BoardVO(Long id, String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate, Long updateCount, Long hitCount, String username) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
@@ -50,11 +50,19 @@ public class BoardVO {
 		return content;
 	}
 	
-	public String getCreateDate() {
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	public LocalDateTime getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public String getFormattedCreateDate() {
 		return createDate.format(Utility.getDateTimeFormatter());
 	}
 
-	public String getLastUpdateDate() {
+	public String getFormattedLastUpdateDate() {
 		return lastUpdateDate.format(Utility.getDateTimeFormatter());
 	}
 

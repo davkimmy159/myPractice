@@ -7,20 +7,120 @@ bootstrapTable = {
 		
 		/* Bootstrap table plugin settings for my board list */
 		$("table#myBoardList").bootstrapTable({
+			columns: [
+            	{
+            		field: "state",
+            		checkbox: true
+            	}, {
+            		field: "id",
+            		title: "#",
+            		class: "hidden-xs",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			return '<span class="eachBoardIdInTable">' + row.id + '</span>';
+            		},
+            		events: {
+            			'click .eachBoardIdInTable': function(e, value, row, index) {
+            				notify.notify(row.id);
+            			}
+            		}
+            	}, {
+            		field: "title",
+            		title: "Title",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			return '<span class="boardTitle">' + row.title + '</span>';
+            		},
+            		events: {
+            			'click .boardTitle': function(e, value, row, index) {
+            				location.href = path.getFullContextPath() + "/board/" + row.id;
+            			}
+            		}
+            	}, {
+            		field: "hitCount",
+            		title: "Hits",
+            		sortable: true
+            	
+            		/*
+                	footerFormatter: function(data) {
+                        var total = 0;
+                        $.each(data, function(i, row) {
+                        	total += Number(row.hitCount);
+                        });
+                		return '<span>' + total + '</span>';
+                    }
+                    */
+            	}, {
+            		field: "updateCount",
+            		title: "Up",
+            		sortable: true
+                	
+            		/*
+            		footerFormatter: function(data) {
+                        var total = 0;
+                        $.each(data, function(i, row) {
+                        	total += Number(row.updateCount);
+                        });
+                        return '<span>' + total + '</span>';
+                    }
+                    */
+            	}, {
+            		field: "createDate",
+            		title: "Create",
+            		class: "hidden-xs hidden-sm",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			var date = row.createDate;
+            			return [
+            				'<span class="createDate">',
+            				bootstrapTable.dateFormat(date),
+            				'</span>'
+            			].join('');
+            		}
+            	}, {
+            		field: "lastUpdateDate",
+            		title: "Last up",
+            		class: "hidden-xs hidden-sm",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			var date = row.lastUpdateDate;
+            			return [
+            				'<span class="createDate">',
+            				bootstrapTable.dateFormat(date),
+            				'</span>'
+            			].join('');
+            		}
+            	},  {
+            		field: "Utils",
+            		title: "utils",
+            		formatter: function(value, row, index) {
+            			return [
+            				'<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>',
+							'<span class="boardSettingBtn glyphicon glyphicon-cog"></span>',
+							'<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" style="color: red;"></span>'
+            			].join('');
+            		},
+            		events: {
+            			'click .boardDownloadBtn': function (e, value, row, index) {
+            	            notify.notify("button clicked", "download");
+            	        },
+            	        'click .boardSettingBtn': function (e, value, row, index) {
+            	            notify.notify("button clicked", "setting");
+            	        },
+            	        'click .boardDeleteBtn': function (e, value, row, index) {
+            	        	ajax.deleteOneBoard(row.id);
+            	        }
+            		}
+            	}
+            ],
 			
-			url : path.getContextPath() + "/ajax/board/test",
+			url : path.getContextPath() + "/ajax/board/getBoardOfMember",
 			sidePagination : "server",
 			contentType	: 'application/json; charset=utf-8',
 			queryParamsType : "limit",
 			queryParams : function(params) {
-			    params.limit = 10;
+			    params.sort = "id";
 				return params;
-			    	/*
-			    	offset,
-			    	search,
-			    	sort,
-			    	order
-			    	*/
 			},
 			
 			classes : "table table-no-bordered",
@@ -31,6 +131,7 @@ bootstrapTable = {
 			showRefresh : true,
 			showToggle : true,
 			showColumns : true,
+			showExport : true,
 			
 			search : true,
 			searchOnEnterKey : true,
@@ -44,53 +145,22 @@ bootstrapTable = {
 			selectItemName : "rowCheckbox",
 			
 			detailView : true,
-			detailFormFormatter : function(index, row, element) {
+			detailFormatter : function(index, row, element) {
 				var format = "<span>test!!!</span>";
 				
 				return format;
 			},
 			
 			pagination : true,
-			pageSize : 10,
-			pageList : [10, 20, 30, 50, 80, 100]
+			paginationLoop : true,
+			pageList : [10, 20, 30, 50, 80, 100, "ALL"],
 			
-			/*
 			method : "GET",
 			contentType : 'application/json; charset=utf-8',
-			dataType : 'json',
-			cache : true,
-			*/
+			dataType : 'json'
+//			cache : true,
 			
-			/*
-			ajax : function(params) {
-			   
-				notify.notify(params);
-				
-		        setTimeout(function () {
-		            params.success({
-		            	total : params.data.total,
-		            	rows : params.data.boardList
-		            });
-		        }, 500);
-		    },
-		    */
-		    
-			/*
-			queryParams : function() {
-			    return {
-			        type: 'owner',
-			        sort: 'updated',
-			        direction: 'desc',
-			        per_page: 100,
-			        page: 1
-			    };
-			},
-			*/
-			/*
-			onPageChange : function(number, size) {
-				bootstrapTable.common.event.onPageChange(number, size);
-			}
-			*/
+//			onPageChange : bootstrapTable.common.event.onPageChange
 		});
 		
 		/* Bootstrap table plugin settings for my board list */
@@ -133,84 +203,53 @@ bootstrapTable = {
 			*/
 		});
 		
-//		utils.executeAllFunctionMembers(this.sideSetting);
+		utils.executeAllFunctionMembers(this.sideSetting);
 	},
 	
-	/*
 	sideSetting : {
 		initialSideSetting : function() {
-			$("input[type='checkbox'][data-field='number']").parent().parent("li").addClass("hidden-xs");
-			$("input[type='checkbox'][data-field='create']").parent().parent("li").addClass("hidden-xs hidden-sm");
-			$("input[type='checkbox'][data-field='last up']").parent().parent("li").addClass("hidden-xs hidden-sm");
+			$("input[type='checkbox'][data-field='id']").parent().parent("li").addClass("hidden-xs");
+			$("input[type='checkbox'][data-field='createDate']").parent().parent("li").addClass("hidden-xs hidden-sm");
+			$("input[type='checkbox'][data-field='lastUpdateDate']").parent().parent("li").addClass("hidden-xs hidden-sm");
 			
-			$(".search").removeClass("pull-right").addClass("pull-left").css("width", "140px");
-			
-			$("span.pagination-info").remove();
+			$(".search").removeClass("pull-right").addClass("pull-left");
 		},
 		
-		eachCellClickEvent : function() {
-			$("span.boardDownloadBtn").click(function() {
-				notify.notify("test 1", $(this));
-			});
-			
-			$("span.boardSettingBtn").click(function() {
-				notify.notify("test 2", $(this));
-			});
-			
-			$("span.boardDeleteBtn").click(function() {
-				var boardId = $(this).parent().siblings(".eachBoardIdInTable").find("span").text();
-
-				$(".eachBoardIdInTable").filter(function() {
-					 return $(this).find("span").text() == boardId;
-				}).parent().remove();
-				
-//				ajax.deleteOneBoardFromBtn(boardId);
-			});
-			
-			$("button[name='deleteSelectedBoardBtn']").click(function() {
-				var boardIds = $.map(bootstrapTable.myBoardListTable.bootstrapTable('getSelections'), function (row) {
-	                notify.notify($.parseHTML(row.number)[1].innerHTML);
-					return $.parseHTML(row.number)[1].innerHTML;
-	            });
-				notify.notify("boardIds", boardIds);
-				bootstrapTable.myBoardListTable.bootstrapTable("remove", {field: "number", values: boardIds});
-//				ajax.deleteSelectedBoard(boardIds);
+		deleteSelectedBoardButtonEvent : function() {
+			$('button[name="deleteSelectedBoardBtn"]').click(function() {
+				var boardIds = $.map(bootstrapTable.myBoardListTable.bootstrapTable("getSelections"), function (row) {
+					return row.id;
+				});
+				ajax.deleteSelectedBoard(boardIds);
 			});
 		}
 	},
 	
 	responsiveSetting : {
 		basicSize : function() {
-			$("div.pagination-detail").removeAttr("style");
-			$("div.pagination").removeAttr("style");
 			$("div.pagination-detail").removeClass("text-center");
 			$("div.pagination").removeClass("text-center");
 		},
 		
 		mobileSize : function() {
-			$("div.pagination-detail").css("width", "100%");
-			$("div.pagination").css("width", "100%");
 			$("div.pagination-detail").addClass("text-center");
 			$("div.pagination").addClass("text-center");
 		}
 	},
 	
-	// For 'data-formatter' attribute in checkbox td in bootstrap table
-	checkboxFormatter : function(value, row, index) {
-		if($("span#loginUsername").text() != $.parseHTML(row.owner)[1].innerHTML) {
-            return {
-                disabled: true
-            };
-        }
-	},
-	*/
 	common : {
-		/*
+		column : {
+			formatter : {
+				  
+			},
+			event : {
+				
+			}
+		},
+		
+		
 		event : {
 			onPageChange : function(number, size) {
-				$("span.pagination-info").remove();
-				bootstrapTable.sideSetting.eachCellClickEvent();
-				
 				// Basic size
 				if (utils.isDesktopSize()) {
 					bootstrapTable.responsiveSetting.basicSize();	
@@ -221,16 +260,17 @@ bootstrapTable = {
 				}
 			}
 		}
-		*/
+	},
+	
+	dateFormat : function(date) {
+		return date.year + "." + date.monthValue + "." + date.dayOfMonth + " " + date.hour + ":" + date.minute;
 	}
 };
 
 ajax = {
-		/*
-}
-	deleteOneBoardFromBtn : function(boardId) {
+	deleteOneBoard : function(boardId) {
 		$.ajax({
-			url : '../ajax/board/deleteOneBoardFromBtn',
+			url : '../ajax/board/deleteOneBoard',
 			type : 'GET',
 			data : {
 				'boardId' : boardId
@@ -240,7 +280,9 @@ ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify("Ajax 통신 성공 code : " + status + " message : " + data.message);
+				notify.notify("Ajax 통신 성공 code : " + status, " message : " + data.message);
+	        	bootstrapTable.myBoardListTable.bootstrapTable("removeByUniqueId", boardId);
+	        	bootstrapTable.myBoardListTable.bootstrapTable("refresh", {silent: true});
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
@@ -260,16 +302,15 @@ ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify("Ajax 통신 성공 code : " + status + " message : " + data.message);
-				bootstrapTable.myBoardListTable.bootstrapTable("getSelections").remove();
-//				bootstrapTable.myBoardListTable.bootstrapTable("remove", {field: "number", values: boardIds});
+				notify.notify("Ajax 통신 성공 code : " + status, " message : " + data.message);
+				bootstrapTable.myBoardListTable.bootstrapTable("remove", {field: "id", values: boardIds});
+				bootstrapTable.myBoardListTable.bootstrapTable("refresh", {silent: true});
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
 			}
 		});
 	}
-	*/
 };
 
 $(document).ready(function() {
@@ -277,7 +318,7 @@ $(document).ready(function() {
 	bootstrapTable.tableSetting();
 	
 	utils.clientValidatorBtnEvent($("form#createBoardForm"));
-/*
+	
 	// Initial setting
 	if (utils.isDesktopSize()) {
 		
@@ -300,5 +341,5 @@ $(document).ready(function() {
 			}
 		}
 	}).resize();
-*/
+
 });
