@@ -31,12 +31,6 @@ public class Member implements UserDetails, Serializable {
 
 	private static final long serialVersionUID = 3443687366576503018L;
 	
-	// Sets default values
-	@PrePersist
-	void setDefaultValues() {
-		enabled = true;
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "member_id")
@@ -95,6 +89,46 @@ public class Member implements UserDetails, Serializable {
 		this.password = password;
 		this.enabled = enabled;
 	}
+	
+	
+	// ------------------------------------------------------------------
+	
+	
+	// Sets default values
+	@PrePersist
+	void setDefaultValues() {
+		enabled = true;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		memberAuthorities.stream()
+						 .forEach((auth) -> authorities.add(new SimpleGrantedAuthority(auth.getAuthority().getAuthority())));
+        return authorities;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	
+	// ------------------------------------------------------------------
+	
 	
 	public Long getId() {
 		return id;
@@ -211,31 +245,5 @@ public class Member implements UserDetails, Serializable {
 		} else if (!getUsername().equals(other.username))
 			return false;
 		return true;
-	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		memberAuthorities.stream()
-						 .forEach((auth) -> authorities.add(new SimpleGrantedAuthority(auth.getAuthority().getAuthority())));
-        return authorities;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

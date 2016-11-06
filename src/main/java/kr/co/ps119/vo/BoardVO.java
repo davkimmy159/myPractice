@@ -39,7 +39,7 @@ public class BoardVO {
 	}
 
 	public Long getId() {
-		return id.longValue();
+		return id;
 	}
 
 	public String getTitle() {

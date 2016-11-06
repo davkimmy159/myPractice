@@ -40,18 +40,7 @@ import kr.co.ps119.utils.Utility;
 public class Board implements Serializable {
 
 	private transient static final long serialVersionUID = -4939299278182413724L;
-
 	private transient static final Board emptyBoard = new Board(0L, "", "", null, null, 0L, 0L);
-	
-	// Sets default values
-	@PrePersist
-	void setDefaultValues() {
-		setContent("Welcome to IMCOLLA!");
-		setCreateDate(LocalDateTime.now());
-		setLastUpdateDate(LocalDateTime.now());
-		setUpdateCount(0L);
-		setHitCount(0L);
-	}
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -117,6 +106,32 @@ public class Board implements Serializable {
 		this.hitCount = hitCount;
 	}
 
+	
+	// ------------------------------------------------------------------
+	
+	
+	// Sets default values
+	@PrePersist
+	void setDefaultValues() {
+		setContent("Welcome to IMCOLLA!");
+		setCreateDate(LocalDateTime.now());
+		setLastUpdateDate(LocalDateTime.now());
+		setUpdateCount(0L);
+		setHitCount(0L);
+	}
+		
+	public String getFormattedCreateDateString() {
+		return createDate.format(Utility.getDateTimeFormatter());
+	}
+	
+	public String getFormattedLastUpdateDateString() {
+		return lastUpdateDate.format(Utility.getDateTimeFormatter());
+	}
+	
+	
+	// ------------------------------------------------------------------
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -157,14 +172,6 @@ public class Board implements Serializable {
 
 	public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
-	}
-
-	public String getFormattedCreateDateString() {
-		return createDate.format(Utility.getDateTimeFormatter());
-	}
-	
-	public String getFormattedLastUpdateDateString() {
-		return lastUpdateDate.format(Utility.getDateTimeFormatter());
 	}
 
 	public Long getUpdateCount() {

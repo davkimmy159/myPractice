@@ -7,10 +7,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class StompBoardController {
+public class StompController {
 
-	private static final Logger logger = LoggerFactory.getLogger(StompBoardController.class);
-	
 	@MessageMapping("/chat/{boardId}")
 	@SendTo("/subscribe/chat/{boardId}")
 	public StompChatMessage handler1(StompChatMessage chatMessage) {

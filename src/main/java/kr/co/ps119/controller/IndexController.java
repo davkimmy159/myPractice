@@ -22,7 +22,7 @@ import kr.co.ps119.service.MemberService;
 public class IndexController {
 	
 	@Autowired
-	MemberService memberService;
+	private MemberService memberService;
 	
 	@GetMapping(value = "/")
 	public String index1() {

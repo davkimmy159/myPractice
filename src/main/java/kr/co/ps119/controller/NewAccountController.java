@@ -33,7 +33,7 @@ import kr.co.ps119.vo.MemberForm;
 public class NewAccountController {
 
 	@Autowired
-	AccountService creaetAccountService;
+	private AccountService creaetAccountService;
 
 	// Empty instance for validation tags in thymeleaf
 	@ModelAttribute("memberForm")
@@ -107,8 +107,9 @@ public class NewAccountController {
 		
 		return returnPage;
 	}
-	
+	/*
 	private void afterSuccessfulCreation() {
 		
 	}
+	*/
 }

@@ -2,7 +2,6 @@ package kr.co.ps119.controller.stomp;
 
 public class StompChatMessage extends AbstractStompMessage{
 	
-	
 	public StompChatMessage() {
 	}
 

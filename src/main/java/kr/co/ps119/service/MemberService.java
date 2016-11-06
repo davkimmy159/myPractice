@@ -32,22 +32,11 @@ public class MemberService {
 	
 	@Autowired
 	private CommentRepository commentRepo;
-
-	@Autowired
-	private BoardService boardService;
 	
 	/*
 	@Value("#{etc['password.encodingString']}")
 	@Value("${password}")
 	public String passwordEncodingString;
-	*/
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	/*
-	@Autowired
-	private 
 	*/
 	
 	public Member findByUsername(String username) {

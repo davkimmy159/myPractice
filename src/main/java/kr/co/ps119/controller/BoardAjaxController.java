@@ -138,16 +138,6 @@ public class BoardAjaxController {
 	}
 	
 	private Map<String, Object> getAllBoardsHelper(
-			int limit,
-			int offset,
-//			String search,
-			String sort,
-			String order) {
-
-		return getAllBoardsHelper(0L, limit, offset, sort, order);
-	}
-	
-	private Map<String, Object> getAllBoardsHelper(
 			Long memberId,
 			int limit,
 			int offset,
@@ -196,5 +186,15 @@ public class BoardAjaxController {
 		jsonObject.put("rows", viewList);
 		
 		return jsonObject;
+	}
+	
+	private Map<String, Object> getAllBoardsHelper(
+			int limit,
+			int offset,
+//			String search,
+			String sort,
+			String order) {
+
+		return getAllBoardsHelper(0L, limit, offset, sort, order);
 	}
 }
