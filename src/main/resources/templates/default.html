@@ -92,7 +92,7 @@
 	<!-- Main body fragment -->	
 	
 	<!-- Authentication information -->
-	<div th:with="principal = ${#authentication.principal}">
+	<div th:with="principal = ${#authentication.principal}, username = ${#authorization.expression('hasAuthority(''ROLE_MEMBER'')') ? #authentication.principal.getUsername() : 'anonymous'}">
 		
 			
 		<!-- replaced here by under layer -->

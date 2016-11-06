@@ -24,13 +24,14 @@ public class IndexController {
 	@Autowired
 	MemberService memberService;
 	
-	@GetMapping(value = "test")
-	public String test() {
-		return "board/boardTest";
+	@GetMapping(value = "/")
+	public String index1() {
+		
+		return "redirect:/index";
 	}
 	
 	@GetMapping(value = "index")
-	public String user_index(
+	public String index2(
 			HttpServletRequest request,
 			Model model) {
 		

@@ -12,12 +12,14 @@
 				<li>
 					<a data-toggle="modal" data-target="#createBoardModal">Create a colla</a>
 				</li>
+				<!-- 
 				<li>
 					<a id="">xs (mobile) left 2</a>
 				</li>
 				<li>
 					<a id="">xs (mobile) left 3</a>
 				</li>
+				 -->
 			</ul>
 			<!-- /.dropdown-menu -->
 		</li>
@@ -31,16 +33,18 @@
 			<ul class="dropdown-menu">
 				<li class="dropdown-header">
 					<span>Signed in as</span><br />
-					<span id="loginIdDisplayMobile" th:text="${principal.getUsername()}">
+					<span id="loginIdDisplayMobile" th:text="${username}">
 						<strong>username</strong>
 					</span>
 				</li>
+				<!--
 				<li>
 					<a id="">xs (mobile) right 1</a>
 				</li>
 				<li>
 					<a id="">xs (mobile) right 2</a>
 				</li>
+				-->
 				<li>
 					<a id="logoutBtnMobile">Sign out</a>
 				</li>
@@ -71,12 +75,14 @@
 		<li>
 			<a data-toggle="modal" data-target="#createBoardModal">Create a colla</a>
 		</li>
+		<!--
 		<li>
 			<a id="">sm ~ lg (desktop) left 2</a>
 		</li>
 		<li>
 			<a id="">sm ~ lg (desktop) left 3</a>
 		</li>
+		-->
 	</ul>
 	<!-- /ul.dropdown-menu -->
 </li>
@@ -90,16 +96,18 @@
 	<ul class="dropdown-menu" role="menu">
 		<li class="dropdown-header">
 			<span>Signed in as</span><br />
-			<span id="loginIdDisplayDesktop" th:text="${principal.getUsername()}">	
+			<span id="loginIdDisplayDesktop" th:text="${username}">	
 				<strong>username</strong>
 			</span>
 		</li>
+		<!--
 		<li>
 			<a id="">sm ~ lg (desktop) right 1</a>
 		</li>
 		<li>
 			<a id="">sm ~ lg (desktop) right 2</a>
 		</li>
+		-->
 		<li>
 			<a id="logoutBtnDesktop">Sign out</a>
 		</li>

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.ps119.entity.Board;
 import kr.co.ps119.entity.Member;
-import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.service.BoardService;
 import kr.co.ps119.service.MemberService;
 import kr.co.ps119.vo.BoardVO;
@@ -35,10 +34,6 @@ public class BoardAjaxController {
 	
 	@Autowired
 	private BoardService boardService;
-	
-	@Autowired
-	private BoardRepository boardRepo;
-	
 	
 	@GetMapping(value = "updateBoardDB")
 	public Map<String, Object> updateBoardDB(
@@ -64,8 +59,8 @@ public class BoardAjaxController {
 		return jsonObject;
 	}
 	
-	@GetMapping(value = "getBoardOfMember")
-	public Map<String, Object> getBoardOfMember(
+	@GetMapping(value = "getAllBoardsOfMember")
+	public Map<String, Object> getAllBoardsOfMember(
 			Principal principal,
 			int limit,
 			int offset,
@@ -73,15 +68,94 @@ public class BoardAjaxController {
 			String sort,
 			String order) {
 		
-		/*
-		System.out.println("limit : " + limit);
-		System.out.println("offset : " + offset);
-//		System.out.println("search : " + search);
-		System.out.println("sort : " + sort);
-		System.out.println("order : " + order);
-		*/
-		
 		Member member = memberService.findByUsername(principal.getName());
+		
+		return getAllBoardsHelper(member.getId(), limit, offset, sort, order);
+	}
+	
+	@GetMapping(value = "getAllBoards")
+	public Map<String, Object> getAllBoards(
+			int limit,
+			int offset,
+//			String search,
+			String sort,
+			String order) {
+		
+		return getAllBoardsHelper(limit, offset, sort, order);
+	}
+	
+	@GetMapping(value = "deleteOneBoard") 
+	public Map<String, Object> deleteOneBoardFromBtn(
+			Principal principal,
+			Long boardId) {
+
+		Map<String, Object> jsonObject = new HashMap<>();
+
+		Member member;
+		Board board;
+
+		Long memberIdFromBoard;
+		Long memberIdFromMember; 
+		
+		if(boardId == null) {
+			jsonObject.put("message", "board id is empty");
+		} else {
+			member = memberService.findByUsername(principal.getName());
+			board = boardService.findOne(boardId);
+
+			memberIdFromBoard = board.getMember().getId();
+			memberIdFromMember = member.getId();
+			
+			if (memberIdFromBoard.equals(memberIdFromMember)) {
+				boardService.deleteById(boardId);
+				jsonObject.put("message", "Board NO. " + boardId + " is deleted");
+			} else {
+				jsonObject.put("message", "That board is not yours");
+			}
+		}
+		
+		return jsonObject;
+	}
+	
+	@GetMapping(value = "deleteSelectedBoard") 
+	public Map<String, Object> deleteSelectedBoard(
+			Principal principal,
+			@RequestParam("boardIds[]") List<Long> boardIds) {
+
+		Map<String, Object> jsonObject = new HashMap<>();
+		
+		Member member;
+		
+		if(boardIds.isEmpty()) {
+			jsonObject.put("message", "board id list is empty");
+		} else {
+			member = memberService.findByUsername(principal.getName());
+			boardService.deleteByIdInAndMemberId(boardIds, member.getId());
+			jsonObject.put("message", "Board NO. " + boardIds + " are(is) deleted");
+		}
+		
+		return jsonObject;
+	}
+	
+	private Map<String, Object> getAllBoardsHelper(
+			int limit,
+			int offset,
+//			String search,
+			String sort,
+			String order) {
+
+		return getAllBoardsHelper(0L, limit, offset, sort, order);
+	}
+	
+	private Map<String, Object> getAllBoardsHelper(
+			Long memberId,
+			int limit,
+			int offset,
+//			String search,
+			String sort,
+			String order) {
+		
+		System.out.println("sort : " + sort);
 		
 		Sort sorter;
 		
@@ -94,69 +168,33 @@ public class BoardAjaxController {
 		// Initial offset becomes
 		PageRequest pageRequest = new PageRequest(offset / limit, limit, sorter);
 		
-		Long total = boardService.getTotalCountOfBoards(member.getId());
+		Long total;
 		
-//		System.out.println("total : " + total);
+		if(memberId <= 0L) {
+			total = boardService.getTotalCountOfBoards();
+		} else {
+			total = boardService.getTotalCountOfBoards(memberId);	
+		}
 		
-		List<Board> dbList = boardRepo.findByMemberId(member.getId(), pageRequest);
+		List<Board> boardLsitInDB;
+		
+		if(memberId <= 0L) {
+			boardLsitInDB = boardService.findAllBoardsWithPageRequest(pageRequest);
+		} else {
+			boardLsitInDB = boardService.findAllBoardsWithPageRequest(memberId, pageRequest);
+		}
+		
 		List<BoardVO> viewList;
-		
-//		System.out.println("dbList : " + dbList.size());
 		
 		Map<String, Object> jsonObject = new HashMap<>();
 		
-		viewList = dbList.stream()
+		viewList = boardLsitInDB.stream()
 						 .map(board -> new BoardVO(board.getId(), board.getTitle(),board.getContent(), board.getCreateDate(), board.getLastUpdateDate(), board.getUpdateCount(), board.getHitCount(), board.getMember().getUsername()))
 						 .collect(Collectors.toList());
-		
-//		System.out.println("viewList : " + viewList.size());
 		
 		jsonObject.put("total", total);
 		jsonObject.put("rows", viewList);
 		
-//		System.out.println("");
-		
 		return jsonObject;
 	}
-	
-	@GetMapping(value = "deleteOneBoard") 
-	public Map<String, Object> deleteOneBoardFromBtn(Long boardId) {
-		boardService.deleteOneBoardById(boardId);
-		
-		Map<String, Object> jsonObject = new HashMap<>();
-		
-		jsonObject.put("message", "Board is deleted");
-		
-		return jsonObject;
-	}
-	
-	@GetMapping(value = "deleteSelectedBoard") 
-	public Map<String, Object> deleteSelectedBoard(
-			@RequestParam("boardIds[]") String boardIds[]) {
-		
-		for(String boardId : boardIds) {
-			boardService.deleteOneBoardById(Long.valueOf(boardId));
-			System.out.println("boardId : " + boardId);
-		}
-		
-		Map<String, Object> jsonObject = new HashMap<>();
-		
-		jsonObject.put("message", "Selected board are deleted");
-		
-		return jsonObject;
-	}
-	
-	/*
-	@GetMapping(value = "getBoardListOfMemberFromDBByUsername")
-	public Map<String, Object> getBoardListOfMemberFromDBByUsername(String username) {
-		List<Board> boardList = boardService.findAllBoardsOfMemberByUsername(username);
-		
-		Map<String, Object> jsonObject = new HashMap<>();
-		
-		jsonObject.put("total", boardList.size());
-		jsonObject.put("boardList", boardList);
-		
-		return jsonObject;
-	}
-	*/
 }

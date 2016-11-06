@@ -16,4 +16,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	public List<Board> findByMemberId(Long memberId);
 	public List<Board> findByMemberId(Long memberId, Pageable pageable);
+	public List<Board> findByIdInAndMemberId(List<Long> id, Long memberId);
+	
+	public Long countByMemberId(Long memberId);
+	
+	public List<Board> deleteByIdInAndMemberId(List<Long> id, Long memberId);
 }

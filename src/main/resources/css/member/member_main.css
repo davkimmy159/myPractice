@@ -4,11 +4,6 @@ body {
 	padding-top : 60px;
 }
 
-hr {
-	margin : 2px;
-	border-color : #151515;
-}
-
 li {
 	cursor: pointer;
 }
@@ -169,14 +164,12 @@ span#loginIdDisplayDesktop {
 		margin-right: 5px;
 	}
 	
-	/*
 	.bootstrap-table .fixed-table-container .fixed-table-body table.table thead tr th:first-child {
 		display: none;
 	}
 	.bootstrap-table .fixed-table-container .fixed-table-body table.table tbody tr td:first-child {
 		display: none;
 	}
-	*/
 	
 	.bootstrap-table .fixed-table-container .fixed-table-pagination div.pagination-detail {
 		width: 100%;

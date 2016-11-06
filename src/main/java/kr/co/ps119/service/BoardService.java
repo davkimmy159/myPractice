@@ -2,8 +2,6 @@ package kr.co.ps119.service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -11,6 +9,8 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kr.co.ps119.entity.Board;
@@ -34,6 +34,26 @@ public class BoardService {
 	
 	@Autowired
 	private CommentRepository commentRepo;
+	
+	public Board findOne(Long boardId) {
+		return boardRepo.findOne(boardId);
+	}
+	
+	public List<Board> findByIdInAndMemberId(List<Long> id, Long memberId) {
+		return boardRepo.findByIdInAndMemberId(id, memberId);
+	}
+	
+	public List<Board> findAllBoardsWithPageRequest(Pageable pageable) {
+		Page<Board> boardListPage = boardRepo.findAll(pageable);
+		
+		return boardListPage.getContent();
+	}
+	
+	public List<Board> findAllBoardsWithPageRequest(Long memberId, Pageable pageable) {
+		List<Board> boardList = boardRepo.findByMemberId(memberId, pageable);
+		
+		return boardList;
+	}
 	
 	public Long createBoard(String boardName, String ownerUsername) {
 		Board board = new Board();
@@ -84,7 +104,7 @@ public class BoardService {
 		if(board != null) {
 			if(!(principal.getName().equals(board.getMember().getUsername()))) {
 				board.setHitCount(board.getHitCount() + 1L);
-
+				
 				/*
 				em.createQuery(jpql)
 				  .setParameter("boardId", boardId)
@@ -98,35 +118,23 @@ public class BoardService {
 		return board;
 	}
 	
-	public List<Board> findAllBoards() {
-		String jpql = "SELECT board FROM Board AS board";
-		
-		List<Board> boardList = em.createQuery(jpql, Board.class)
-								  .getResultList();
-
-		return boardList;
-	}
-	
 	public Long getTotalCountOfBoards() {
-		String jpql = "SELECT COUNT(*) FROM Board AS board";
+		Long total = boardRepo.count();
 		
-		Long total = em.createQuery(jpql, Long.class)
-					   .getSingleResult();
-
 		return total;
 	}
 	
 	public Long getTotalCountOfBoards(Long memberId) {
-		String jpql = "SELECT COUNT(*) FROM Board AS board WHERE board.member.id = :memberId";
-		
-		Long total = em.createQuery(jpql, Long.class)
-					   .setParameter("memberId", memberId)
-					   .getSingleResult();
+		Long total = boardRepo.countByMemberId(memberId);
 
 		return total;
 	}
 	
-	public void deleteOneBoardById(Long boardId) {
+	public void deleteById(Long boardId) {
 		boardRepo.delete(boardId);
+	}
+	
+	public List<Board> deleteByIdInAndMemberId(List<Long> id, Long memberId) {
+		return boardRepo.deleteByIdInAndMemberId(id, memberId);
 	}
 }

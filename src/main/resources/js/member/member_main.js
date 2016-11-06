@@ -5,7 +5,7 @@ bootstrapTable = {
 		
 	tableSetting : function() {
 		
-		/* Bootstrap table plugin settings for my board list */
+		/* My board list */
 		$("table#myBoardList").bootstrapTable({
 			columns: [
             	{
@@ -40,30 +40,10 @@ bootstrapTable = {
             		field: "hitCount",
             		title: "Hits",
             		sortable: true
-            	
-            		/*
-                	footerFormatter: function(data) {
-                        var total = 0;
-                        $.each(data, function(i, row) {
-                        	total += Number(row.hitCount);
-                        });
-                		return '<span>' + total + '</span>';
-                    }
-                    */
             	}, {
             		field: "updateCount",
             		title: "Up",
             		sortable: true
-                	
-            		/*
-            		footerFormatter: function(data) {
-                        var total = 0;
-                        $.each(data, function(i, row) {
-                        	total += Number(row.updateCount);
-                        });
-                        return '<span>' + total + '</span>';
-                    }
-                    */
             	}, {
             		field: "createDate",
             		title: "Create",
@@ -90,7 +70,7 @@ bootstrapTable = {
             				'</span>'
             			].join('');
             		}
-            	},  {
+            	}, {
             		field: "Utils",
             		title: "utils",
             		formatter: function(value, row, index) {
@@ -114,14 +94,16 @@ bootstrapTable = {
             	}
             ],
 			
-			url : path.getContextPath() + "/ajax/board/getBoardOfMember",
+			url : path.getContextPath() + "/ajax/board/getAllBoardsOfMember",
 			sidePagination : "server",
 			contentType	: 'application/json; charset=utf-8',
 			queryParamsType : "limit",
 			queryParams : function(params) {
-			    params.sort = "id";
 				return params;
 			},
+
+			sortName: "id",
+			sortOrder: "asc",
 			
 			classes : "table table-no-bordered",
 		
@@ -158,14 +140,132 @@ bootstrapTable = {
 			method : "GET",
 			contentType : 'application/json; charset=utf-8',
 			dataType : 'json'
-//			cache : true,
-			
-//			onPageChange : bootstrapTable.common.event.onPageChange
 		});
 		
-		/* Bootstrap table plugin settings for my board list */
+		/* All board list */
 		$("table#allBoardList").bootstrapTable({
-			/*
+			columns: [
+            	{
+            		field: "state",
+            		checkbox: true,
+            		formatter: function(value, row, index) {
+            			if (row.username != $("#loginUsername").text()) {
+            	            return {
+            	                disabled: true
+            	            };
+            	        } else {
+            	        	return value;	
+            	        }
+            		}
+            	}, {
+            		field: "id",
+            		title: "#",
+            		class: "hidden-xs",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			return '<span class="eachBoardIdInTable">' + row.id + '</span>';
+            		},
+            		events: {
+            			'click .eachBoardIdInTable': function(e, value, row, index) {
+            				notify.notify(row.id);
+            			}
+            		}
+            	}, {
+            		field: "title",
+            		title: "Title",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			return '<span class="boardTitle">' + row.title + '</span>';
+            		},
+            		events: {
+            			'click .boardTitle': function(e, value, row, index) {
+            				location.href = path.getFullContextPath() + "/board/" + row.id;
+            			}
+            		}
+            	}, {
+            		field: "hitCount",
+            		title: "Hits",
+            		sortable: true
+            	}, {
+            		field: "updateCount",
+            		title: "Up",
+            		sortable: true
+            	}, {
+            		field: "createDate",
+            		title: "Create",
+            		class: "hidden-xs hidden-sm",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			var date = row.createDate;
+            			return [
+            				'<span class="createDate">',
+            				bootstrapTable.dateFormat(date),
+            				'</span>'
+            			].join('');
+            		}
+            	}, {
+            		field: "lastUpdateDate",
+            		title: "Last up",
+            		class: "hidden-xs hidden-sm",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			var date = row.lastUpdateDate;
+            			return [
+            				'<span class="createDate">',
+            				bootstrapTable.dateFormat(date),
+            				'</span>'
+            			].join('');
+            		}
+            	}, {
+            		field: "member",
+            		title: "Owner",
+            		class: "hidden-sm",
+            		sortable: true,
+            		formatter: function(value, row, index) {
+            			return [
+            				'<span class="member">',
+            				row.username,
+            				'</span>'
+            			].join('');
+            		}
+            	}, {
+            		field: "Utils",
+            		title: "utils",
+            		formatter: function(value, row, index) {
+            			var format = ['<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>'];
+            			
+            			if (row.username == $("#loginUsername").text()) {
+            	            format.push('<span class="boardSettingBtn glyphicon glyphicon-cog"></span>');
+            	            format.push('<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" style="color: red;"></span>');
+            			}
+            			
+            			return format.join('');
+            		},
+            		events: {
+            			'click .boardDownloadBtn': function (e, value, row, index) {
+            	            notify.notify("button clicked", "download");
+            	        },
+            	        'click .boardSettingBtn': function (e, value, row, index) {
+            	            notify.notify("button clicked", "setting");
+            	        },
+            	        'click .boardDeleteBtn': function (e, value, row, index) {
+            	        	ajax.deleteOneBoard(row.id);
+            	        }
+            		}
+            	}
+            ],
+			
+			url : path.getContextPath() + "/ajax/board/getAllBoards",
+			sidePagination : "server",
+			contentType	: 'application/json; charset=utf-8',
+			queryParamsType : "limit",
+			queryParams : function(params) {
+				return params;
+			},
+			
+			sortName: "id",
+			sortOrder: "asc",
+			
 			classes : "table table-no-bordered",
 		
 			showHeader : true,
@@ -174,6 +274,7 @@ bootstrapTable = {
 			showRefresh : true,
 			showToggle : true,
 			showColumns : true,
+			showExport : true,
 			
 			search : true,
 			searchOnEnterKey : true,
@@ -181,26 +282,25 @@ bootstrapTable = {
 			trimOnSearch : true,
 			searchTimeOut : 500,
 			
-			idField : "number",
-			uniqueId : "number",
+			idField : "id",
+			uniqueId : "id",
 			
 			selectItemName : "rowCheckbox",
 			
 			detailView : true,
-			detailFormFormatter : function(index, row, element) {
+			detailFormatter : function(index, row, element) {
 				var format = "<span>test!!!</span>";
 				
 				return format;
 			},
 			
 			pagination : true,
-			pageSize : 10,
-			pageList : [10, 20, 30, 50, 80, 100],
-
-			onPageChange : function(number, size) {
-				bootstrapTable.common.event.onPageChange(number, size);
-			}
-			*/
+			paginationLoop : true,
+			pageList : [10, 20, 30, 50, 80, 100, "ALL"],
+			
+			method : "GET",
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json'
 		});
 		
 		utils.executeAllFunctionMembers(this.sideSetting);
@@ -216,12 +316,22 @@ bootstrapTable = {
 		},
 		
 		deleteSelectedBoardButtonEvent : function() {
-			$('button[name="deleteSelectedBoardBtn"]').click(function() {
-				var boardIds = $.map(bootstrapTable.myBoardListTable.bootstrapTable("getSelections"), function (row) {
+			bootstrapTable.myBoardListTable.parents(".panel-body").siblings(".panel-footer").find('button[name="deleteSelectedBoardBtn"]').click(function() {
+				deleteCheckedBoards(bootstrapTable.myBoardListTable);
+			});
+			
+			bootstrapTable.allBoardListTable.parents(".panel-body").siblings(".panel-footer").find('button[name="deleteSelectedBoardBtn"]').click(function() {
+				deleteCheckedBoards(bootstrapTable.allBoardListTable);
+			});
+			
+			function deleteCheckedBoards($table) {
+				rows = $table.bootstrapTable("getSelections");
+				var boardIds = $.map(rows, function (row) {
 					return row.id;
 				});
 				ajax.deleteSelectedBoard(boardIds);
-			});
+				$table.bootstrapTable("refresh", {silent: true});
+			}
 		}
 	},
 	
@@ -264,6 +374,23 @@ bootstrapTable = {
 	
 	dateFormat : function(date) {
 		return date.year + "." + date.monthValue + "." + date.dayOfMonth + " " + date.hour + ":" + date.minute;
+	},
+	
+	removeByUniqueId : function(boardId) {
+		bootstrapTable.myBoardListTable.bootstrapTable("removeByUniqueId", boardId);
+    	bootstrapTable.allBoardListTable.bootstrapTable("removeByUniqueId", boardId);
+    	this.refresh();
+	},
+	
+	remove : function(boardIds) {
+		bootstrapTable.myBoardListTable.bootstrapTable("remove", boardIds);
+    	bootstrapTable.allBoardListTable.bootstrapTable("remove", boardIds);
+		this.refresh();
+	},
+	
+	refresh : function() {
+    	bootstrapTable.myBoardListTable.bootstrapTable("refresh", {silent: true});
+    	bootstrapTable.allBoardListTable.bootstrapTable("refresh", {silent: true});
 	}
 };
 
@@ -280,12 +407,12 @@ ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify("Ajax 통신 성공 code : " + status, " message : " + data.message);
-	        	bootstrapTable.myBoardListTable.bootstrapTable("removeByUniqueId", boardId);
-	        	bootstrapTable.myBoardListTable.bootstrapTable("refresh", {silent: true});
+//				notify.notify("Ajax 통신 성공 code : " + status, " message : " + data.message);
+				notify.notify("message", data.message, "success");
+				bootstrapTable.removeByUniqueId(boardId);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+				notify.notify('Ajax 통신 실패 code : ' + request.status, 'error : ' + error, "error");
 			}
 		});
 	},
@@ -302,12 +429,13 @@ ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify("Ajax 통신 성공 code : " + status, " message : " + data.message);
-				bootstrapTable.myBoardListTable.bootstrapTable("remove", {field: "id", values: boardIds});
-				bootstrapTable.myBoardListTable.bootstrapTable("refresh", {silent: true});
+//				notify.notify("Ajax 통신 성공 code : " + status, " message : " + data.message);
+				notify.notify("message", data.message), "success";
+				bootstrapTable.remove(boardIds);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+				notify.notify('Ajax 통신 실패 code : ' + request.status, 'error : ' + error, "error");
+				notify.notify("Warning", "You must select board", "error");
 			}
 		});
 	}
@@ -341,5 +469,4 @@ $(document).ready(function() {
 			}
 		}
 	}).resize();
-
 });

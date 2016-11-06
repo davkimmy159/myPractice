@@ -2,6 +2,13 @@ PNotify.prototype.options.styling = "bootstrap3";
 
 var notify = {
 		
+	/*
+		notify
+		info
+		success
+		error
+	 */
+		
 	toggle : true,
 	
 	notify : function(title, msg, type) {

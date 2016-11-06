@@ -60,30 +60,19 @@
 							
 							<li class="dropdown">
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-									<span>dropdown</span><span class="caret"></span>
+									<span>Go to</span><span class="caret"></span>
 								</a>
 								<ul class="dropdown-menu" role="menu">
 									<li>
-										<a class="hidden-sm" href="../index.html" th:href="@{/index}">Index</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a class="hidden-sm" data-toggle="modal" data-target="#createBoardModal">Create</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test</a>
-									</li>
-									<li class="divider"></li>
-									<li>
-										<a>test</a>
+										<a href="../index.html" th:href="@{/index}">
+											<span>Index</span>
+										</a>
 									</li>
 								</ul>
 								<!-- /.dropdown-menu -->
 							</li>
+							
 							<hr class="visible-xs-block" />
-							
-							
 							
 							<!-- user utility button -->
 							<!-- mobile view -->
@@ -146,53 +135,7 @@
 								<div class="panel-body">
 									
 									<div class="table-responsive">
-										<table id="myBoardList" class="table-hover">
-											<!-- 
-											<thead>
-												<tr>
-													<th data-checkbox="true" data-field="checkbox">checkbox</th>
-													<th class="hidden-xs" data-field="id" data-sortable="true">#</th>
-													<th data-field="title" data-sortable="true">Title</th>
-													<th data-field="hitCount" data-sortable="true">Hits</th>
-													<th data-field="updateCount" data-sortable="true">Up</th>
-													<th class="hidden-xs hidden-sm" data-field="createDate" data-sortable="true">Create</th>
-													<th class="hidden-xs hidden-sm" data-field="lastUpdateDate" data-sortable="true">Last up</th>
-													<th data-field="utils">Utils</th>
-												</tr>
-											</thead>
-											<tbody>
-											
-												<tr th:each="board : ${userBoardList}" th:with="boardUrl = '/board/' + ${board.getId()}">
-													<td></td>
-													<td class="eachBoardIdInTable hidden-xs">
-														<span th:text="${board.getId()}">Number</span>
-													</td>
-													<td>
-														<a href="" th:href="@{${boardUrl}}">
-															<span class="boardTitle" th:text="${board.getTitle()}">Title</span>
-														</a>
-													</td>
-													<td>
-														<span th:text="${board.getHitCount()}">Hits</span>
-													</td>
-													<td>
-														<span th:text="${board.getUpdateCount()}">Update count</span>
-													</td>
-													<td class="hidden-xs hidden-sm">
-														<span th:text="${board.getFormattedCreateDateString()}" class="datetime">Create date</span>
-													</td>
-													<td class="hidden-xs hidden-sm">
-														<span th:text="${board.getFormattedLastUpdateDateString()}" class="datetime">Last update date</span>
-													</td>
-													<td>
-														<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>
-														<span class="boardSettingBtn glyphicon glyphicon-cog"></span>
-														<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" style="color: red;"></span>
-													</td>
-												</tr>
-											</tbody>
-											 -->
-										</table>
+										<table id="myBoardList" class="table-hover"></table>
 									</div>
 									<!-- /.table-responsive -->
 									
@@ -223,54 +166,7 @@
 								<div class="panel-body">
 									
 									<div class="table-responsive">
-										<table id="allBoardList" class="table-hover">
-									<!-- 
-											<thead>
-												<tr>
-													<th data-checkbox="true" data-field="checkbox" data-formatter="bootstrapTable.checkboxFormatter">checkbox</th>
-													<th class="hidden-xs" data-field="number" data-sortable="true">#</th>
-													<th data-field="title" data-sortable="true">Title</th>
-													<th data-field="hits" data-sortable="true">Hits</th>
-													<th data-field="up" data-sortable="true">Up</th>
-													<th class="hidden-xs hidden-sm" data-field="create" data-sortable="true">Create</th>
-													<th class="hidden-xs hidden-sm" data-field="last up" data-sortable="true">Last up</th>
-													<th data-field="owner" data-sortable="true">Owner</th>
-													<th data-field="utils">Utils</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr th:each="board : ${allBoardList}">
-													<td></td>
-													<td class="eachBoardIdInTable hidden-xs">
-														<span th:text="${board.getId()}">Number</span>
-													</td>
-													<td>
-														<span class="boardTitle" th:text="${board.getTitle()}">Title</span>
-													</td>
-													<td>
-														<span th:text="${board.getHitCount()}">Hits</span>
-													</td>
-													<td>
-														<span th:text="${board.getUpdateCount()}">Update count</span>
-													</td>
-													<td class="hidden-xs hidden-sm">
-														<span class="datetime" th:text="${board.getFormattedCreateDateString()}">Create date</span>
-													</td>
-													<td class="hidden-xs hidden-sm">
-														<span class="datetime" th:text="${board.getFormattedLastUpdateDateString()}">Last update date</span>
-													</td>
-													<td>
-														<span class="owner" th:text="${board.getMember().getUsername()}">Owner</span>
-													</td>
-													<td>
-														<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>
-														<span class="boardSettingBtn glyphicon glyphicon-cog" th:if="${board.getMember().getUsername() == principal.username}"></span>
-														<span class="boardDeleteBtn glyphicon glyphicon-remove-circle" th:if="${board.getMember().getUsername() == principal.username}" style="color: red;"></span>
-													</td>
-												</tr>
-											</tbody>
-											-->
-										</table>
+										<table id="allBoardList" class="table-hover"></table>
 									</div>
 									<!-- /.table-responsive -->
 									

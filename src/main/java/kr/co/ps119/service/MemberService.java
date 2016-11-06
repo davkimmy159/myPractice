@@ -53,4 +53,8 @@ public class MemberService {
 	public Member findByUsername(String username) {
 		return memberRepo.findByUsername(username);
 	}
+	
+	public Member findOne(Long memberId) {
+		return memberRepo.findOne(memberId);
+	}
 }
