@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import kr.co.ps119.entity.Board;
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.repository.BoardRepository;
-import kr.co.ps119.repository.CommentRepository;
+import kr.co.ps119.repository.MemoRepository;
 import kr.co.ps119.repository.MemberRepository;
 
 @Service
@@ -33,7 +33,7 @@ public class BoardService {
 	private BoardRepository boardRepo;
 	
 	@Autowired
-	private CommentRepository commentRepo;
+	private MemoRepository commentRepo;
 	
 	public Board findOne(Long boardId) {
 		return boardRepo.findOne(boardId);

@@ -7,7 +7,7 @@ var notify = {
 		info
 		success
 		error
-	 */
+	*/
 		
 	toggle : true,
 	

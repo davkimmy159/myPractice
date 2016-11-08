@@ -19,8 +19,9 @@ var jqAjax = {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
 			}
 		});
-	},
-		
+	}
+	
+	/*	
 	updateList : function() {
 		$.ajax({
 			url : 'test/boardUpdateAjaxTest',
@@ -83,7 +84,7 @@ var jqAjax = {
 			}
 		});
 	},
-		
+	
 	insertRefresh : function() {
 		$.ajax({
 			url : 'test/ajaxTest1',
@@ -125,7 +126,7 @@ var jqAjax = {
 			}
 		});
 	},
-
+	
 	deleteRefresh : function() {
 		$.ajax({
 			url : 'test/ajaxTest2',
@@ -168,7 +169,7 @@ var jqAjax = {
 	},
 	
 	test1 : function() {
-		/*
+		
 		$.ajax({
 			url : 'test/test2',
 			type : 'GET',
@@ -186,7 +187,7 @@ var jqAjax = {
 				notify.notify('실패\ncode : ' + request.status + '\n error : ' + error);
 			}
 		});
-		*/
+
 		
 		$.ajax({
 			url : 'test/test1',
@@ -210,4 +211,5 @@ var jqAjax = {
 			}
 		});
 	}
+	*/
 };

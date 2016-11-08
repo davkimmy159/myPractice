@@ -1,7 +1,7 @@
 package kr.co.ps119.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -22,7 +23,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class Comment implements Serializable {
+public class Memo implements Serializable {
 	
 	private static final long serialVersionUID = 5199824822705432663L;
 
@@ -38,24 +39,45 @@ public class Comment implements Serializable {
 	
 	@Column
 	@NotNull(message = "date is empty")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createDate;
+	private LocalDateTime createDate;
 	
 	// foreign key 1
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id",
+				nullable = true)
+	@JsonManagedReference
+	private Member member;
+	
+	// foreign key 2
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "board_id",
 				nullable = true)
 	@JsonManagedReference
 	private Board board;
 	
-	public Comment() {
+	public Memo() {
 	}
 
-	public Comment(String content, Date createDate) {
+	public Memo(String content, LocalDateTime createDate) {
 		this.content = content;
 		this.createDate = createDate;
 	}
-
+	
+	
+	// ------------------------------------------------------------------
+	
+	
+	// Sets default values
+	@PrePersist
+	void setDefaultValues() {
+		setContent("This is a memo");
+		setCreateDate(LocalDateTime.now());
+	}
+	
+	
+	// ------------------------------------------------------------------
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -74,14 +96,26 @@ public class Comment implements Serializable {
 		this.content = content;
 	}
 
-	public Date getCreateDate() {
+	public LocalDateTime getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(LocalDateTime createDate) {
 		this.createDate = createDate;
 	}
 
+	public Member getMember() {
+		return member;
+	}
+
+	public void setMember(Member member) {
+		this.member = member;
+		
+		if(!(member.getMemos().contains(this))) {
+			member.getMemos().add(this);
+		}
+	}
+	
 	public Board getBoard() {
 		return board;
 	}
@@ -89,8 +123,8 @@ public class Comment implements Serializable {
 	public void setBoard(Board board) {
 		this.board = board;
 		
-		if(!(board.getComments().contains(this))) {
-			board.getComments().add(this);
+		if(!(board.getMemos().contains(this))) {
+			board.getMemos().add(this);
 		}
 	}
 
@@ -115,7 +149,7 @@ public class Comment implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		*/
-		Comment other = (Comment) obj;
+		Memo other = (Memo) obj;
 		if (getContent() == null) {
 			if (other.content != null)
 				return false;

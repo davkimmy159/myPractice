@@ -76,6 +76,13 @@ public class Member implements UserDetails, Serializable {
 	@JsonBackReference
 	private List<Board> boards = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "member",
+			   fetch = FetchType.LAZY,
+			   cascade = CascadeType.ALL,
+			   orphanRemoval = true)
+	@JsonBackReference
+	private List<Memo> memos = new ArrayList<>();
+		
 	public Member() {
 	}
 	
@@ -183,6 +190,18 @@ public class Member implements UserDetails, Serializable {
 		
 		if(board.getMember() != this) {
 			board.setMember(this);
+		}
+	}
+	
+	public List<Memo> getMemos() {
+		return memos;
+	}
+
+	public void addMemo(Memo memo) {
+		memos.add(memo);
+		
+		if(memo.getMember() != this) {
+			memo.setMember(this);
 		}
 	}
 	

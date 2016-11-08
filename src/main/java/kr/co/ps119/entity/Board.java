@@ -81,13 +81,12 @@ public class Board implements Serializable {
 	@JsonManagedReference
 	private Member member;
 	
-	// child
 	@OneToMany(mappedBy = "board",
 			   fetch = FetchType.LAZY,
 			   cascade = CascadeType.ALL,
 			   orphanRemoval = true)
 	@JsonBackReference
-	private List<Comment> comments = new ArrayList<>();
+	private List<Memo> memos = new ArrayList<>();
 	
 	public Board() {
 	}
@@ -119,7 +118,7 @@ public class Board implements Serializable {
 		setUpdateCount(0L);
 		setHitCount(0L);
 	}
-		
+	
 	public String getFormattedCreateDateString() {
 		return createDate.format(Utility.getDateTimeFormatter());
 	}
@@ -202,15 +201,15 @@ public class Board implements Serializable {
 		}
 	}
 
-	public List<Comment> getComments() {
-		return comments;
+	public List<Memo> getMemos() {
+		return memos;
 	}
 
-	public void addComment(Comment comment) {
-		comments.add(comment);
+	public void addMemo(Memo memo) {
+		memos.add(memo);
 		
-		if(comment.getBoard() != this) {
-			comment.setBoard(this);
+		if(memo.getBoard() != this) {
+			memo.setBoard(this);
 		}
 	}
 

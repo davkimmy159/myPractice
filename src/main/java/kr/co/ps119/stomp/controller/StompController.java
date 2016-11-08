@@ -1,10 +1,14 @@
-package kr.co.ps119.controller.stomp;
+package kr.co.ps119.stomp.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+
+import kr.co.ps119.stomp.messageVO.StompChatMessage;
+import kr.co.ps119.stomp.messageVO.StompDBUpdateMessage;
+import kr.co.ps119.stomp.messageVO.StompEditorContent;
 
 @Controller
 public class StompController {

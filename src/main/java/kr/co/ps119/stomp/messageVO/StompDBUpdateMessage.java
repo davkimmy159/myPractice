@@ -1,4 +1,4 @@
-package kr.co.ps119.controller.stomp;
+package kr.co.ps119.stomp.messageVO;
 
 public class StompDBUpdateMessage extends AbstractStompMessage {
 	

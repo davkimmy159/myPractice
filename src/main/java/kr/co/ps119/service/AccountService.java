@@ -14,7 +14,7 @@ import kr.co.ps119.entity.MemberAuthority;
 import kr.co.ps119.flag.NewAccountFlag;
 import kr.co.ps119.repository.AuthorityRepository;
 import kr.co.ps119.repository.BoardRepository;
-import kr.co.ps119.repository.CommentRepository;
+import kr.co.ps119.repository.MemoRepository;
 import kr.co.ps119.repository.MemberAuthorityRepository;
 import kr.co.ps119.repository.MemberRepository;
 import kr.co.ps119.vo.MemberForm;
@@ -39,7 +39,7 @@ public class AccountService {
 	private BoardRepository boardRepo;
 	
 	@Autowired
-	private CommentRepository commentRepo;
+	private MemoRepository commentRepo;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;

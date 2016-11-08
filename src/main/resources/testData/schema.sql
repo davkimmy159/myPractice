@@ -44,11 +44,13 @@ CREATE TABLE IF NOT EXISTS board (
 	CONSTRAINT board_member_id_fk FOREIGN KEY(member_id) REFERENCES member(member_id)
 );
 
-CREATE TABLE IF NOT EXISTS comment (
+CREATE TABLE IF NOT EXISTS memo (
 	comment_id BIGINT AUTO_INCREMENT NOT NULL,
 	content VARCHAR(2000) NOT NULL,
 	create_date TIMESTAMP NOT NULL,
+	member_id BIGINT NOT NULL,
 	board_id BIGINT NOT NULL,
 	CONSTRAINT comment_comment_id_pk PRIMARY KEY(comment_id),
+	CONSTRAINT comment_member_id_fk FOREIGN KEY(member_id) REFERENCES member(member_id),
 	CONSTRAINT comment_board_id_fk FOREIGN KEY(board_id) REFERENCES board(board_id)
 );

@@ -103,7 +103,7 @@ bootstrapTable = {
 			},
 
 			sortName: "id",
-			sortOrder: "asc",
+			sortOrder: "desc",
 			
 			classes : "table table-no-bordered",
 		
@@ -264,7 +264,7 @@ bootstrapTable = {
 			},
 			
 			sortName: "id",
-			sortOrder: "asc",
+			sortOrder: "desc",
 			
 			classes : "table table-no-bordered",
 		

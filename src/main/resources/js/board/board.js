@@ -85,7 +85,6 @@ $('#memoEditor').height($(window).height() * 0.2);
 
 // ===================================================================================================
 
-
 var session = {
 
 	socket : null,
@@ -148,9 +147,6 @@ var session = {
 					if(session.nickname != alarmMsgBody.username) {
 						notify.notify(alarmMsgBody.messageBody, " by '" + alarmMsgBody.username + "\'", "success");
 					}
-
-					// Updates html page of DB list
-//					jqAjax.updateList();
 				});
 
 				// editor subscribe 1
@@ -278,13 +274,12 @@ var session = {
 
 		// desktop
 		if (utils.isDesktopSize()) {
-			jqAjax.updateBoardDB(session.boardId, basicEditor.getData());
+			ajax.updateBoardDB(session.boardId, basicEditor.getData());
 
 		// mobile
 		} else {
-			jqAjax.updateBoardDB(session.boardId, mobileEditor.getData());
+			ajax.updateBoardDB(session.boardId, mobileEditor.getData());
 		}
-//		jqAjax.saveBoard(basicEditor.document.getBody().getText());
 
 		var dbUpdateMsg = JSON.stringify({
 			username : session.nickname,
@@ -375,12 +370,6 @@ var boardUtils = {
 
 var eventObj = {
 
-	mobileEditorToolbarHide : function() {
-		$('#editorSaveBtn').click(function() {
-
-		});
-	},
-
 	badgeEvent : function() {
 		// Badge event function
 		$('#chatArea').focus(function(event) {
@@ -400,8 +389,23 @@ var eventObj = {
 	// Toggle chat notification
 	toggleChatNotifyEvent : function() {
 		$('#chatNotifyToggleBtn').click(function() {
-//			notify.toggle ? notify.toggle = false : notify.toggle = true;
-			this.blur();
+			if($(this).hasClass("active")) {
+				notify.toggle = true;
+			} else {
+				notify.toggle = false;
+			}
+		});
+	},
+	
+	mobileToggleToolbarBtnEvent : function() {
+		$("#toolbarToggleBtn").click(function() {
+			if(!(utils.isDesktopSize())) {
+				if($(this).hasClass("active")) {
+					$(".cke_editor_mobileEditor").find(".cke_top").css("display", "block");					
+				} else {
+					$(".cke_editor_mobileEditor").find(".cke_top").css("display", "none");
+				}
+			}
 		});
 	},
 
@@ -689,11 +693,57 @@ var resizeFuncs = {
 
 };
 
+var ajax = {
+	updateBoardDB : function(boardId, editorContent) {
+		$.ajax({
+			url : '../ajax/board/updateBoardDB',
+			type : 'GET',
+			data : {
+				'boardId' : boardId,
+				'editorContent' : editorContent
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify('Ajax 통신 성공 code : ' + status, '저장 프로세스 : ' + data.resultMessage);
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+			}
+		});
+	},
+	
+	updateJoinMemberTable : function() {
+		$.ajax({
+			url : '../ajax/board/updateJoinMemberTable',
+			type : 'GET',
+			data : {
+				'boardId' : boardId,
+				'editorContent' : editorContent
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify('Ajax 통신 성공 code : ' + status, '저장 프로세스 : ' + data.resultMessage);
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+			}
+		});
+	}
+}
+
 // =============================================================================================
 
 // $(function() {
 $(document).ready(function() {
-
+	
+	boardUtils.chatAppend(mobileEditor);
+	
 	// Connects to STOMP server after 1 second
 	// Immediate connection didn't work
 	setTimeout(function() {

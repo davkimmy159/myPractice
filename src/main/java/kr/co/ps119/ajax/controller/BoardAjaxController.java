@@ -1,4 +1,4 @@
-package kr.co.ps119.controller;
+package kr.co.ps119.ajax.controller;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -108,7 +108,7 @@ public class BoardAjaxController {
 			
 			if (memberIdFromBoard.equals(memberIdFromMember)) {
 				boardService.deleteById(boardId);
-				jsonObject.put("message", "Board NO. " + boardId + " is deleted");
+				jsonObject.put("message", "Board NO. " + boardId + " deleted");
 			} else {
 				jsonObject.put("message", "That board is not yours");
 			}
@@ -131,7 +131,7 @@ public class BoardAjaxController {
 		} else {
 			member = memberService.findByUsername(principal.getName());
 			boardService.deleteByIdInAndMemberId(boardIds, member.getId());
-			jsonObject.put("message", "Board NO. " + boardIds + " are(is) deleted");
+			jsonObject.put("message", "Board NO. " + boardIds + " deleted");
 		}
 		
 		return jsonObject;
