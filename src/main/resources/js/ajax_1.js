@@ -1,5 +1,6 @@
 var jqAjax = {
 
+	/*
 	updateBoardDB : function(boardId, editorContent) {
 		$.ajax({
 			url : '../ajax/board/updateBoardDB',
@@ -19,9 +20,8 @@ var jqAjax = {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
 			}
 		});
-	}
+	},
 	
-	/*	
 	updateList : function() {
 		$.ajax({
 			url : 'test/boardUpdateAjaxTest',
