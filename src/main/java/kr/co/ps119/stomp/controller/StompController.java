@@ -42,6 +42,7 @@ public class StompController {
 		return editorContent;
 	}
 	
+	/*
 	@SubscribeMapping({"/queue/subscribe1"})
 	public StompBasicMessage handleSubscription() {
 		StompBasicMessage outgoing = new StompBasicMessage();
@@ -50,4 +51,5 @@ public class StompController {
 		
 		return outgoing;
 	}
+	*/
 }
