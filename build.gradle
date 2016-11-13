@@ -77,7 +77,6 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-devtools'
 	compile 'org.springframework:springloaded'
 	
-	
 //	runtime 'commons-dbcp:commons-dbcp'
 	
 //	compile 'org.projectlombok:lombok:1.16.8'
