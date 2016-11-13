@@ -178,13 +178,14 @@
 	<div layout:fragment="customScript">
 		<script src="../js/utils.js" th:src="@{/js/utils.js}" type="text/javascript"></script>
 		<script>
+			/*
 			notify.notify('회원가입 폼', '회원가입 페이지입니다.');
 	
 			toastr.info('Are you the 6 fingered man?');
 			toastr.warning('My name is Inigo Montoya. You killed my father, prepare to die!');
 			toastr.success('Have fun storming the castle!', 'Miracle Max Says');
 			toastr.error('I do not think that word means what you think it means.', 'Inconceivable!');
-			
+			*/
 			$(document).ready(function() {
 				$('form').validator().on('submit', function(e) {
 					if (e.isDefaultPrevented()) {

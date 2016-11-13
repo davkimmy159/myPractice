@@ -46,6 +46,7 @@
 											</a>
 										</li>
 										
+										<!--
 										<li role="presentation" class="">
 											<a href="#createBoardModal_tabContent1_test2" data-toggle="tab" role="tab">
 												<span class="glyphicon glyphicon-edit"></span>
@@ -53,7 +54,7 @@
 												<span>test 2</span>
 											</a>
 										</li>
-										
+										 -->
 									</ul>
 									<!-- /.nav.nav-pills -->
 								</div>
@@ -100,10 +101,9 @@
 												<div class="form-group has-feedback">
 													<label for="room_name_input" class="col-sm-3 col-md-2 control-label">Title</label>
 													<div class="col-sm-9 col-md-10">
-														<input name="boardName" class="form-control" type="text" placeholder="Insert your room name here" th:value="${wrongTitleInput}" data-error="Title is invalid" />
-														<span class="glyphicon form-control-feedback"></span><!-- required="required" pattern="[a-zA-Z1-9!`~@#$%^&amp;*()-_+=]{1,200}"  -->
-														<div class="help-block">client-side : any </div>
-														<div class="help-block">server-side : 1 ~ 5 (no blank)</div><!-- Character range : 1 ~ 200 -->
+														<input name="boardName" class="form-control" type="text" placeholder="Insert your room name here" th:value="${wrongTitleInput}" data-error="Title is invalid" required="required" pattern="^\w?.{1,200}\w?$]$" />
+														<span class="glyphicon form-control-feedback"></span>
+														<div class="help-block">Length : 1 ~ 200 (no blank)</div>
 														<div class="help-block with-errors"></div>
 													</div>
 												</div>
@@ -129,6 +129,7 @@
 										</div>
 										<!-- /.tab-pane -->
 										
+										<!--
 										<div id="createBoardModal_tabContent1_test2" class="tab-pane fade" role="tabpanel">
 											<form action="" method='post'>
 												<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
@@ -139,6 +140,7 @@
 												</div>
 											</form>
 										</div>
+										-->
 										<!-- /.tab-pane -->
 										
 									</div>
