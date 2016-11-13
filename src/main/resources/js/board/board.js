@@ -742,10 +742,7 @@ var ajax = {
 // $(function() {
 $(document).ready(function() {
 	
-	boardUtils.chatAppend(mobileEditor);
-	
-	// Connects to STOMP server after 1 second
-	// Immediate connection didn't work
+	// Connects to STOMP server after 1 second because immediate connection didn't work
 	setTimeout(function() {
 		session.connect();
 	}, 1000);

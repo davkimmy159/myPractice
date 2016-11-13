@@ -18,12 +18,12 @@ bootstrapTable = {
             		sortable: true,
             		formatter: function(value, row, index) {
             			return '<span class="eachBoardIdInTable">' + row.id + '</span>';
-            		},
+            		}/*,
             		events: {
             			'click .eachBoardIdInTable': function(e, value, row, index) {
             				notify.notify(row.id);
             			}
-            		}
+            		}*/
             	}, {
             		field: "title",
             		title: "Title",
