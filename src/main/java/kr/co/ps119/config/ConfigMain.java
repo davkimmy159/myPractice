@@ -61,7 +61,7 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/bower_components/**").addResourceLocations("classpath:/bower_components/");
 		registry.addResourceHandler("/js/**").addResourceLocations("classpath:/js/");
 		registry.addResourceHandler("/css/**").addResourceLocations("classpath:/css/");
-		registry.addResourceHandler("/images/**").addResourceLocations("classpath:/images/");
+		registry.addResourceHandler("/image/**").addResourceLocations("classpath:/image/");
 	}
 
 	/*
