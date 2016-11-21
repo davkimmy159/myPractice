@@ -690,6 +690,29 @@ var resizeFuncs = {
 
 };
 
+//=============================================================================================
+// pagination
+
+$('#pagination-bootpag').bootpag({
+	total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 0,
+	page: 1,
+	maxVisible: 5,
+	leaps: true,
+	firstLastUse: true,
+	prev: "‹",
+	next: "›",
+	first: "«",
+	last: "»"
+}).on("page", function(event, num){
+	ajax.getMemosOfBoard($("input#boardId").val(), num);
+	
+	$(this).bootpag({
+		total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 0
+	});
+}); 
+
+//=============================================================================================
+
 var ajax = {
 	updateBoardDB : function(boardId, editorContent) {
 		$.ajax({
@@ -704,14 +727,70 @@ var ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify('Ajax 통신 성공 code : ' + status, '저장 프로세스 : ' + data.resultMessage);
+				notify.notify('Ajax 통신 성공 : ' + status, '저장 프로세스 : ' + data.resultMessage);
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패 : ' + request.status, 'error : ' + error);
+			}
+		});
+	},
+	
+	getMemosOfBoard : function(boardId, offset) {
+		$.ajax({
+			url : '../ajax/memo/getAllMemosOfBoard',
+			type : 'GET',
+			data : {
+				'boardId' : boardId,
+				'offset' : offset
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+				notify.notify('Ajax 통신 성공 : ', status);
+				
+				$("input#boardMemoSize").val(data.total);
+				
+				var memoList = data.memoList;
+				
+				var memoListDisplay = "";
+
+				for(var cnt in memoList) {
+					memoListDisplay +=  '<div class="panel panel-default">' +
+										'	<div id="memoHeading' + memoList[cnt].id + '" class="panel-heading" role="tab">' +
+										'		<h4 class="panel-title">' +
+										'			<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoContent' + memoList[cnt].id + '">' +
+										'				<span>Memo title ' + memoList[cnt].id + '</span>' +
+										'			</a>';
+					if(memoList[cnt].member.username == $("#loginUsername").text()) {
+						memoListDisplay +=  '			<button type="button" class="close">' +
+											'				<span class="glyphicon glyphicon-remove-sign"></span>' +
+											'			</button>' +
+											'			<span class="close">&nbsp;</span>' +
+											'			<button type="button" class="close">' +
+											'				<span class="glyphicon glyphicon-edit"></span>' +
+											'			</button>';
+					}
+					memoListDisplay +=  '		</h4>' +
+										'	</div>' +
+										'	<div id="memoContent' + memoList[cnt].id + '" class="panel-collapse collapse" role="tabpanel">' +
+										'		<div class="panel-body">Accordion test ' + memoList[cnt].id + '</div>' +
+										'	</div>' +
+										'</div>';
+				};
+
+				$("#memoListAccordion").html(memoListDisplay);
+				
+				memoListDisplay = "";
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
 			}
 		});
-	},
+	}
 	
+	/*
 	updateJoinMemberTable : function() {
 		$.ajax({
 			url : '../ajax/board/updateJoinMemberTable',
@@ -732,6 +811,7 @@ var ajax = {
 			}
 		});
 	}
+	*/
 }
 
 
@@ -748,6 +828,11 @@ $(document).ready(function() {
 
 	utils.executeAllFunctionMembers(eventObj);
 
+	if($("input#boardMemoSize").val() != 0) {
+		ajax.getMemosOfBoard($("input#boardId").val(), 1);	
+	}
+	
+	
 	for(var ctr in BCModalSet) {
 		if((typeof BCModalSet[ctr]) == 'function') {
 			BCModalSet[ctr]();

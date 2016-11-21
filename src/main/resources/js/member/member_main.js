@@ -104,6 +104,9 @@ bootstrapTable = {
 				return params;
 			},
 
+			idField : "id",
+			uniqueId : "id",
+			
 			sortName: "id",
 			sortOrder: "desc",
 			
@@ -122,9 +125,6 @@ bootstrapTable = {
 			searchAlign : "left",
 			trimOnSearch : true,
 			searchTimeOut : 500,
-			
-			idField : "id",
-			uniqueId : "id",
 			
 			selectItemName : "rowCheckbox",
 			
@@ -263,6 +263,9 @@ bootstrapTable = {
 				return params;
 			},
 			
+			idField : "id",
+			uniqueId : "id",
+			
 			sortName: "id",
 			sortOrder: "desc",
 			
@@ -281,9 +284,6 @@ bootstrapTable = {
 			searchAlign : "left",
 			trimOnSearch : true,
 			searchTimeOut : 500,
-			
-			idField : "id",
-			uniqueId : "id",
 			
 			selectItemName : "rowCheckbox",
 			

@@ -106,7 +106,7 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 		}
 		
 		Memo memo ;
-		for(int i = 1; i <= 250; i++) {
+		for(int i = 1; i <= 101; i++) {
 			memo = new Memo();
 			memo.setBoard(boardRepo.findOne(249L));
 			memo.setTitle("memo title " + i);

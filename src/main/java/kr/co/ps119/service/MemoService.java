@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kr.co.ps119.entity.Board;
+import kr.co.ps119.entity.Member;
 import kr.co.ps119.entity.Memo;
 import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.repository.MemberRepository;
@@ -30,6 +31,11 @@ public class MemoService {
 	
 	@Autowired
 	private MemoRepository memoRepo;
+	
+	public Long getMemberIdByUsername(String username) {
+		Member member = memberRepo.findByUsername(username);
+		return member.getId();
+	}
 	
 	public Long getTotalCountOfMemos(Long boardId) {
 		Long total = memoRepo.countByBoardId(boardId);

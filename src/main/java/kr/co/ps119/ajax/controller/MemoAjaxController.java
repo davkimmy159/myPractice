@@ -1,20 +1,20 @@
 package kr.co.ps119.ajax.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.ps119.entity.Board;
+import kr.co.ps119.entity.Member;
 import kr.co.ps119.entity.Memo;
+import kr.co.ps119.service.MemberService;
 import kr.co.ps119.service.MemoService;
 
 @RestController
@@ -25,46 +25,29 @@ import kr.co.ps119.service.MemoService;
 public class MemoAjaxController {
 
 	@Autowired
+	private MemberService memberService;
+	
+	@Autowired
 	private MemoService memoService;
 	
 	@GetMapping(value = "getAllMemosOfBoard")
 	private Map<String, Object> getAllMemosOfBoard(
 			Long boardId,
-			int limit,
-			int offset,
-//			String search,
-			String sort,
-			String order) {
+			int offset) {
 		
-		System.out.println("boardId : " + boardId);
-		System.out.println("limit : " + limit);
-		System.out.println("offset : " + offset);
-//		System.out.println("sort : " + sort);
-		System.out.println("order : " + order);
+		Long total = memoService.getTotalCountOfMemos(boardId);
+		PageRequest pageRequest = new PageRequest(offset - 1, 10);
 		
-		Sort sorter;
+		List<Memo> memoList;
 		
-		if("asc".equals(order)) {
-			sorter = new Sort(Direction.ASC, sort);
-		} else {
-			sorter = new Sort(Direction.DESC, sort);
-		}
-		
-		// Initial offset becomes
-		PageRequest pageRequest = new PageRequest(offset / limit, limit, sorter);
-		
-		Long total;
-		
-		total = memoService.getTotalCountOfMemos(boardId);	
-		
-		List<Memo> memoListInDB;
-		
-		memoListInDB = memoService.findAllMemosWithPageRequest(boardId, pageRequest);
+		memoList = memoService.findAllMemosWithPageRequest(boardId, pageRequest);
+
+		memoList.forEach(memo -> memo.getMember().getUsername());
 		
 		Map<String, Object> jsonObject = new HashMap<>();
 		
 		jsonObject.put("total", total);
-		jsonObject.put("rows", memoListInDB);
+		jsonObject.put("memoList", memoList);
 		
 		return jsonObject;
 	}

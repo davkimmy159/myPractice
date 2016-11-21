@@ -89,6 +89,7 @@ public class BoardController {
 		if(!(board.isEmptyBoard())) {
 			returnPage = "board/board";
 			model.addAttribute("boardContent", board.getContent());
+			model.addAttribute("boardMemoSize", board.getMemos().size());
 
 		// If board doesn't exist
 		} else {

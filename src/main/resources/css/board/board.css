@@ -1,0 +1,134 @@
+@CHARSET "UTF-8";
+
+body {
+	padding-top: 58px;
+}
+
+#refresh, #showHeights {
+	cursor: pointer;
+}
+
+#basicStatus {
+	margin-right: 1em;
+	cursor: default;
+	opacity: 1;
+}
+
+#mobileStatus {
+	opacity: 1;
+	cursor: default;
+}
+
+.badge {
+	margin-left: 5px;
+}
+
+.colorText {
+	color: pink;
+}
+
+li {
+	cursor: pointer;
+}
+
+li.dropdown-header {
+	cursor: default;
+}
+
+span#loginIdDisplayMobile {
+	font-style: italic;
+	font-size: 17px;
+	color: rgb(255, 255, 255);
+}
+
+span#loginIdDisplayDesktop {
+	font-style: italic;
+	font-size: 17px;
+	color: rgb(0, 0, 0);
+}
+
+
+
+#mobileEditor, #memoEditor {
+	overflow: auto;
+	white-space: nowrap;
+}
+
+#chatArea {
+	background: white;
+	resize: none;
+	cursor: text;
+}
+
+#memoContent2 {
+	margin-bottom: 0px;
+}
+
+#memoPagination {
+	margin-top: -10px;
+	margin-bottom: -10px;
+}
+
+#yearlyCalendar {
+	overflow: auto;
+}
+
+#basicCalendarModal input {
+	background: white;
+}
+
+#basicCalendarInputEditor {
+	overflow: auto;
+	white-space: nowrap;
+}
+
+#BCEventViewerModal input {
+	background: white;
+}
+
+#basicCalendarEventContentViewer {
+	overflow: auto;
+	white-space: nowrap;
+}
+
+#yearlyCalendarModal input {
+	background: white;
+}
+
+#yearlyCalendarInputEditor {
+	overflow: auto;
+	white-space: nowrap;
+}
+
+#joinTable td span {
+	cursor: pointer;
+}
+
+#listAccordion > .panel > .panel-collapse {
+	overflow: scroll;
+	text-overflow: ellipsis;
+	max-height: 650px;
+}
+
+input#boardIdIdsplay {
+	width: 80px;
+}
+
+#memoListAccordion.panel-group {
+	margin-bottom: 14px;
+}
+
+ul.pagination.bootpag {
+	margin: 0;
+	margin-bottom: -20px;
+}
+/* Responsive css */
+/* basic */
+@media screen and (min-width:768px) {
+	
+}
+
+/* mobile */
+@media screen and (max-width:767px) {
+	
+}

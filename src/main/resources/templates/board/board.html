@@ -14,121 +14,8 @@
 <script src="../bower_components/sockjs-client/dist/sockjs-1.1.1.min.js" th:src="@{/bower_components/sockjs-client/dist/sockjs-1.1.1.min.js}"></script>
 <script src="../bower_components/stomp-websocket/lib/stomp.min.js" th:src="@{/bower_components/stomp-websocket/lib/stomp.min.js}"></script>
 
-<style type="text/css">
-body {
-	padding-top: 58px;
-}
-
-#refresh, #showHeights {
-	cursor: pointer;
-}
-
-#basicStatus {
-	margin-right: 1em;
-	cursor: default;
-	opacity: 1;
-}
-
-#mobileStatus {
-	opacity: 1;
-	cursor: default;
-}
-
-.badge {
-	margin-left: 5px;
-}
-
-.colorText {
-	color: pink;
-}
-
-li {
-	cursor: pointer;
-}
-
-li.dropdown-header {
-	cursor: default;
-}
-
-span#loginIdDisplayMobile {
-	font-style: italic;
-	font-size: 17px;
-	color: rgb(255, 255, 255);
-}
-
-span#loginIdDisplayDesktop {
-	font-style: italic;
-	font-size: 17px;
-	color: rgb(0, 0, 0);
-}
-
-
-
-#mobileEditor, #memoEditor {
-	overflow: auto;
-	white-space: nowrap;
-}
-
-#chatArea {
-	background: white;
-	resize: none;
-	cursor: text;
-}
-
-#memoContent2 {
-	margin-bottom: 0px;
-}
-
-#memoPagination {
-	margin-top: -10px;
-	margin-bottom: -10px;
-}
-
-#yearlyCalendar {
-	overflow: auto;
-}
-
-#basicCalendarModal input {
-	background: white;
-}
-
-#basicCalendarInputEditor {
-	overflow: auto;
-	white-space: nowrap;
-}
-
-#BCEventViewerModal input {
-	background: white;
-}
-
-#basicCalendarEventContentViewer {
-	overflow: auto;
-	white-space: nowrap;
-}
-
-#yearlyCalendarModal input {
-	background: white;
-}
-
-#yearlyCalendarInputEditor {
-	overflow: auto;
-	white-space: nowrap;
-}
-
-#joinTable td span {
-	cursor: pointer;
-}
-
-#listAccordion > .panel > .panel-collapse {
-	overflow: scroll;
-	text-overflow: ellipsis;
-	max-height: 650px;
-}
-
-input#boardIdIdsplay {
-	width: 80px;
-}
-</style>
+<!-- custom css -->
+<link href="../css/board/board.css" th:href="@{/css/board/board.css}" rel="stylesheet" type="text/css" />
 <title>board</title>
 </head>
 <body>
@@ -163,6 +50,7 @@ input#boardIdIdsplay {
 						<div class="form-group">
 							<input id="boardIdIdsplay" type="text" class="form-control" placeholder="test" th:value="${#httpServletRequest.getAttribute('boardId')}" disabled="disabled" />
 							<input id="boardId" th:value="${#httpServletRequest.getAttribute('boardId')}" type="hidden" />
+							<input id="boardMemoSize" th:value="${#httpServletRequest.getAttribute('boardMemoSize')}" type="hidden" />
 						</div>
 						<div id="btnGroup1" class="btn-group" role="group" aria-label="...">
 							<!--
@@ -521,61 +409,16 @@ input#boardIdIdsplay {
 											<!-- /.tab-pane -->
 											
 											<div id="mainModal_tabContent3_memoContent2" class="tab-pane fade form-group" role="tabpanel">
-												<div id="memoListAccordion" class="panel-group" role="tablist" aria-multiselectable="true">
-
-													<div class="panel panel-default">
-													
-														<!-- memo body list -->
-													
-														<div class="table-responsive">
-															<table id="memoList" class="table-hover"></table>
-														</div>
-														<!-- /.table-responsive -->
-													
-														<!--
-														<div id="mainModal_tabContent3_memoListHeading1" class="panel-heading" role="tab">
-															<h4 class="panel-title">
-																<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#mainModal_tabContent3_memoListContent1">
-																	<span>Memo title 1</span>
-																</a>
-																<button type="button" class="close">
-																	<span class="glyphicon glyphicon-remove-sign"></span>
-																</button>
-																<span class="close">&nbsp;</span>
-																<button type="button" class="close">
-																	<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-																</button>
-															</h4>
-														</div>
-														
-														<div id="mainModal_tabContent3_memoListContent1" class="panel-collapse collapse" role="tabpanel">
-															<div class="panel-body">Accordion test 1</div>
-														</div>
-														-->
-														<!-- /.panel-collapse -->
-														
-													</div>
-													<!-- /.panel -->
-
-												</div>
-												<!-- /.panel-group -->
-
-												<!--
-												<div class="text-center">
-													<nav class="center-block">
-														<ul id="memoPagination" class="pagination pagination-sm">
-															<li><a href="#" aria-label="Previous"> <span class="glyphicon glyphicon-backward" aria-hidden="true"></span></a></li>
-															<li><a href="#">1</a></li>
-															<li><a href="#">2</a></li>
-															<li><a href="#">3</a></li>
-															<li><a href="#">4</a></li>
-															<li><a href="#" aria-label="Next"> <span class="glyphicon glyphicon-fast-forward" aria-hidden="true"></span></a></li>
-														</ul>
-													</nav>
-												</div>
-												-->
-												<!-- /.text-center -->
 												
+												<div id="memoListAccordion" class="panel-group" role="tablist" aria-multiselectable="true">
+													<div class="jumbotron text-center">
+														<h2>No memo</h2>
+													</div>
+												</div>
+												<!-- /#memoListAccordion.panel-group -->
+
+												<div id="pagination-bootpag" class="text-center"></div>
+
 											</div>
 											<!-- /.tab-pane -->
 											
@@ -1066,7 +909,6 @@ input#boardIdIdsplay {
 	<div layout:fragment="customScript">
 		<script src="../js/utils.js" th:src="@{/js/utils.js}" type="text/javascript"></script>
 		<script src="../js/effect.js" th:src="@{/js/effect.js}" type="text/javascript"></script>
-		<script src="../js/board/memoTable.js" th:src="@{/js/board/memoTable.js}" type="text/javascript"></script>
 		<script src="../js/board/calendar.js" th:src="@{/js/board/calendar.js}" type="text/javascript"></script>
 		<script src="../js/board/board.js" th:src="@{/js/board/board.js}" type="text/javascript"></script>
 	</div>
