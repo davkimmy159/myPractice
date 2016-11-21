@@ -33,7 +33,7 @@ public class BoardService {
 	private BoardRepository boardRepo;
 	
 	@Autowired
-	private MemoRepository commentRepo;
+	private MemoRepository memoRepo;
 	
 	public Board findOne(Long boardId) {
 		return boardRepo.findOne(boardId);

@@ -1,6 +1,3 @@
-// <![CDATA[
-// ]]>
-
 var jqObj = {
 
 	editorContainer : $('#editorContainer'),

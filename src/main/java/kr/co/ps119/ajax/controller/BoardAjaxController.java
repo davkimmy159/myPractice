@@ -166,19 +166,19 @@ public class BoardAjaxController {
 			total = boardService.getTotalCountOfBoards(memberId);	
 		}
 		
-		List<Board> boardLsitInDB;
+		List<Board> boardListInDB;
 		
 		if(memberId <= 0L) {
-			boardLsitInDB = boardService.findAllBoardsWithPageRequest(pageRequest);
+			boardListInDB = boardService.findAllBoardsWithPageRequest(pageRequest);
 		} else {
-			boardLsitInDB = boardService.findAllBoardsWithPageRequest(memberId, pageRequest);
+			boardListInDB = boardService.findAllBoardsWithPageRequest(memberId, pageRequest);
 		}
 		
 		List<BoardVO> viewList;
 		
 		Map<String, Object> jsonObject = new HashMap<>();
 		
-		viewList = boardLsitInDB.stream()
+		viewList = boardListInDB.stream()
 						 .map(board -> new BoardVO(board.getId(), board.getTitle(),board.getContent(), board.getCreateDate(), board.getLastUpdateDate(), board.getUpdateCount(), board.getHitCount(), board.getMember().getUsername()))
 						 .collect(Collectors.toList());
 		

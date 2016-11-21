@@ -1,3 +1,6 @@
+// <![CDATA[
+// ]]>
+
 PNotify.prototype.options.styling = "bootstrap3";
 
 var notify = {

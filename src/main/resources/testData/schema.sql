@@ -46,8 +46,10 @@ CREATE TABLE IF NOT EXISTS board (
 
 CREATE TABLE IF NOT EXISTS memo (
 	comment_id BIGINT AUTO_INCREMENT NOT NULL,
-	content VARCHAR(2000) NOT NULL,
+	title VARCHAR(600) NOT NULL,
+	content CLOB NOT NULL,
 	create_date TIMESTAMP NOT NULL,
+	last_update_date TIMESTAMP NOT NULL,
 	member_id BIGINT NOT NULL,
 	board_id BIGINT NOT NULL,
 	CONSTRAINT comment_comment_id_pk PRIMARY KEY(comment_id),

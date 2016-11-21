@@ -33,6 +33,11 @@ public class Memo implements Serializable {
 	private Long id;
 	
 	@Column
+	@NotBlank(message = "title is empty")
+	@Lob
+	private String title;
+	
+	@Column
 	@NotBlank(message = "content is empty")
 	@Lob
 	private String content;
@@ -40,6 +45,10 @@ public class Memo implements Serializable {
 	@Column
 	@NotNull(message = "date is empty")
 	private LocalDateTime createDate;
+	
+	@Column
+	@NotNull(message = "date is empty")
+	private LocalDateTime lastUpdateDate;
 	
 	// foreign key 1
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -58,9 +67,11 @@ public class Memo implements Serializable {
 	public Memo() {
 	}
 
-	public Memo(String content, LocalDateTime createDate) {
+	public Memo(String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
+		this.title = title;
 		this.content = content;
 		this.createDate = createDate;
+		this.lastUpdateDate = lastUpdateDate;
 	}
 	
 	
@@ -70,8 +81,9 @@ public class Memo implements Serializable {
 	// Sets default values
 	@PrePersist
 	void setDefaultValues() {
-		setContent("This is a memo");
+		setContent("This is memo");
 		setCreateDate(LocalDateTime.now());
+		setLastUpdateDate(LocalDateTime.now());
 	}
 	
 	
@@ -88,6 +100,14 @@ public class Memo implements Serializable {
 	}
 	*/
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
 	public String getContent() {
 		return content;
 	}
@@ -104,6 +124,14 @@ public class Memo implements Serializable {
 		this.createDate = createDate;
 	}
 
+	public LocalDateTime getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+	
 	public Member getMember() {
 		return member;
 	}
@@ -132,36 +160,53 @@ public class Memo implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getContent() == null) ? 0 : content.hashCode());
-		result = prime * result + ((getCreateDate() == null) ? 0 : createDate.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((content == null) ? 0 : content.hashCode());
+		result = prime * result + ((createDate == null) ? 0 : createDate.hashCode());
+		result = prime * result + ((lastUpdateDate == null) ? 0 : lastUpdateDate.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if(!(obj instanceof Board))
+		}
+		if (!(obj instanceof Memo)) {
 			return false;
-		/*
-		if (getClass() != obj.getClass())
-			return false;
-		*/
+		}
 		Memo other = (Memo) obj;
+		if (getTitle() == null) {
+			if (other.title != null) {
+				return false;
+			}
+		} else if (!getTitle().equals(other.title)) {
+			return false;
+		}
 		if (getContent() == null) {
-			if (other.content != null)
+			if (other.content != null) {
 				return false;
-		} else if (!getContent().equals(other.content))
+			}
+		} else if (!getContent().equals(other.content)) {
 			return false;
+		}
 		if (getCreateDate() == null) {
-			if (other.createDate != null)
+			if (other.createDate != null) {
 				return false;
-		} else if (!getCreateDate().equals(other.createDate))
+			}
+		} else if (!getCreateDate().equals(other.createDate)) {
 			return false;
+		}
+		if (getLastUpdateDate() == null) {
+			if (other.lastUpdateDate != null) {
+				return false;
+			}
+		} else if (!getLastUpdateDate().equals(other.lastUpdateDate)) {
+			return false;
+		}
 		return true;
 	}
-	
-	
 }

@@ -1,7 +1,5 @@
 package kr.co.ps119.event;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,10 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.ps119.entity.Board;
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.entity.MemberAuthority;
+import kr.co.ps119.entity.Memo;
 import kr.co.ps119.repository.AuthorityRepository;
 import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.repository.MemberAuthorityRepository;
 import kr.co.ps119.repository.MemberRepository;
+import kr.co.ps119.repository.MemoRepository;
 
 @Service
 @Transactional
@@ -38,6 +38,9 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 
 	@Autowired
 	private BoardRepository boardRepo;
+	
+	@Autowired
+	private MemoRepository memoRepo;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -79,8 +82,10 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 		memberRepo.save(member4);
 		memberRepo.save(member5);
 		
+		Board board;
+		
 		for(int i = 1; i <= 250; i++) {
-			Board board = new Board();
+			board = new Board();
 			board.setTitle("title " + i);
 			
 			switch(i % 4) {
@@ -100,6 +105,29 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 			boardRepo.save(board);
 		}
 		
+		Memo memo ;
+		for(int i = 1; i <= 250; i++) {
+			memo = new Memo();
+			memo.setBoard(boardRepo.findOne(249L));
+			memo.setTitle("memo title " + i);
+			memo.setContent("memo title " + i);
+			
+			switch(i % 4) {
+				case 1:
+					memo.setMember(member1);
+					break;
+				case 2:
+					memo.setMember(member2);
+					break;
+				case 3:
+					memo.setMember(member3);
+					break;
+				case 0:
+					memo.setMember(member4);
+					break;
+			}
+			memoRepo.save(memo);
+		}
 
 		
 		/*

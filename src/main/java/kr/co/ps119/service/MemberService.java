@@ -31,7 +31,7 @@ public class MemberService {
 	private BoardRepository boardRepo;
 	
 	@Autowired
-	private MemoRepository commentRepo;
+	private MemoRepository memoRepo;
 	
 	/*
 	@Value("#{etc['password.encodingString']}")

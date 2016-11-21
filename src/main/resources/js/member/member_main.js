@@ -97,6 +97,8 @@ bootstrapTable = {
 			url : path.getContextPath() + "/ajax/board/getAllBoardsOfMember",
 			sidePagination : "server",
 			contentType	: 'application/json; charset=utf-8',
+			method : "GET",
+			dataType : 'json',
 			queryParamsType : "limit",
 			queryParams : function(params) {
 				return params;
@@ -117,7 +119,7 @@ bootstrapTable = {
 			
 			search : true,
 			searchOnEnterKey : true,
-			
+			searchAlign : "left",
 			trimOnSearch : true,
 			searchTimeOut : 500,
 			
@@ -135,11 +137,7 @@ bootstrapTable = {
 			
 			pagination : true,
 			paginationLoop : true,
-			pageList : [10, 20, 30, 50, 80, 100, "ALL"],
-			
-			method : "GET",
-			contentType : 'application/json; charset=utf-8',
-			dataType : 'json'
+			pageList : [10, 20, 30, 50, 80, 100, "ALL"]
 		});
 		
 		/* All board list */
@@ -258,6 +256,8 @@ bootstrapTable = {
 			url : path.getContextPath() + "/ajax/board/getAllBoards",
 			sidePagination : "server",
 			contentType	: 'application/json; charset=utf-8',
+			method : "GET",
+			dataType : 'json',
 			queryParamsType : "limit",
 			queryParams : function(params) {
 				return params;
@@ -278,7 +278,7 @@ bootstrapTable = {
 			
 			search : true,
 			searchOnEnterKey : true,
-			
+			searchAlign : "left",
 			trimOnSearch : true,
 			searchTimeOut : 500,
 			
@@ -296,11 +296,7 @@ bootstrapTable = {
 			
 			pagination : true,
 			paginationLoop : true,
-			pageList : [10, 20, 30, 50, 80, 100, "ALL"],
-			
-			method : "GET",
-			contentType : 'application/json; charset=utf-8',
-			dataType : 'json'
+			pageList : [10, 20, 30, 50, 80, 100, "ALL"]
 		});
 		
 		utils.executeAllFunctionMembers(this.sideSetting);
@@ -311,8 +307,6 @@ bootstrapTable = {
 			$("input[type='checkbox'][data-field='id']").parent().parent("li").addClass("hidden-xs");
 			$("input[type='checkbox'][data-field='createDate']").parent().parent("li").addClass("hidden-xs hidden-sm");
 			$("input[type='checkbox'][data-field='lastUpdateDate']").parent().parent("li").addClass("hidden-xs hidden-sm");
-			
-			$(".search").removeClass("pull-right").addClass("pull-left");
 		},
 		
 		deleteSelectedBoardButtonEvent : function() {

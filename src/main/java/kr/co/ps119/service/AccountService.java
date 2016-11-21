@@ -36,12 +36,6 @@ public class AccountService {
 	private AuthorityRepository authRepo;
 	
 	@Autowired
-	private BoardRepository boardRepo;
-	
-	@Autowired
-	private MemoRepository commentRepo;
-	
-	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	public NewAccountFlag createAccount(MemberForm memberForm) {
