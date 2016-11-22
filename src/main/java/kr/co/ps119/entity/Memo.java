@@ -18,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -29,16 +30,17 @@ public class Memo implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "comment_id")
+	@Column(name = "memo_id")
 	private Long id;
 	
 	@Column
 	@NotBlank(message = "title is empty")
-	@Lob
+	@Length(max = 600,
+			message = "memo title must be between 0 ~ 600")
 	private String title;
 	
 	@Column
-	@NotBlank(message = "content is empty")
+	@NotBlank(message = "memo content is empty")
 	@Lob
 	private String content;
 	
@@ -81,7 +83,7 @@ public class Memo implements Serializable {
 	// Sets default values
 	@PrePersist
 	void setDefaultValues() {
-		setContent("This is memo");
+//		setContent("This is memo");
 		setCreateDate(LocalDateTime.now());
 		setLastUpdateDate(LocalDateTime.now());
 	}

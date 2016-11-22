@@ -110,7 +110,7 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 			memo = new Memo();
 			memo.setBoard(boardRepo.findOne(249L));
 			memo.setTitle("memo title " + i);
-			memo.setContent("memo title " + i);
+			memo.setContent("memo content " + i);
 			
 			switch(i % 4) {
 				case 1:

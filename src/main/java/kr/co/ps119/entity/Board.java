@@ -54,7 +54,7 @@ public class Board implements Serializable {
 	private String title;
 	
 	@Column
-	@NotBlank(message = "content is empty")
+	@NotBlank(message = "board content is empty")
 	@Lob
 	private String content;
 	

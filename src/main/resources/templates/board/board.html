@@ -230,8 +230,8 @@
 							</li>
 							-->
 						 
-							<li role="presentation">
-								<a href="#mainModal_tabContent3" data-toggle="tab" aria-controls="tabContent3" role="tab">
+							<li id="memoTabLi" role="presentation">
+								<a id="memoTab" href="#mainModal_tabContent3" data-toggle="tab" aria-controls="tabContent3" role="tab">
 									<span>Memo</span>
 								</a>
 							</li>
@@ -370,7 +370,7 @@
 										<ul class="nav nav-pills" role="tablist">
 										
 											<li role="presentation" class="active">
-												<a href="#mainModal_tabContent3_memoContent1" data-toggle="tab" aria-controls="memo writing" role="tab">
+												<a id="memoWriteTab" href="#mainModal_tabContent3_memoContent1" data-toggle="tab" aria-controls="memo writing" role="tab">
 													<span class="glyphicon glyphicon-edit"></span>
 													&nbsp;
 													<span>Write</span>
@@ -394,10 +394,15 @@
 										<div class="tab-content">
 										
 											<div id="mainModal_tabContent3_memoContent1" class="tab-pane fade in active" role="tabpanel">
-												<input type="text" class="form-control form-group" placeholder="제목을 입력하세요." />
-												<div id="memoEditorDiv">
-													<div id="memoEditor" class="form-control form-group" contenteditable="true">memoEditor</div>
+												<div class="form-group">
+													<input name="memoTitle" class="form-control" type="text" placeholder="Memo title" required="required" />
+													<div class="help-block">Length : 1 ~ 200 (no blank)</div>
 												</div>
+												
+												<div id="memoEditorDiv">
+													<div id="memoEditor" class="form-control form-group" contenteditable="true"></div>
+												</div>
+												
 												<div class="pull-right">
 													<button id="memoSaveBtn" type="button" class="btn btn-primary">
 														<span>Save</span>
@@ -417,7 +422,7 @@
 												</div>
 												<!-- /#memoListAccordion.panel-group -->
 
-												<div id="pagination-bootpag" class="text-center"></div>
+												<div id="memoPagination-bootpag" class="text-center"></div>
 
 											</div>
 											<!-- /.tab-pane -->
@@ -546,7 +551,6 @@
 						</div>
 						<!-- /.tab-content -->
 						
-						
 					</div>
 					<!-- /.modal-body -->
 					
@@ -567,38 +571,53 @@
 <!-- ========================================================================================================================================== -->
 
 		<!-- sub modal in memo panel -->
-		<div id="subModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div id="memoUpdateSubModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<div class="modal-content">
+				
+					<input name="memoUpdateId" type="hidden" />	
 				
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Memo modal</h4>
+						<h4 class="modal-title">Memo update</h4>
 					</div>
 					<!-- /.modal-header -->
 					
 					<div class="modal-body">
-						...
+						<div id="memoUpdateDiv" class="tab-pane fade in active" role="tabpanel">
+							<div class="form-group">
+								<input name="memoTitle" class="form-control" type="text" placeholder="Memo title" required="required" />
+								<div class="help-block">no blank</div>
+							</div>
+							
+							<div id="memoUpdateEditorDiv">
+								<div id="memoUpdateEditor" class="form-control form-group" contenteditable="true"></div>
+							</div>
+							
+						</div>
+						<!-- /.tab-pane -->
+				
 					</div>
 					<!-- /.modal-body -->
 					
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">
-							<span>Close</span>
-						</button>
-						<button type="button" class="btn btn-primary">
-							<span>Save changes</span>
+						<button id="memoUpdateSaveBtn" type="button" class="btn btn-primary">
+							<span>Update</span>
+							&nbsp;
+							<span class="glyphicon glyphicon-floppy-disk"></span>
 						</button>
 					</div>
-					<!-- /.modal-body -->
+					<!-- /.modal-footer -->
 				</div>
 				<!-- /.modal-content -->
 			</div>
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal (sub modal) -->
+
+		
 
 <!-- ========================================================================================================================================== -->
 

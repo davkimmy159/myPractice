@@ -401,12 +401,12 @@ ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-//				notify.notify("Ajax 통신 성공 code : " + status, " message : " + data.message);
+//				notify.notify("Ajax 통신 성공 : " + status, " message : " + data.message);
 				notify.notify("message", data.message, "success");
 				bootstrapTable.removeByUniqueId(boardId);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패 code : ' + request.status, 'error : ' + error, "error");
+				notify.notify('Ajax 통신 실패 : ' + request.status, 'error : ' + error, "error");
 			}
 		});
 	},
@@ -423,12 +423,12 @@ ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-//				notify.notify("Ajax 통신 성공 code : " + status, " message : " + data.message);
+//				notify.notify("Ajax 통신 성공 : " + status, " message : " + data.message);
 				notify.notify("message", data.message), "success";
 				bootstrapTable.remove(boardIds);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패 code : ' + request.status, 'error : ' + error, "error");
+				notify.notify('Ajax 통신 실패 : ' + request.status, 'error : ' + error, "error");
 				notify.notify("Warning", "You must select board", "error");
 			}
 		});

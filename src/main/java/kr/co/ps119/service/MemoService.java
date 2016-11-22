@@ -32,6 +32,14 @@ public class MemoService {
 	@Autowired
 	private MemoRepository memoRepo;
 	
+	public Memo findOne(Long memoId) {
+		return memoRepo.findOne(memoId);
+	}
+	
+	public void deleteById(Long memoId) {
+		memoRepo.delete(memoId);
+	}
+	
 	public Long getMemberIdByUsername(String username) {
 		Member member = memberRepo.findByUsername(username);
 		return member.getId();
@@ -47,5 +55,9 @@ public class MemoService {
 		List<Memo> boardList = memoRepo.findByBoardId(boardId, pageable);
 		
 		return boardList;
+	}
+	
+	public Memo saveOneMemo(Memo memo) {
+		return memoRepo.save(memo);
 	}
 }

@@ -11,13 +11,14 @@ var jqObj = {
 // basicEditor settings (CKEditor)
 var basicEditor = CKEDITOR.replace('basicEditor', {
 	contentsCss  : 'body {white-space: nowrap;}',
-	customConfig : 'config2.js',
+//	customConfig : 'config2.js',
 	toolbarCanCollapse: true,
 	resize_enabled: false,
 	removePlugins: 'elementspath',
-	enterMode: CKEDITOR.ENTER_BR
+	enterMode: CKEDITOR.ENTER_BR,
 //	shiftEnterMode: CKEDITOR.ENTER_P
-	,
+	fillEmptyBlocks : false,
+	basicEntities : false,
 	on: {
 		instanceReady : function() {
 			$("a.cke_toolbox_collapser").click(function() {
@@ -36,6 +37,7 @@ var basicEditor = CKEDITOR.replace('basicEditor', {
 			} else if(keyCode == eventObj.ctrlEnter) {
 				$('#editorInputBtn').trigger('click');
 			}
+			
 			keyCode = null;
 		}
 	}
@@ -59,6 +61,9 @@ var basicEditor = CKEDITOR.replace('basicEditor', {
 
 // mobileEditor settings (inline CKEditor)
 var mobileEditor = CKEDITOR.inline('mobileEditor', {
+	enterMode: CKEDITOR.ENTER_BR,
+	fillEmptyBlocks : false,
+	basicEntities : false,
 	on: {
 		key : function(event) {
 			var keyCode = event.data.keyCode;
@@ -77,10 +82,23 @@ var mobileEditor = CKEDITOR.inline('mobileEditor', {
 });
 
 // memoEditor settings (inline CKEditor)
-var memoEditor = CKEDITOR.inline('memoEditor');
+var memoEditor = CKEDITOR.inline('memoEditor', {
+	fillEmptyBlocks : false,
+	basicEntities : false
+});
 $('#memoEditor').height($(window).height() * 0.2);
 
+// memo update editor settings (inline CKEditor)
+var memoUpdateEditor = CKEDITOR.inline('memoUpdateEditor', {
+	fillEmptyBlocks : false,
+	basicEntities : false,
+	enterMode: CKEDITOR.ENTER_BR
+});
+$('#memoUpdateEditor').height($(window).height() * 0.2);
+
+
 // ===================================================================================================
+
 
 var session = {
 
@@ -406,31 +424,6 @@ var eventObj = {
 		});
 	},
 
-	/*
-	windowOutEvent : function() {
-		// Logout, close event with 'esc' key on browser window
-		$(window).keydown(function(event) {
-			if (event.keyCode == 27) {
-				boardUtils.chatAppend('esc!!');
-				if (session.socket) {
-					// boardUtils.chatAppend('Exit now!');
-					$('#joinToggleBtn').html('Join');
-					$('#joinToggleBtn').removeClass('btn-danger');
-					$('#joinToggleBtn').addClass('btn-success');
-					$('#nicknameInput').val('');
-					$('#nicknameInput').attr('placeholder', 'Type nickname');
-					session.disconnect();
-					session.nickname = null;
-					$('#nicknameInput').focus();
-				} else {
-					// 창 닫는 함수 (작동 안 함)
-					// window.open("about:blank","_self").close();
-				}
-			}
-		});
-	},
-	*/
-
 	showHeightsEvent : function() {
 		$('#showHeights').click(function() {
 			boardUtils.showHeight();
@@ -460,6 +453,52 @@ var eventObj = {
 		});
 	},
 
+	memoSaveEvent : function() {
+		$('#memoSaveBtn').click(function() {
+			if (boardUtils.isSessionAlive()) {
+				
+				var memoTitleInput = $("#mainModal_tabContent3_memoContent1").find('input[name="memoTitle"]');
+				var memoTitle = memoTitleInput.val();
+				var memoContent = memoEditor.getData();
+				
+				if(!(utils.checkStr(memoTitle))) {
+					notify.notify("Title", "invalid", "error");
+					memoTitleInput.focus();
+				} else if (!(utils.checkStr(memoContent))) {
+					notify.notify("Content", "invalid", "error");
+					memoEditor.focus();
+				} else {
+					ajax.createMemo($("#boardId").val(), memoTitle, memoContent);
+				}
+				
+			} else {
+				notify.notify('Join required', 'You need to join first!');
+			}
+		});
+	},
+	
+	memoUpdateEvent : function() {
+		$('#memoUpdateSaveBtn').click(function() {
+			if (boardUtils.isSessionAlive()) {
+				var memoUpdateTitleInput = $("#memoUpdateDiv").find('input[name="memoTitle"]');
+				var memoUpdateTitle = memoUpdateTitleInput.val();
+				var memoUpdateContent = memoUpdateEditor.getData();
+				
+				if(!(utils.checkStr(memoUpdateTitle))) {
+					notify.notify("Title", "invalid", "error");
+					memoUpdateTitleInput.focus();
+				} else if (!(utils.checkStr(memoUpdateContent))) {
+					notify.notify("Content", "invalid", "error");
+					memoUpdateEditor.focus();
+				} else {
+					ajax.updateMemo($("#memoUpdateSubModal").find('input[name="memoUpdateId"]').val(), memoUpdateTitle, memoUpdateContent);
+				}
+			} else {
+				notify.notify('Join required', 'You need to join first!');
+			}
+		});
+	},
+	
 	chatInputKey : function() {
 
 		// for CTRL + SHIFT
@@ -690,10 +729,11 @@ var resizeFuncs = {
 
 };
 
-//=============================================================================================
-// pagination
 
-$('#pagination-bootpag').bootpag({
+//=============================================================================================
+
+// List pagination
+$('#memoPagination-bootpag').bootpag({
 	total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 0,
 	page: 1,
 	maxVisible: 5,
@@ -705,13 +745,12 @@ $('#pagination-bootpag').bootpag({
 	last: "»"
 }).on("page", function(event, num){
 	ajax.getMemosOfBoard($("input#boardId").val(), num);
-	
-	$(this).bootpag({
-		total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 0
-	});
 }); 
 
+
 //=============================================================================================
+
+// Ajax
 
 var ajax = {
 	updateBoardDB : function(boardId, editorContent) {
@@ -748,7 +787,7 @@ var ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify('Ajax 통신 성공 : ', status);
+//				notify.notify('Ajax 통신 성공', status);
 				
 				$("input#boardMemoSize").val(data.total);
 				
@@ -757,35 +796,157 @@ var ajax = {
 				var memoListDisplay = "";
 
 				for(var cnt in memoList) {
-					memoListDisplay +=  '<div class="panel panel-default">' +
-										'	<div id="memoHeading' + memoList[cnt].id + '" class="panel-heading" role="tab">' +
-										'		<h4 class="panel-title">' +
-										'			<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoContent' + memoList[cnt].id + '">' +
-										'				<span>Memo title ' + memoList[cnt].id + '</span>' +
-										'			</a>';
+					memoListDisplay +=  	'<div id="memoPanel' + memoList[cnt].id + '" class="panel panel-default">' +
+											'	<input name="memoId" value="' + memoList[cnt].id + '" hidden="hidden" />' +
+											'	<div id="memoHeading' + memoList[cnt].id + '" class="panel-heading" role="tab">' +
+											'		<h4 class="panel-title">' +
+											'			<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoContent' + memoList[cnt].id + '">';
+					
+					memoListDisplay +=  	'				<span class="memoTitleSpan hidden-xs">' + memoList[cnt].title + '</span>';
+					
+					memoListDisplay +=  	memoList[cnt].title.length >= 18 ? '				<span class="visible-xs-inline-block">' + memoList[cnt].title.substring(0, 18) + '...' + '</span>' : '				<span class="visible-xs-inline-block">' + memoList[cnt].title + '</span>';
+					
+					memoListDisplay +=		'			</a>';
+					
 					if(memoList[cnt].member.username == $("#loginUsername").text()) {
-						memoListDisplay +=  '			<button type="button" class="close">' +
+						memoListDisplay +=  '			<button class="close" name="memoDeleteBtn" type="button" >' +
 											'				<span class="glyphicon glyphicon-remove-sign"></span>' +
 											'			</button>' +
 											'			<span class="close">&nbsp;</span>' +
-											'			<button type="button" class="close">' +
+											'			<button class="close" name="memoUpdateBtn" type="button">' +
 											'				<span class="glyphicon glyphicon-edit"></span>' +
-											'			</button>';
+											'			</button>' +
+											'			<span class="close">&nbsp;</span>';
 					}
-					memoListDisplay +=  '		</h4>' +
-										'	</div>' +
-										'	<div id="memoContent' + memoList[cnt].id + '" class="panel-collapse collapse" role="tabpanel">' +
-										'		<div class="panel-body">Accordion test ' + memoList[cnt].id + '</div>' +
-										'	</div>' +
-										'</div>';
+					
+					memoListDisplay +=  	'			<button class="close visible-xs-block" name="usernameDisplayBtn" type="button">' +
+											'				<span class="glyphicon glyphicon-exclamation-sign"></span>' +
+											'			</button>' +
+											'			<span class="hidden-xs memoOwnerDisplay">  [' + memoList[cnt].member.username + ']</span>';					
+					memoListDisplay +=  	'		</h4>' +
+											'	</div>' +
+											'	<div id="memoContent' + memoList[cnt].id + '" class="panel-collapse collapse" role="tabpanel">' +
+											'		<div class="panel-body">' + memoList[cnt].content + '</div>' +
+											'	</div>' +
+											'</div>';
 				};
 
 				$("#memoListAccordion").html(memoListDisplay);
 				
 				memoListDisplay = "";
+				
+				$('button[name="memoUpdateBtn"]').click(function() {
+					
+					var memoPanel = $(this).parents('[id^="memoPanel"]');
+					var memoId = memoPanel.find('input[name="memoId"]').val();
+					var memoTitle = memoPanel.find('span.memoTitleSpan').text();
+					var memoContent = memoPanel.find('[id^="memoContent"]').html();
+					
+					$("#memoUpdateSubModal").find('input[name="memoUpdateId"]').val($(this).parents('div[id^="memoHeading"]').siblings('input[name="memoId"]').val());
+					$("#memoUpdateDiv").find('input[name="memoTitle"]').val(memoTitle);
+					memoUpdateEditor.setData(memoContent);
+					
+					$("#memoUpdateSubModal").modal("show");
+				});
+				
+				$('button[name="memoDeleteBtn"]').click(function() {
+					ajax.deleteOneMemo($(this).parents('div[id^="memoHeading"]').siblings('input[name="memoId"]').val());
+				});
+				
+				$('button[name="usernameDisplayBtn"]').click(function() {
+					var memoPanel = $(this).parents('[id^="memoPanel"]');
+					var memoTitle = memoPanel.find('span.memoTitleSpan').text();
+					var username = memoPanel.find("span.memoOwnerDisplay").text();
+					
+					notify.notify(memoTitle, username.substring(3, username.length - 1));
+				});
+				
+				$('#memoPagination-bootpag').bootpag({
+					total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 0
+				});
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
+			}
+		});
+	},
+	
+	deleteOneMemo : function(memoId) {
+		$.ajax({
+			url : '../ajax/memo/deleteOneMemo',
+			type : 'GET',
+			data : {
+				'memoId' : memoId
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+//				notify.notify('Ajax 통신 성공', status);
+				notify.notify('message', data.message);
+				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
+			}
+		});
+	},
+	
+	createMemo : function(boardId, memoTitle, memoContent) {
+		$.ajax({
+			url : '../ajax/memo/createMemo',
+			type : 'GET',
+			data : {
+				"boardId" : boardId,
+				"memoTitle" : memoTitle,
+				"memoContent" : memoContent
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+//				notify.notify('Ajax 통신 성공', status);
+				notify.notify("저장 성공", data.result);
+				
+				$("#mainModal_tabContent3_memoContent1").find('input[name="memoTitle"]').val("");
+				memoEditor.setData("");
+				
+				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
+			}
+		});
+	},
+	
+	updateMemo : function(memoId, memoTitle, memoContent) {
+		$.ajax({
+			url : '../ajax/memo/updateMemo',
+			type : 'GET',
+			data : {
+				"memoId" : memoId,
+				"memoTitle" : memoTitle,
+				"memoContent" : memoContent
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+//				notify.notify('Ajax 통신 성공', status);
+				notify.notify("갱신 성공", data.result);
+				
+				$("#memoUpdateSubModal").modal("hide");
+				
+				$("#memoUpdateDiv").find('input[name="memoTitle"]').val("");
+				memoUpdateEditor.setData("");
+				
+				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
 			}
 		});
 	}

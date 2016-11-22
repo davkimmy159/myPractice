@@ -122,6 +122,22 @@ ul.pagination.bootpag {
 	margin: 0;
 	margin-bottom: -20px;
 }
+
+#memoUpdateEditor {
+	overflow: auto;
+	white-space: nowrap;
+}
+
+[id^="memoPanel"] [id^="memoContent"] div.panel-body {
+	overflow: auto;
+	white-space: nowrap;
+}
+
+[id^="memoPanel"] span.memoOwnerDisplay {
+	font-size: 12px;
+	font-style: italic;
+}
+
 /* Responsive css */
 /* basic */
 @media screen and (min-width:768px) {
