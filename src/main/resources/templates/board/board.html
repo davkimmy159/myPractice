@@ -405,9 +405,9 @@
 												
 												<div class="pull-right">
 													<button id="memoSaveBtn" type="button" class="btn btn-primary">
-														<span>Save</span>
-														&nbsp;
 														<span class="glyphicon glyphicon-floppy-disk"></span>
+														&nbsp;
+														<span>Save</span>
 													</button>
 												</div>
 											</div>
@@ -432,13 +432,13 @@
 									</div>
 									<!-- /.panel-body -->
 									
-									<!--
 									<div class="panel-footer">
-										<button id="mainModal_tabContent3_memoFooterBtn" class="btn btn-primary">
-											<span>sub button</span>
+										<button id="memoRefreshBtn" class="btn btn-primary">
+											<span class="glyphicon glyphicon-refresh"></span>
+											&nbsp;
+											<span>Refresh</span>
 										</button>
 									</div>
-									-->
 									<!-- /.panel-footer -->
 									
 								</div>
@@ -451,97 +451,128 @@
 								<div class="panel panel-info">
 									
 									<div class="panel-heading">
-										<h4>
-											<span class="label label-primary">
-												<span class="glyphicon glyphicon-user"></span>
-											</span>
-												&nbsp;
-											<span>
-												<strong>Participants</strong>
-											</span>
-										</h4>
+										<ul class="nav nav-pills" role="tablist">
+										
+											<li role="presentation" class="active">
+												<a href="#mainModal_tabContent4_participant1" data-toggle="tab" role="tab">
+													<span class="glyphicon glyphicon-user"></span>
+													&nbsp;
+													<span>Now</span>
+												</a>
+											</li>
+											
+											<li role="presentation">
+												<a href="#mainModal_tabContent4_participant2" data-toggle="tab" role="tab">
+													<span class="glyphicon glyphicon-th-list"></span>
+													&nbsp;
+													<span>History</span>
+												</a>
+											</li>
+											
+										</ul>
+										<!-- /.nav.nav-pills -->
 									</div>
 									<!-- /.panel-heading -->
 									
 									<div class="panel-body">
-										<div class="container-fluid">
-											<div class="row">
-												<div class="table-responsive">
-													<table id="joinMemberTable" class="table table-hover table-striped">
-														<thead>
-															<tr>
-																<td>
-																	<strong><span>Username</span></strong>
-																</td>
-																<td>
-																	<strong><span>Email</span></strong>
-																</td>
-																<td>
-																	<strong><span>Authority</span></strong>
-																</td>
-																<!--
-																<td>
-																	<strong><span>Part</span></strong>
-																</td>
-																<td>
-																	<strong><span>test1</span></strong>
-																</td>
-																<td>
-																	<strong><span>test2</span></strong>
-																</td>
-																-->
-															</tr>
-														</thead>
-														<tbody id="joinMemberListTbody">
-															<tr>
-																<td>
-																	<span name="userName">Park</span>
-																</td>
-																<td>
-																	<span name="userEmail">email1@email.com</span>
-																</td>
-																<td>
-																	<span name="userAuth">Host</span>
-																</td>
-																<!--
-																<td>
-																	<span name="userPart">Managing</span>
-																</td>
-																<td>
-																	<span name="test1">test1</span>
-																</td>
-																<td>
-																	<span name="test2">test1</span>
-																</td>
-																-->
-															</tr>
-														</tbody>
-													</table>
+									
+										<div class="tab-content">
+										
+											<div id="mainModal_tabContent4_participant1" class="tab-pane fade in active" role="tabpanel">
+
+												<div class="container-fluid">
+													<div class="row">
+														<div class="table-responsive">
+															<table id="joinMemberTable" class="table table-hover table-striped">
+																<thead>
+																	<tr>
+																	
+																		<th>
+																			<span>Username</span>
+																		</th>
+																		<th>
+																			<span>Email</span>
+																		</th>
+																		<th>
+																			<span>Authority</span>
+																		</th>
+																		<!--
+																		<td>
+																			<strong><span>Part</span></strong>
+																		</td>
+																		<td>
+																			<strong><span>test1</span></strong>
+																		</td>
+																		<td>
+																			<strong><span>test2</span></strong>
+																		</td>
+																		-->
+																	</tr>
+																</thead>
+																<tbody id="joinMemberListTbody">
+																	<tr>
+																		<td>
+																			<span name="userName">Park</span>
+																		</td>
+																		<td>
+																			<span name="userEmail">email1@email.com</span>
+																		</td>
+																		<td>
+																			<span name="userAuth">Host</span>
+																		</td>
+																		<!--
+																		<td>
+																			<span name="userPart">Managing</span>
+																		</td>
+																		<td>
+																			<span name="test1">test1</span>
+																		</td>
+																		<td>
+																			<span name="test2">test1</span>
+																		</td>
+																		-->
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+														<!-- /.table-responsive -->
+													</div>
+													<!-- /.row -->
 												</div>
-												<!-- /.table-responsive -->
+												<!-- /.container-fluid -->
+
+												<div class="pull-right">
+													<button type="button" class="btn btn-primary">
+														<span class="glyphicon glyphicon-floppy-disk"></span>
+														&nbsp;
+														<span>Button</span>
+													</button>
+												</div>
 											</div>
-											<!-- /.row -->
+											<!-- /.tab-pane -->
+											
+											<div id="mainModal_tabContent4_participant2" class="tab-pane fade form-group" role="tabpanel">
+												
+												<div class="jumbotron">
+													<h1 class="text-center">Tab 2</h1>
+												</div>
+												
+											</div>
+											<!-- /.tab-pane -->
+											
 										</div>
-										<!-- /.container-fluid -->
+										<!-- /.tab-content -->
+										
 									</div>
 									<!-- /.panel-body -->
 									
-									<!--
 									<div class="panel-footer">
-										<div class="form-group">
-											<button type="button" class="btn btn-primary">
-												<span class="glyphicon glyphicon-send"></span>
-												&nbsp;
-												<span>기능1</span>
-											</button>
-											<button type="button" class="btn btn-danger">
-												<span>기능 2</span>
-											</button>
-										</div>
-										<div id="collapse1"></div>
-										<div id="collapse2"></div>
+										<button id="memoRefreshBtn" class="btn btn-primary">
+											<span class="glyphicon glyphicon-refresh"></span>
+											&nbsp;
+											<span>Refresh</span>
+										</button>
 									</div>
-									-->
 									<!-- /.panel-footer -->
 									
 								</div>

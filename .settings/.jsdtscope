@@ -7,7 +7,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.baseBrowserLibrary"/>
-	<classpathentry excluding="**/bower_components/**/*.js" kind="src" path=""/>
+	<classpathentry excluding="**/bower_components/**/*.js|**/node_modules/**/*.js" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipselabs.jsdt.jquery.core.NoCoflictLibrary_1.11"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

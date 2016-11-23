@@ -518,6 +518,12 @@ var eventObj = {
 		});
 	},
 	
+	memoRefreshEvent : function() {
+		$("#memoRefreshBtn").click(function() {
+			ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+		});
+	},
+	
 	chatInputKey : function() {
 
 		// for CTRL + SHIFT
