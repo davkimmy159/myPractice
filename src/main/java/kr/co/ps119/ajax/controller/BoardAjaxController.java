@@ -1,6 +1,7 @@
 package kr.co.ps119.ajax.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import kr.co.ps119.entity.Member;
 import kr.co.ps119.service.BoardService;
 import kr.co.ps119.service.MemberService;
 import kr.co.ps119.vo.BoardVO;
+import kr.co.ps119.vo.MemberVO;
 
 @RestController
 @RequestMapping(
@@ -34,6 +36,36 @@ public class BoardAjaxController {
 	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private Map<Long, List<Member>> memberListMap;
+	
+	@GetMapping(value = "updateJoinMemberTable")
+	public Map<String, Object> updateJoinMemberTable(
+			Principal principal,
+			Long boardId) {
+		
+		Member member = memberService.findByUsername(principal.getName());
+//		MemberVO memberVO = new MemberVO(member.getId(), member.getEmail(), member.getUsername(), member.isEnabled());
+		
+		List<Member> memberList = memberListMap.get(boardId);
+		
+		if(memberList == null) {
+			memberList = new ArrayList<>();
+			memberList.add(member);
+			memberListMap.put(boardId, memberList);
+		} else if(!(memberList.contains(member))){
+			memberList.add(member);	
+		}
+
+		System.out.println("memberList : " + memberList);
+		
+		Map<String, Object> jsonObject = new HashMap<>();
+		
+		jsonObject.put("memberList", memberList);
+		
+		return jsonObject;
+	}
 	
 	@GetMapping(value = "updateBoardDB")
 	public Map<String, Object> updateBoardDB(

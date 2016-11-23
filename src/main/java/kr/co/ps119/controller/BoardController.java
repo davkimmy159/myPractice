@@ -1,6 +1,9 @@
 package kr.co.ps119.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,12 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import kr.co.ps119.entity.Board;
+import kr.co.ps119.entity.Member;
 import kr.co.ps119.service.BoardService;
+import kr.co.ps119.service.MemberService;
 
 @Controller
 @RequestMapping(
@@ -28,7 +31,13 @@ import kr.co.ps119.service.BoardService;
 public class BoardController {
 
 	@Autowired
+	private MemberService memberService;
+	
+	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private Map<Long, List<Member>> memberListMap;
 	
 	@PostMapping(value = "create_board")
 	public String createBoard(
@@ -83,14 +92,19 @@ public class BoardController {
 		
 		String returnPage = "redirect:/index";
 		
+		Member member = memberService.findByUsername(principal.getName());
+//		MemberVO memberVO = new MemberVO(member.getId(), member.getEmail(), member.getUsername(), member.isEnabled());
+		
 		Board board = boardService.findOneWithAddHitCount(boardId, principal);
 
 		// If board exists
 		if(!(board.isEmptyBoard())) {
 			returnPage = "board/board";
 			model.addAttribute("boardContent", board.getContent());
+			model.addAttribute("boardOwner", board.getMember().getUsername());
 			model.addAttribute("boardMemoSize", board.getMemos().size());
-
+//			model.addAttribute("member", memberVO);
+			
 		// If board doesn't exist
 		} else {
 			/*

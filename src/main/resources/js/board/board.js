@@ -110,11 +110,12 @@ var session = {
 	editorHandler: "/dest/board/editor/",
 	dbUpdateAlarmHandler: "/dest/board/chat/db_update_alarm/",
 	memoUpdateAlarmHandler: "/dest/board/memo_update_alarm/",
+	memberInfoRowHandler: "/dest/board/memberInfoRow/",
 	
 	chatSubscribe: "/subscribe/board/chat/",
 	editorSubscribe: "/subscribe/board/editor/",
 	dbUpdateAlarmSubscribe: "/subscribe/board/chat/db_update_alarm/",
-	memoUpdateAlarmSubscribe: "/subscribe/board/memo_update_alarm/",
+	memberInfoRowSubscribe: "/subscribe/board/memberInfoRow/",
 	
 
 	connect : function() {
@@ -124,12 +125,14 @@ var session = {
 		this.editorHandler += $("input#boardId").val();
 		this.dbUpdateAlarmHandler += $("input#boardId").val();
 		this.memoUpdateAlarmHandler += $("input#boardId").val();
+		this.memberInfoRowHandler += $("input#boardId").val();
 
 		this.chatSubscribe += $("input#boardId").val();
 		this.editorSubscribe += $("input#boardId").val();
 		this.dbUpdateAlarmSubscribe += $("input#boardId").val();
 		this.memoUpdateAlarmSubscribe += $("input#boardId").val();
-
+		this.memberInfoRowSubscribe += $("input#boardId").val();
+		
 		// Sets nickname
 		this.nickname = $("#loginUsername").text();
 
@@ -192,27 +195,40 @@ var session = {
 					}
 				});
 				
-				// memo subscribe
+				// memoUpdateAlarm subscribe
 				session.stompClient.subscribe(session.memoUpdateAlarmSubscribe, function(messageData) {
-
 					ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
 					
-					var chatMessage = JSON.parse(messageData.body);
+					var memoUpdateMessage = JSON.parse(messageData.body);
 
-					boardUtils.chatAppend(chatMessage.chatAreaMessage);
-//					notify.notify(chatMessage.username, chatMessage.messageBody);
+					boardUtils.chatAppend(memoUpdateMessage.chatAreaMessage);
 
-					if(session.nickname != chatMessage.username) {
-						notify.notify(chatMessage.username, chatMessage.messageBody);
+					if(session.nickname != memoUpdateMessage.username) {
+						notify.notify(memoUpdateMessage.username, memoUpdateMessage.messageBody);
 					}
 				});
-
-				var joinMsg = JSON.stringify({
-					username : session.nickname,
-					messageBody : ' 님이 접속했습니다.'
+				
+				// memberInfoRow subscribe
+				session.stompClient.subscribe(session.memberInfoRowSubscribe, function(messageData) {
+					var memberInfoRow = JSON.parse(messageData.body);
+					
+//					notify.notify("row data", memberInfoRow.memberInfoRowData);
+//					notify.notify("username", memberInfoRow.username);
+					
+//					var memberInfoCheck = ".username_" + memberInfoRow.username;
+//					var checkFlag = $("#joinMemberTableListTbody").find(memberInfoCheck).length;
+					
+//					notify.notify("checkClass", memberInfoCheck);
+//					notify.notify("flag", checkFlag);					
+					
+					/*
+					if(checkFlag <= 0) {
+						$("#joinMemberTableListTbody").append(memberInfoRow.memberInfoRowData);	
+					}
+					*/
 				});
-
-				session.stompClient.send(session.chatHandler, {}, joinMsg);
+				
+//				ajax.updateJoinMemberTable($("#boardId").val());
 			},
 			function(error) {
 
@@ -794,7 +810,7 @@ var ajax = {
 				notify.notify('Ajax 통신 성공 : ' + status, '저장 프로세스 : ' + data.resultMessage);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패 : ' + request.status, 'error : ' + error);
+				notify.notify('Ajax 통신 실패 : ' + request.status, 'status : ' + status);
 			}
 		});
 	},
@@ -891,7 +907,7 @@ var ajax = {
 				});
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
 			}
 		});
 	},
@@ -922,7 +938,7 @@ var ajax = {
 				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
 			}
 		});
 	},
@@ -958,7 +974,7 @@ var ajax = {
 				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
 			}
 		});
 	},
@@ -996,35 +1012,146 @@ var ajax = {
 				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
 			}
 		});
-	}
+	},
 	
-	/*
-	updateJoinMemberTable : function() {
+	updateJoinMemberTable : function(boardId) {
 		$.ajax({
 			url : '../ajax/board/updateJoinMemberTable',
 			type : 'GET',
 			data : {
-				'boardId' : boardId,
-				'editorContent' : editorContent
+				"boardId" : boardId
 			},
 			contentType : 'application/json; charset=utf-8',
 			dataType : 'json',
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify('Ajax 통신 성공 code : ' + status, '저장 프로세스 : ' + data.resultMessage);
+				notify.notify('Ajax 통신 성공 : ', status);
+				
+//				notify.notify("memberList", data.memberList);
+//				notify.notify("memberList size", data.memberList.length);
+				
+				var memberList = data.memberList;
+				
+				var joinMemberRows = "";
+				var role;
+				
+				for(var cnt in memberList) {
+					role = memberList[cnt].username == $("#boardOwner").val() ? "Owner" : "Guest";
+					
+					joinMemberRows +=
+						'<tr>' +
+						'	<td>' +
+						'		<span class="username">' + memberList[cnt].username + '</span>' +
+						'	</td>' +
+						'	<td>' +
+						'		<span class="userEmail">' + memberList[cnt].email + '</span>' +
+						'	</td>' +
+						'	<td>' +
+						'		<span class="userRole">' + role + '</span>' +
+						'	</td>' +
+						'</tr>';
+				}
+
+//				notify.notify("test", joinMemberRows);
+				
+				$("#joinMemberTableListTbody").html(joinMemberRows);
+				
+				/*
+				var memberInfoRowData = JSON.stringify({
+					"memberInfoRowData" : memberInfoRowData,
+					"username" : member.username
+				});
+				
+				session.stompClient.send(session.memberInfoRowHandler, {}, memberInfoRowData);
+				*/
+				
+				/*
+				
+				for(var cnt in memoList) {
+					memoListDisplay +=  	'<div id="memoPanel' + memoList[cnt].id + '" class="panel panel-default">' +
+											'	<input name="memoId" value="' + memoList[cnt].id + '" hidden="hidden" />' +
+											'	<div id="memoHeading' + memoList[cnt].id + '" class="panel-heading" role="tab">' +
+											'		<h4 class="panel-title">' +
+											'			<a class="collapsed" data-toggle="collapse" data-parent="#memoListAccordion" href="#memoContent' + memoList[cnt].id + '">';
+					
+					memoListDisplay +=  	'				<span class="memoTitleSpan hidden-xs">' + memoList[cnt].title + '</span>';
+					
+					memoListDisplay +=  	memoList[cnt].title.length >= 18 ? '				<span class="visible-xs-inline-block">' + memoList[cnt].title.substring(0, 18) + '...' + '</span>' : '				<span class="visible-xs-inline-block">' + memoList[cnt].title + '</span>';
+					
+					memoListDisplay +=		'			</a>';
+					
+					if(memoList[cnt].member.username == $("#loginUsername").text()) {
+						memoListDisplay +=  '			<button class="close" name="memoDeleteBtn" type="button" >' +
+											'				<span class="glyphicon glyphicon-remove-sign"></span>' +
+											'			</button>' +
+											'			<span class="close">&nbsp;</span>' +
+											'			<button class="close" name="memoUpdateBtn" type="button">' +
+											'				<span class="glyphicon glyphicon-edit"></span>' +
+											'			</button>' +
+											'			<span class="close">&nbsp;</span>';
+					}
+					
+					memoListDisplay +=  	'			<button class="close visible-xs-block" name="usernameDisplayBtn" type="button">' +
+											'				<span class="glyphicon glyphicon-exclamation-sign"></span>' +
+											'			</button>' +
+											'			<span class="hidden-xs memoOwnerDisplay">  [' + memoList[cnt].member.username + ']</span>';					
+					memoListDisplay +=  	'		</h4>' +
+											'	</div>' +
+											'	<div id="memoContent' + memoList[cnt].id + '" class="panel-collapse collapse" role="tabpanel">' +
+											'		<div class="panel-body">' + memoList[cnt].content + '</div>' +
+											'	</div>' +
+											'</div>';
+				};
+
+				$("#memoListAccordion").html(memoListDisplay);
+				
+				memoListDisplay = "";
+				
+				$('button[name="memoUpdateBtn"]').click(function() {
+					
+					var memoPanel = $(this).parents('[id^="memoPanel"]');
+					var memoId = memoPanel.find('input[name="memoId"]').val();
+					var memoTitle = memoPanel.find('span.memoTitleSpan').text();
+					var memoContent = memoPanel.find('[id^="memoContent"]').html();
+					
+					$("#memoUpdateSubModal").find('input[name="memoUpdateId"]').val($(this).parents('div[id^="memoHeading"]').siblings('input[name="memoId"]').val());
+					$("#memoUpdateDiv").find('input[name="memoTitle"]').val(memoTitle);
+					memoUpdateEditor.setData(memoContent);
+					
+					$("#memoUpdateSubModal").modal("show");
+				});
+				
+				$('button[name="memoDeleteBtn"]').click(function() {
+					ajax.deleteOneMemo($(this).parents('div[id^="memoHeading"]').siblings('input[name="memoId"]').val());
+				});
+				
+				$('button[name="usernameDisplayBtn"]').click(function() {
+					var memoPanel = $(this).parents('[id^="memoPanel"]');
+					var memoTitle = memoPanel.find('span.memoTitleSpan').text();
+					var username = memoPanel.find("span.memoOwnerDisplay").text();
+					
+					notify.notify(memoTitle, username.substring(3, username.length - 1));
+				});
+				
+				$('#memoPagination-bootpag').bootpag({
+					total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 0
+				});
+				*/
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패 code : ' + request.status + '\n error : ' + error);
+				notify.notify('Ajax 통신 실패 : ' + request.status, 'status : ' + status);
 			}
 		});
 	}
-	*/
 }
 
+$("#joinMemberRefreshBtn").click(function() {
+	ajax.updateJoinMemberTable($("#boardId").val());
+});
 
 // =============================================================================================
 

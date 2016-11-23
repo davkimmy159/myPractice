@@ -13,8 +13,10 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Set;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 import kr.co.ps119.controller.*;
+import kr.co.ps119.entity.Member;
 
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.dialect.IDialect;
@@ -47,6 +50,11 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 @Configuration
 //@PropertySource("classpath:properties/etc.properties")
 public class ConfigMain extends WebMvcConfigurerAdapter {
+	
+	@Bean
+	public Map<Long, List<Member>> memberListMap() {
+		return new HashMap<>();
+	}
 	
 	/*
 	@Bean
