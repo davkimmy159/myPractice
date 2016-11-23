@@ -106,14 +106,16 @@ var session = {
 	stompClient : null,
 	nickname : null,
 	boardId : null,
-	chatHandler: "/dest/chat/",
-	editorHandler: "/dest/editor/",
-	dbUpdateAlarmHandler: "/dest/chat/db_update_alarm/",
-
-	chatSubscribe: "/subscribe/chat/",
-	editorSubscribe: "/subscribe/editor/",
-	dbUpdateAlarmSubscribe: "/subscribe/chat/db_update_alarm/",
-
+	chatHandler: "/dest/board/chat/",
+	editorHandler: "/dest/board/editor/",
+	dbUpdateAlarmHandler: "/dest/board/chat/db_update_alarm/",
+	memoUpdateAlarmHandler: "/dest/board/memo_update_alarm/",
+	
+	chatSubscribe: "/subscribe/board/chat/",
+	editorSubscribe: "/subscribe/board/editor/",
+	dbUpdateAlarmSubscribe: "/subscribe/board/chat/db_update_alarm/",
+	memoUpdateAlarmSubscribe: "/subscribe/board/memo_update_alarm/",
+	
 
 	connect : function() {
 
@@ -121,10 +123,12 @@ var session = {
 		this.chatHandler += $("input#boardId").val();
 		this.editorHandler += $("input#boardId").val();
 		this.dbUpdateAlarmHandler += $("input#boardId").val();
+		this.memoUpdateAlarmHandler += $("input#boardId").val();
 
 		this.chatSubscribe += $("input#boardId").val();
 		this.editorSubscribe += $("input#boardId").val();
 		this.dbUpdateAlarmSubscribe += $("input#boardId").val();
+		this.memoUpdateAlarmSubscribe += $("input#boardId").val();
 
 		// Sets nickname
 		this.nickname = $("#loginUsername").text();
@@ -140,7 +144,7 @@ var session = {
 			function(frame) {
 				notify.notify("Stomp connection for board", frame);
 
-				// chat subscribe 1
+				// chat subscribe
 				session.stompClient.subscribe(session.chatSubscribe, function(messageData) {
 					var chatMessage = JSON.parse(messageData.body);
 
@@ -152,7 +156,7 @@ var session = {
 					}
 				});
 
-				// chat subscribe 2
+				// DB update subscribe
 				session.stompClient.subscribe(session.dbUpdateAlarmSubscribe, function(alarmMessage) {
 					var alarmMsgBody = JSON.parse(alarmMessage.body);
 
@@ -164,7 +168,7 @@ var session = {
 					}
 				});
 
-				// editor subscribe 1
+				// editor subscribe
 				session.stompClient.subscribe(session.editorSubscribe, function(contentData) {
 					var contentDataBody = JSON.parse(contentData.body);
 
@@ -185,6 +189,21 @@ var session = {
 
 					if(session.nickname != contentDataBody.username) {
 						notify.notify("Editor update", " by '" + contentDataBody.username + "'", "success");
+					}
+				});
+				
+				// memo subscribe
+				session.stompClient.subscribe(session.memoUpdateAlarmSubscribe, function(messageData) {
+
+					ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+					
+					var chatMessage = JSON.parse(messageData.body);
+
+					boardUtils.chatAppend(chatMessage.chatAreaMessage);
+//					notify.notify(chatMessage.username, chatMessage.messageBody);
+
+					if(session.nickname != chatMessage.username) {
+						notify.notify(chatMessage.username, chatMessage.messageBody);
 					}
 				});
 
@@ -885,7 +904,16 @@ var ajax = {
 			success : function(data, status) {
 //				notify.notify('Ajax 통신 성공', status);
 				notify.notify('message', data.message);
-				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+				
+//				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+				
+				var memoUpdateMsg = JSON.stringify({
+					username : session.nickname,
+					messageBody : "Memo update",
+					pageNumber : $('#memoPagination-bootpag').find("li.active").find("a").text()
+				});
+				
+				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
@@ -913,7 +941,15 @@ var ajax = {
 				$("#mainModal_tabContent3_memoContent1").find('input[name="memoTitle"]').val("");
 				memoEditor.setData("");
 				
-				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+//				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+				
+				var memoUpdateMsg = JSON.stringify({
+					username : session.nickname,
+					messageBody : "Memo update",
+					pageNumber : $('#memoPagination-bootpag').find("li.active").find("a").text()
+				});
+				
+				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);
@@ -943,7 +979,15 @@ var ajax = {
 				$("#memoUpdateDiv").find('input[name="memoTitle"]').val("");
 				memoUpdateEditor.setData("");
 				
-				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+//				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+				
+				var memoUpdateMsg = JSON.stringify({
+					username : session.nickname,
+					messageBody : "Memo update",
+					pageNumber : $('#memoPagination-bootpag').find("li.active").find("a").text()
+				});
+				
+				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패  : ' + request.status, 'error : ' + error);

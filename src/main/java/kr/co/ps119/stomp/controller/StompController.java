@@ -10,12 +10,13 @@ import org.springframework.stereotype.Controller;
 import kr.co.ps119.stomp.messageVO.StompChatMessage;
 import kr.co.ps119.stomp.messageVO.StompDBUpdateMessage;
 import kr.co.ps119.stomp.messageVO.StompEditorContent;
+import kr.co.ps119.stomp.messageVO.StompMemoUpdateMessage;
 
 @Controller
 public class StompController {
 
-	@MessageMapping("/chat/{boardId}")
-	@SendTo("/subscribe/chat/{boardId}")
+	@MessageMapping("/board/chat/{boardId}")
+	@SendTo("/subscribe/board/chat/{boardId}")
 	public StompChatMessage handler1(StompChatMessage chatMessage) {
 		
 		chatMessage.makeChatAreaMessage();
@@ -24,8 +25,8 @@ public class StompController {
 	}
 	
 	
-	@MessageMapping("/chat/db_update_alarm/{boardId}")
-	@SendTo("/subscribe/chat/db_update_alarm/{boardId}")
+	@MessageMapping("/board/chat/db_update_alarm/{boardId}")
+	@SendTo("/subscribe/board/chat/db_update_alarm/{boardId}")
 	public StompDBUpdateMessage handler3(StompDBUpdateMessage DBUpdateMessage) {
 		
 		DBUpdateMessage.makeChatAreaMessage();
@@ -33,13 +34,24 @@ public class StompController {
 		return DBUpdateMessage;
 	}
 	
-	@MessageMapping("/editor/{boardId}")
-	@SendTo("/subscribe/editor/{boardId}")
+	@MessageMapping("/board/editor/{boardId}")
+	@SendTo("/subscribe/board/editor/{boardId}")
 	public StompEditorContent handler2(StompEditorContent editorContent) {
 
 		editorContent.makeChatAreaMessage();
 		
 		return editorContent;
+	}
+	
+	@MessageMapping("/board/memo_update_alarm/{boardId}")
+	@SendTo("/subscribe/board/memo_update_alarm/{boardId}")
+	public StompMemoUpdateMessage handler4(StompMemoUpdateMessage memoUpdateMessage) {
+		
+		memoUpdateMessage.makeChatAreaMessage();
+		
+		System.out.println("page number : " + memoUpdateMessage.getPageNumber());
+		
+		return memoUpdateMessage;
 	}
 	
 	/*
