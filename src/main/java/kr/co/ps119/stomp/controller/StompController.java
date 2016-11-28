@@ -1,8 +1,6 @@
 package kr.co.ps119.stomp.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.service.MemberService;
-import kr.co.ps119.stomp.messageVO.MemberRowInfo;
 import kr.co.ps119.stomp.messageVO.StompChatMessage;
 import kr.co.ps119.stomp.messageVO.StompDBUpdateMessage;
 import kr.co.ps119.stomp.messageVO.StompEditorContent;
@@ -28,6 +27,9 @@ public class StompController {
 	
 	@Autowired
 	private Map<Long, List<Member>> memberListMap;
+	
+	@Autowired
+	SimpMessagingTemplate messagingTemplate;
 	
 	@MessageMapping("/board/chat/{boardId}")
 	@SendTo("/subscribe/board/chat/{boardId}")
@@ -66,28 +68,12 @@ public class StompController {
 		
 		return memoUpdateMessage;
 	}
-	
-	@MessageMapping("/board/memberInfoRow/{boardId}")
-	@SendTo("/subscribe/board/memberInfoRow/{boardId}")
-	public MemberRowInfo handler5(
-			MemberRowInfo memberRowInfo,
-			@DestinationVariable Long boardId) {
-		
-		System.out.println("board id : " + boardId);
-		System.out.println("member row info : " + memberRowInfo.getMemberInfoRowData());
-		System.out.println("member username : " + memberRowInfo.getUsername());
-		
-		return memberRowInfo;
-	}
-	
+
 	/*
-	@SubscribeMapping({"/queue/subscribe1"})
-	public StompBasicMessage handleSubscription() {
-		StompBasicMessage outgoing = new StompBasicMessage();
-		outgoing.setUsername("username!");
-		outgoing.setMessage("message");
-		
-		return outgoing;
+	@SubscribeMapping({"/board/test/{boardId}"})
+	public void handleSubscription(Principal principal, @DestinationVariable Long boardId) {
+		System.out.println("test");
+		messagingTemplate.convertAndSendToUser(principal.getName(), "/board/test/" + boardId, "Cool");
 	}
 	*/
 }
