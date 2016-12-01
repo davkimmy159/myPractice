@@ -36,8 +36,10 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
+	/*
 	@Autowired
 	private Map<Long, List<Member>> memberListMap;
+	*/
 	
 	@PostMapping(value = "create_board")
 	public String createBoard(

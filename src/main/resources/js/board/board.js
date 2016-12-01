@@ -207,7 +207,7 @@ var session = {
 					var memoUpdateMessage = JSON.parse(messageData.body);
 
 					boardUtils.chatAppend(memoUpdateMessage.chatAreaMessage);
-
+					
 					if(session.nickname != memoUpdateMessage.username) {
 						notify.notify(memoUpdateMessage.username, memoUpdateMessage.messageBody);
 					}

@@ -52,7 +52,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 public class ConfigMain extends WebMvcConfigurerAdapter {
 	
 	@Bean
-	public Map<Long, List<Member>> memberListMap() {
+	public Map<Long, Map<String, Member>> boardStompConnMap() {
 		return new HashMap<>();
 	}
 	

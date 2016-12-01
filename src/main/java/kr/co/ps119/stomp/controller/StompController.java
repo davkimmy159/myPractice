@@ -26,9 +26,6 @@ public class StompController {
 	private MemberService memberService;
 	
 	@Autowired
-	private Map<Long, List<Member>> memberListMap;
-	
-	@Autowired
 	SimpMessagingTemplate messagingTemplate;
 	
 	@MessageMapping("/board/chat/{boardId}")

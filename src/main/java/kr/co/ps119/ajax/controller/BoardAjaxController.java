@@ -37,6 +37,7 @@ public class BoardAjaxController {
 	@Autowired
 	private BoardService boardService;
 	
+	/*
 	@Autowired
 	private Map<Long, List<Member>> memberListMap;
 	
@@ -66,6 +67,7 @@ public class BoardAjaxController {
 		
 		return jsonObject;
 	}
+	*/
 	
 	@GetMapping(value = "updateBoardDB")
 	public Map<String, Object> updateBoardDB(

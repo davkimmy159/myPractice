@@ -1,8 +1,9 @@
 package kr.co.ps119.stomp;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -17,7 +18,7 @@ import kr.co.ps119.service.MemberService;
 public class StompHandler extends ChannelInterceptorAdapter {
 	
 	@Autowired
-	private Map<Long, List<Member>> memberListMap;
+	private Map<Long, Map<String, Member>> boardStompConnMap;
 	
 	@Autowired
 	private MemberService memberService;
@@ -54,18 +55,26 @@ public class StompHandler extends ChannelInterceptorAdapter {
 		case CONNECT:
 			System.out.println("Connected");
 			
+			Long boardId = Long.valueOf(sha.getNativeHeader("boardId").get(0));
+			String simpSessionIdIn = (String)message.getHeaders().get("simpSessionId");
 			Member connectMember = memberService.findByUsername(sha.getUser().getName());
-//			addConnection(Long.valueOf(sha.getNativeHeader("boardId").get(0)), connectMember);	
-			System.out.println("header : " + sha.getHeader(""));
+			addConnection(boardId, simpSessionIdIn, connectMember);
+			
+			System.out.println("message       : " + message);
+			System.out.println("headers       : " + message.getHeaders());
+			System.out.println("simpSessionId : " + message.getHeaders().get("simpSessionId"));
 			
 			break;
 		case DISCONNECT:
 			System.out.println("Disconnected");
 			
+			String simpSessionIdOut = (String)message.getHeaders().get("simpSessionId");
 			Member disconnectMember = memberService.findByUsername(sha.getUser().getName());
-//			removeConnection(Long.valueOf(sha.getNativeHeader("boardId").get(0)), disconnectMember);	
-//			System.out.println("boardId : " + Long.valueOf(sha.getNativeHeader("boardId").get(0)));
-			System.out.println("receipt : " + sha.getReceipt());
+			removeConnection(simpSessionIdOut, disconnectMember);
+			
+			System.out.println("message       : " + message);
+			System.out.println("headers       : " + message.getHeaders());
+			System.out.println("simpSessionId : " + message.getHeaders().get("simpSessionId"));
 			
 			break;
 		case RECEIPT:
@@ -76,48 +85,55 @@ public class StompHandler extends ChannelInterceptorAdapter {
 		}
 	}
 	
-	public void addConnection(Long boardId, Member member) {
-		List<Member> memberList = null;
+	public void addConnection(Long boardId, String simpSessionId, Member member) {
+		Map<String, Member> memberMap = null;
 		
 		if(boardId != null && member != null) {
-			memberList = memberListMap.get(boardId);
+			memberMap = boardStompConnMap.get(boardId);
 			
-			if(memberList == null) {
-				memberList = new ArrayList<>();
-				memberList.add(member);
-				memberListMap.put(boardId, memberList);
-			} else if(!(memberList.contains(member))) {
-				memberList.add(member);
+			if(memberMap == null) {
+				memberMap = new HashMap<>();
+				memberMap.put(simpSessionId, member);
+				boardStompConnMap.put(boardId, memberMap);
+				System.out.println("---------- CONNECT ----------");
+			} else if(!(memberMap.keySet().contains(simpSessionId))) {
+				memberMap.put(simpSessionId, member);
+				System.out.println("---------- CONNECT ----------");
 			} else {
 				System.out.println("Connection has been made already");
 			}
 		} else if(boardId == null) {
-			System.out.println("That board doesn't exist.");
+			System.out.println("boardId param is null.");
 		} else {
-			System.out.println("That member doesn't exist.");
+			System.out.println("member param is null.");
 		}
 		
-		System.out.println("memberList : " + memberList);
+		System.out.println("memberList : " + memberMap);
 	}
 	
-	public void removeConnection(Long boardId, Member member) {
-		List<Member> memberList = null;
-		if(boardId != null && member != null) {
-			memberList = memberListMap.get(boardId);
+	public void removeConnection(String simpSessionId, Member member) {
+		Map<String, Member> memberMap = null;
+		boolean flag = false;
+		
+		if(member != null) {
 			
-			if(memberList == null) {
-				System.out.println("Connection is never made before.");
-			} else if(memberList.contains(member)) {
-				memberList.remove(member);
-			} else {
-				System.out.println("Connection is empty already.");
+			for(Long connMapKey : boardStompConnMap.keySet()) {
+				memberMap = boardStompConnMap.get(connMapKey);
+				if(memberMap.keySet().contains(simpSessionId)) {
+					flag = true;
+					memberMap.remove(simpSessionId);
+					System.out.println("---------- DISCONNECT ----------");
+				}
 			}
-		} else if(boardId == null) {
-			System.out.println("That board doesn't exist.");
+			
+			if(!flag) {
+				System.out.println("That connection doesn't exist. ");
+			}
+
 		} else {
-			System.out.println("That member doesn't exist.");
+			System.out.println("member param is null.");
 		}
 		
-		System.out.println("memberList : " + memberList);
+		System.out.println("memberList : " + memberMap);
 	}
 }
