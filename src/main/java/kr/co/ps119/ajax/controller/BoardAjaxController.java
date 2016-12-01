@@ -37,37 +37,33 @@ public class BoardAjaxController {
 	@Autowired
 	private BoardService boardService;
 	
-	/*
 	@Autowired
-	private Map<Long, List<Member>> memberListMap;
+	private Map<Long, Map<String, MemberVO>> boardStompConnMap;
 	
 	@GetMapping(value = "updateJoinMemberTable")
 	public Map<String, Object> updateJoinMemberTable(
 			Principal principal,
 			Long boardId) {
 		
-		Member member = memberService.findByUsername(principal.getName());
-//		MemberVO memberVO = new MemberVO(member.getId(), member.getEmail(), member.getUsername(), member.isEnabled());
-		
-		List<Member> memberList = memberListMap.get(boardId);
-		
-		if(memberList == null) {
-			memberList = new ArrayList<>();
-			memberList.add(member);
-			memberListMap.put(boardId, memberList);
-		} else if(!(memberList.contains(member))){
-			memberList.add(member);	
-		}
-
-		System.out.println("memberList : " + memberList);
-		
 		Map<String, Object> jsonObject = new HashMap<>();
 		
-		jsonObject.put("memberList", memberList);
-		
+		if(boardId != null) {
+			Map<String, MemberVO> memberMap = boardStompConnMap.get(boardId);
+			
+			if(memberMap != null) {
+				jsonObject.put("memberList", memberMap.values());
+			} else {
+				System.out.println("server error occurred");
+				jsonObject.put("message", "server error occurred");
+			}
+			
+		} else {
+			System.out.println("board id is null");
+			jsonObject.put("message", "board id is null");
+		}
+
 		return jsonObject;
 	}
-	*/
 	
 	@GetMapping(value = "updateBoardDB")
 	public Map<String, Object> updateBoardDB(

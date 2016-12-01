@@ -39,6 +39,7 @@ import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
 import kr.co.ps119.controller.*;
 import kr.co.ps119.entity.Member;
+import kr.co.ps119.vo.MemberVO;
 
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.dialect.IDialect;
@@ -52,7 +53,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 public class ConfigMain extends WebMvcConfigurerAdapter {
 	
 	@Bean
-	public Map<Long, Map<String, Member>> boardStompConnMap() {
+	public Map<Long, Map<String, MemberVO>> boardStompConnMap() {
 		return new HashMap<>();
 	}
 	

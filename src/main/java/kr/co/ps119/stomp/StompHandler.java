@@ -14,11 +14,12 @@ import org.springframework.messaging.support.ChannelInterceptorAdapter;
 
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.service.MemberService;
+import kr.co.ps119.vo.MemberVO;
 
 public class StompHandler extends ChannelInterceptorAdapter {
 	
 	@Autowired
-	private Map<Long, Map<String, Member>> boardStompConnMap;
+	private Map<Long, Map<String, MemberVO>> boardStompConnMap;
 	
 	@Autowired
 	private MemberService memberService;
@@ -37,18 +38,13 @@ public class StompHandler extends ChannelInterceptorAdapter {
 	
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
-		return super.preSend(message, channel);
-	}
-
-	@Override
-	public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
-
+		
 		StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
 		
 		stompCommand = sha.getCommand();
 		
 		if (stompCommand == null) {
-			return;
+			return message;
 		}
 		
 		switch (stompCommand) {
@@ -83,21 +79,31 @@ public class StompHandler extends ChannelInterceptorAdapter {
 		default:
 			break;
 		}
+		
+		return message;
 	}
 	
+	@Override
+	public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
+		super.postSend(message, channel, sent);
+	}
+
 	public void addConnection(Long boardId, String simpSessionId, Member member) {
-		Map<String, Member> memberMap = null;
+		Map<String, MemberVO> memberMap = null;
+		MemberVO memberVO;
 		
 		if(boardId != null && member != null) {
 			memberMap = boardStompConnMap.get(boardId);
 			
+			memberVO = changeToVO(member);
+			
 			if(memberMap == null) {
 				memberMap = new HashMap<>();
-				memberMap.put(simpSessionId, member);
+				memberMap.put(simpSessionId, memberVO);
 				boardStompConnMap.put(boardId, memberMap);
 				System.out.println("---------- CONNECT ----------");
 			} else if(!(memberMap.keySet().contains(simpSessionId))) {
-				memberMap.put(simpSessionId, member);
+				memberMap.put(simpSessionId, memberVO);
 				System.out.println("---------- CONNECT ----------");
 			} else {
 				System.out.println("Connection has been made already");
@@ -112,7 +118,7 @@ public class StompHandler extends ChannelInterceptorAdapter {
 	}
 	
 	public void removeConnection(String simpSessionId, Member member) {
-		Map<String, Member> memberMap = null;
+		Map<String, MemberVO> memberMap = null;
 		boolean flag = false;
 		
 		if(member != null) {
@@ -135,5 +141,9 @@ public class StompHandler extends ChannelInterceptorAdapter {
 		}
 		
 		System.out.println("memberList : " + memberMap);
+	}
+	
+	private MemberVO changeToVO(Member member) {
+		return new MemberVO(member.getId(), member.getEmail(), member.getUsername(), member.isEnabled());
 	}
 }

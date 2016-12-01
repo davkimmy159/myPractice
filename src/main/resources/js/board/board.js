@@ -110,11 +110,13 @@ var session = {
 	editorHandler: "/dest/board/editor/",
 	dbUpdateAlarmHandler: "/dest/board/chat/db_update_alarm/",
 	memoUpdateAlarmHandler: "/dest/board/memo_update_alarm/",
+	joinMemberUpdateHandler: "/dest/board/join_member_update/",
 	
 	chatSubscribe: "/subscribe/board/chat/",
 	editorSubscribe: "/subscribe/board/editor/",
 	dbUpdateAlarmSubscribe: "/subscribe/board/chat/db_update_alarm/",
 	memoUpdateAlarmSubscribe: "/subscribe/board/memo_update_alarm/",
+	joinMemberUpdateSubscribe: "/subscribe/board/join_member_update/",
 	
 
 	connect : function() {
@@ -124,11 +126,13 @@ var session = {
 		this.editorHandler += $("input#boardId").val();
 		this.dbUpdateAlarmHandler += $("input#boardId").val();
 		this.memoUpdateAlarmHandler += $("input#boardId").val();
+		this.joinMemberUpdateHandler += $("input#boardId").val();
 
 		this.chatSubscribe += $("input#boardId").val();
 		this.editorSubscribe += $("input#boardId").val();
 		this.dbUpdateAlarmSubscribe += $("input#boardId").val();
 		this.memoUpdateAlarmSubscribe += $("input#boardId").val();
+		this.joinMemberUpdateSubscribe += $("input#boardId").val();
 		
 		// Sets nickname
 		this.nickname = $("#loginUsername").text();
@@ -157,7 +161,6 @@ var session = {
 					var chatMessage = JSON.parse(messageData.body);
 
 					boardUtils.chatAppend(chatMessage.chatAreaMessage);
-//					notify.notify(chatMessage.username, chatMessage.messageBody);
 
 					if(session.nickname != chatMessage.username) {
 						notify.notify(chatMessage.username, chatMessage.messageBody);
@@ -169,7 +172,6 @@ var session = {
 					var alarmMsgBody = JSON.parse(alarmMessage.body);
 
 					boardUtils.chatAppend(alarmMsgBody.chatAreaMessage);
-//					notify.notify(alarmMsgBody.messageBody, ' by \'' + alarmMsgBody.username + '\'');
 
 					if(session.nickname != alarmMsgBody.username) {
 						notify.notify(alarmMsgBody.messageBody, " by '" + alarmMsgBody.username + "\'", "success");
@@ -193,7 +195,6 @@ var session = {
 					}
 
 					boardUtils.chatAppend(contentDataBody.chatAreaMessage);
-//					notify.notify("Editor update", " by '" + contentDataBody.username + "'");
 
 					if(session.nickname != contentDataBody.username) {
 						notify.notify("Editor update", " by '" + contentDataBody.username + "'", "success");
@@ -212,6 +213,13 @@ var session = {
 						notify.notify(memoUpdateMessage.username, memoUpdateMessage.messageBody);
 					}
 				});
+				
+				session.stompClient.subscribe(session.joinMemberUpdateSubscribe, function(messageData) {
+					
+					var message = JSON.parse(messageData.body);
+					
+					notify.notify("test", message.message);
+				});
 			},
 			function(error) {
 
@@ -228,12 +236,17 @@ var session = {
 			}
 		);
 		
-		var enterMsg = JSON.stringify({
-			username : session.nickname,
-			messageBody : ' 님이 들어왔습니다.'
-		});
+		// Connects to STOMP server after 1 second because immediate connection didn't work
+		setTimeout(function() {
 		
-		session.stompClient.send(session.chatHandler, {}, enterMsg);
+			var enterMsg = JSON.stringify({
+				username : session.nickname,
+				messageBody : ' 님이 들어왔습니다.'
+			});
+			
+			session.stompClient.send(session.chatHandler, {}, enterMsg);
+			
+		}, 1000);
 	},
 
 	disconnect : function() {
@@ -1021,9 +1034,6 @@ var ajax = {
 			success : function(data, status) {
 				notify.notify('Ajax 통신 성공 : ', status);
 				
-//				notify.notify("memberList", data.memberList);
-//				notify.notify("memberList size", data.memberList.length);
-				
 				var memberList = data.memberList;
 				
 				var joinMemberRows = "";
@@ -1045,7 +1055,7 @@ var ajax = {
 						'	</td>' +
 						'</tr>';
 				}
-
+				
 				$("#joinMemberTableListTbody").html(joinMemberRows);
 			},
 			error : function(request, status, error) {
@@ -1056,12 +1066,13 @@ var ajax = {
 }
 
 $("#joinMemberRefreshBtn").click(function() {
-//	ajax.updateJoinMemberTable($("#boardId").val());
+	ajax.updateJoinMemberTable($("#boardId").val());
+	
 	var msg = JSON.stringify({
 		message : "test message"
 	});
 	
-	session.stompClient.send("/board/test/" + $("input#boardId").val(), {}, msg);
+	session.stompClient.send(session.joinMemberUpdateSubscribe, {}, msg);
 });
 
 // =============================================================================================
