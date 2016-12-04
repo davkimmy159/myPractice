@@ -110,7 +110,7 @@ var session = {
 	editorHandler: "/dest/board/editor/",
 	dbUpdateAlarmHandler: "/dest/board/chat/db_update_alarm/",
 	memoUpdateAlarmHandler: "/dest/board/memo_update_alarm/",
-	joinMemberUpdateHandler: "/dest/board/join_member_update/",
+//	joinMemberUpdateHandler: "/dest/board/join_member_update/",
 	
 	chatSubscribe: "/subscribe/board/chat/",
 	editorSubscribe: "/subscribe/board/editor/",
@@ -126,7 +126,7 @@ var session = {
 		this.editorHandler += $("input#boardId").val();
 		this.dbUpdateAlarmHandler += $("input#boardId").val();
 		this.memoUpdateAlarmHandler += $("input#boardId").val();
-		this.joinMemberUpdateHandler += $("input#boardId").val();
+//		this.joinMemberUpdateHandler += $("input#boardId").val();
 
 		this.chatSubscribe += $("input#boardId").val();
 		this.editorSubscribe += $("input#boardId").val();
@@ -214,11 +214,16 @@ var session = {
 					}
 				});
 				
+				// member connection and disconnection subscribe
 				session.stompClient.subscribe(session.joinMemberUpdateSubscribe, function(messageData) {
 					
 					var message = JSON.parse(messageData.body);
 					
-					notify.notify("test", message.message);
+					notify.notify(message.messageBody, message.username);
+					boardUtils.chatAppend(message.messageBody);
+					boardUtils.chatAppend(" - " + message.username + " - ");
+					
+					notify.notify("member list", message.memberList);
 				});
 			},
 			function(error) {
@@ -235,28 +240,9 @@ var session = {
 				session.disconnect();
 			}
 		);
-		
-		// Connects to STOMP server after 1 second because immediate connection didn't work
-		setTimeout(function() {
-		
-			var enterMsg = JSON.stringify({
-				username : session.nickname,
-				messageBody : ' 님이 들어왔습니다.'
-			});
-			
-			session.stompClient.send(session.chatHandler, {}, enterMsg);
-			
-		}, 1000);
 	},
 
 	disconnect : function() {
-
-		var exitMsg = JSON.stringify({
-			username : session.nickname,
-			messageBody : ' 님이 나갔습니다.'
-		});
-
-		session.stompClient.send(session.chatHandler, {}, exitMsg);
 
 		// For good-bye message isn't sent
 		setTimeout(function() {
@@ -1032,7 +1018,7 @@ var ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify('Ajax 통신 성공 : ', status);
+//				notify.notify('Ajax 통신 성공 : ', status);
 				
 				var memberList = data.memberList;
 				
@@ -1066,13 +1052,13 @@ var ajax = {
 }
 
 $("#joinMemberRefreshBtn").click(function() {
-	ajax.updateJoinMemberTable($("#boardId").val());
+	notify.notify("test", "test");
 	
 	var msg = JSON.stringify({
 		message : "test message"
 	});
 	
-	session.stompClient.send(session.joinMemberUpdateSubscribe, {}, msg);
+	session.stompClient.send(session.joinMemberUpdateHandler, {}, msg);
 });
 
 // =============================================================================================

@@ -129,6 +129,7 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 			memoRepo.save(memo);
 		}
 
+		System.out.println("\n-------------------------- test data is ready --------------------------\n");
 		
 		/*
 		INSERT INTO board(title, content, create_date, member_id) VALUES('title_1', 'content', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 1);

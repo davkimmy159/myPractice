@@ -2,8 +2,6 @@ package kr.co.ps119.stomp;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -14,6 +12,8 @@ import org.springframework.messaging.support.ChannelInterceptorAdapter;
 
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.service.MemberService;
+import kr.co.ps119.stomp.controller.StompController;
+import kr.co.ps119.stomp.messageVO.StompChatMessage;
 import kr.co.ps119.vo.MemberVO;
 
 public class StompHandler extends ChannelInterceptorAdapter {
@@ -39,6 +39,7 @@ public class StompHandler extends ChannelInterceptorAdapter {
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		
+		/*
 		StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
 		
 		stompCommand = sha.getCommand();
@@ -48,102 +49,23 @@ public class StompHandler extends ChannelInterceptorAdapter {
 		}
 		
 		switch (stompCommand) {
-		case CONNECT:
-			System.out.println("Connected");
-			
-			Long boardId = Long.valueOf(sha.getNativeHeader("boardId").get(0));
-			String simpSessionIdIn = (String)message.getHeaders().get("simpSessionId");
-			Member connectMember = memberService.findByUsername(sha.getUser().getName());
-			addConnection(boardId, simpSessionIdIn, connectMember);
-			
-			System.out.println("message       : " + message);
-			System.out.println("headers       : " + message.getHeaders());
-			System.out.println("simpSessionId : " + message.getHeaders().get("simpSessionId"));
-			
-			break;
-		case DISCONNECT:
-			System.out.println("Disconnected");
-			
-			String simpSessionIdOut = (String)message.getHeaders().get("simpSessionId");
-			Member disconnectMember = memberService.findByUsername(sha.getUser().getName());
-			removeConnection(simpSessionIdOut, disconnectMember);
-			
-			System.out.println("message       : " + message);
-			System.out.println("headers       : " + message.getHeaders());
-			System.out.println("simpSessionId : " + message.getHeaders().get("simpSessionId"));
-			
-			break;
 		case RECEIPT:
 			System.out.println("Receipt");
+		
 			break;
+		
 		default:
 			break;
 		}
 		
 		return message;
+		*/
+		
+		return super.preSend(message, channel);
 	}
 	
 	@Override
 	public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
 		super.postSend(message, channel, sent);
-	}
-
-	public void addConnection(Long boardId, String simpSessionId, Member member) {
-		Map<String, MemberVO> memberMap = null;
-		MemberVO memberVO;
-		
-		if(boardId != null && member != null) {
-			memberMap = boardStompConnMap.get(boardId);
-			
-			memberVO = changeToVO(member);
-			
-			if(memberMap == null) {
-				memberMap = new HashMap<>();
-				memberMap.put(simpSessionId, memberVO);
-				boardStompConnMap.put(boardId, memberMap);
-				System.out.println("---------- CONNECT ----------");
-			} else if(!(memberMap.keySet().contains(simpSessionId))) {
-				memberMap.put(simpSessionId, memberVO);
-				System.out.println("---------- CONNECT ----------");
-			} else {
-				System.out.println("Connection has been made already");
-			}
-		} else if(boardId == null) {
-			System.out.println("boardId param is null.");
-		} else {
-			System.out.println("member param is null.");
-		}
-		
-		System.out.println("memberList : " + memberMap);
-	}
-	
-	public void removeConnection(String simpSessionId, Member member) {
-		Map<String, MemberVO> memberMap = null;
-		boolean flag = false;
-		
-		if(member != null) {
-			
-			for(Long connMapKey : boardStompConnMap.keySet()) {
-				memberMap = boardStompConnMap.get(connMapKey);
-				if(memberMap.keySet().contains(simpSessionId)) {
-					flag = true;
-					memberMap.remove(simpSessionId);
-					System.out.println("---------- DISCONNECT ----------");
-				}
-			}
-			
-			if(!flag) {
-				System.out.println("That connection doesn't exist. ");
-			}
-
-		} else {
-			System.out.println("member param is null.");
-		}
-		
-		System.out.println("memberList : " + memberMap);
-	}
-	
-	private MemberVO changeToVO(Member member) {
-		return new MemberVO(member.getId(), member.getEmail(), member.getUsername(), member.isEnabled());
 	}
 }

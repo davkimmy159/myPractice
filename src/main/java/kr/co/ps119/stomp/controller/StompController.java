@@ -1,6 +1,7 @@
 package kr.co.ps119.stomp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -58,12 +59,5 @@ public class StompController {
 		System.out.println("page number : " + memoUpdateMessage.getPageNumber());
 		
 		return memoUpdateMessage;
-	}
-
-	@MessageMapping("/board/join_member_update/{boardId}")
-	@SendTo("/subscribe/board/join_member_update/{boardId}")
-	public TestMsg handler5(TestMsg tsetMsg) {
-		
-		return tsetMsg;
 	}
 }
