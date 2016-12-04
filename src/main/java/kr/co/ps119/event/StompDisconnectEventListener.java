@@ -19,7 +19,7 @@ import kr.co.ps119.vo.MemberVO;
 
 @Service
 @Transactional
-public class StompDisconnectEvent implements ApplicationListener<SessionDisconnectEvent> {
+public class StompDisconnectEventListener implements ApplicationListener<SessionDisconnectEvent> {
 
 	@Autowired
 	private Map<Long, Map<String, MemberVO>> boardStompConnMap;

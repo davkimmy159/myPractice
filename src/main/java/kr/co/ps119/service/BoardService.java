@@ -21,7 +21,7 @@ import kr.co.ps119.repository.MemberRepository;
 
 @Service
 @Transactional
-public class BoardService {
+public class BoardService implements BoardServiceAopMethod {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -76,6 +76,7 @@ public class BoardService {
 		return createdBoardId;
 	}
 	
+	@Override
 	public Long updateBoardDBContent(Long boardId, String editorContent) {
 		Board boardToBeUpdated = boardRepo.findOne(boardId);
 

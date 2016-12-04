@@ -63,7 +63,7 @@ public class MemoAjaxController {
 			memo.setTitle(trimmedMemoTitle);
 			memo.setContent(trimmedMemoContent);
 		
-			memo = memoService.saveOneMemo(memo);
+			memo = memoService.updateOneMemo(memo);
 			
 			if(memo == null) {
 				jsonObject.put("result", "Server error occurred during saving");
@@ -120,14 +120,17 @@ public class MemoAjaxController {
 		
 		Sort sorter = new Sort(Direction.DESC, "id");
 		
-		Long total = memoService.getTotalCountOfMemos(boardId);
+		Long total = memoService.getTotalMemoCountOfBoard(boardId);
 		PageRequest pageRequest = new PageRequest(offset - 1, 10, sorter);
 		
 		List<Memo> memoList;
 		
 		memoList = memoService.findAllMemosWithPageRequest(boardId, pageRequest);
 
-		memoList.forEach(memo -> memo.getMember().getUsername());
+		memoList.forEach(memo -> {
+			memo.setMemberUsername(memo.getMember().getUsername());
+			memo.setMemberNull();
+		});
 		
 		Map<String, Object> jsonObject = new HashMap<>();
 		

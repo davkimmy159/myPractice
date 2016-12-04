@@ -11,7 +11,7 @@ public class StompEditorContent extends AbstractStompMessage {
 	}
 
 	@Override
-	public void makeChatAreaMessage() {
+	public void setChatAreaMessage() {
 		chatAreaMessage = "** Editor updated by '" + username + "' **";
 	}
 }

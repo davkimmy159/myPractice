@@ -2,16 +2,19 @@ package kr.co.ps119.event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.socket.messaging.SessionConnectEvent;
+import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.service.MemberService;
@@ -20,7 +23,7 @@ import kr.co.ps119.vo.MemberVO;
 
 @Service
 @Transactional
-public class StompConnectEvent implements ApplicationListener<SessionConnectEvent> {
+public class StompConnectedEventListener implements ApplicationListener<SessionConnectedEvent> {
 
 	@Autowired
 	private Map<Long, Map<String, MemberVO>> boardStompConnMap;
@@ -32,12 +35,16 @@ public class StompConnectEvent implements ApplicationListener<SessionConnectEven
 	private SimpMessagingTemplate template;
 	
 	@Override
-	public void onApplicationEvent(SessionConnectEvent event) {
+	public void onApplicationEvent(SessionConnectedEvent event) {
 		
 		Message<byte[]> message = event.getMessage();
 		StompHeaderAccessor sha = StompHeaderAccessor.wrap(message);
 		
-		Long boardId = Long.valueOf(sha.getNativeHeader("boardId").get(0));
+		MessageHeaders messageHeaders = ((GenericMessage<?>)sha.getHeader("simpConnectMessage")).getHeaders();
+		Map<?, ?> nativeHeaders = (Map<?, ?>)messageHeaders.get("nativeHeaders");
+		List<?> memberList = (List<?>)nativeHeaders.get("boardId");
+		Long boardId = Long.valueOf((String)memberList.get(0));
+
 		String simpSessionIdIn = (String)message.getHeaders().get("simpSessionId");
 		Member connectMember = memberService.findByUsername(sha.getUser().getName());
 		addConnection(boardId, simpSessionIdIn, connectMember);
@@ -68,10 +75,10 @@ public class StompConnectEvent implements ApplicationListener<SessionConnectEven
 				memberMap = new HashMap<>();
 				memberMap.put(simpSessionId, memberVO);
 				boardStompConnMap.put(boardId, memberMap);
-				System.out.println("---------- CONNECT ----------");
+				System.out.println("---------- CONNECTED ----------");
 			} else if(!(memberMap.keySet().contains(simpSessionId))) {
 				memberMap.put(simpSessionId, memberVO);
-				System.out.println("---------- CONNECT ----------");
+				System.out.println("---------- CONNECTED ----------");
 			} else {
 				System.out.println("Connection has been made already");
 			}

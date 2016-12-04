@@ -10,12 +10,14 @@ bootstrapTable = {
 			columns: [
             	{
             		field: "state",
-            		checkbox: true
+            		checkbox: true,
+            		searchable: false
             	}, {
             		field: "id",
             		title: "#",
             		class: "hidden-xs",
             		sortable: true,
+            		searchable: false,
             		formatter: function(value, row, index) {
             			return '<span class="eachBoardIdInTable">' + row.id + '</span>';
             		}/*,
@@ -28,6 +30,7 @@ bootstrapTable = {
             		field: "title",
             		title: "Title",
             		sortable: true,
+            		searchable: true,
             		formatter: function(value, row, index) {
             			return '<span class="boardTitle">' + row.title + '</span>';
             		},
@@ -39,21 +42,24 @@ bootstrapTable = {
             	}, {
             		field: "hitCount",
             		title: "Hits",
-            		sortable: true
+            		sortable: true,
+            		searchable: false
             	}, {
             		field: "updateCount",
             		title: "Up",
-            		sortable: true
+            		sortable: true,
+            		searchable: false
             	}, {
             		field: "createDate",
             		title: "Create",
             		class: "hidden-xs hidden-sm",
             		sortable: true,
+            		searchable: false,
             		formatter: function(value, row, index) {
             			var date = row.createDate;
             			return [
             				'<span class="createDate">',
-            				bootstrapTable.dateFormat(date),
+            				utils.dateFormat(date),
             				'</span>'
             			].join('');
             		}
@@ -62,17 +68,19 @@ bootstrapTable = {
             		title: "Last up",
             		class: "hidden-xs hidden-sm",
             		sortable: true,
+            		searchable: false,
             		formatter: function(value, row, index) {
             			var date = row.lastUpdateDate;
             			return [
             				'<span class="createDate">',
-            				bootstrapTable.dateFormat(date),
+            				utils.dateFormat(date),
             				'</span>'
             			].join('');
             		}
             	}, {
             		field: "Utils",
             		title: "utils",
+            		searchable: false,
             		formatter: function(value, row, index) {
             			return [
             				'<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>',
@@ -121,7 +129,7 @@ bootstrapTable = {
 			showExport : true,
 			
 			search : true,
-			searchOnEnterKey : true,
+//			searchOnEnterKey : true,
 			searchAlign : "left",
 			trimOnSearch : true,
 			searchTimeOut : 500,
@@ -146,6 +154,7 @@ bootstrapTable = {
             	{
             		field: "state",
             		checkbox: true,
+            		searchable: false,
             		formatter: function(value, row, index) {
             			if (row.username != $("#loginUsername").text()) {
             	            return {
@@ -160,6 +169,7 @@ bootstrapTable = {
             		title: "#",
             		class: "hidden-xs",
             		sortable: true,
+            		searchable: false,
             		formatter: function(value, row, index) {
             			return '<span class="eachBoardIdInTable">' + row.id + '</span>';
             		},
@@ -183,21 +193,24 @@ bootstrapTable = {
             	}, {
             		field: "hitCount",
             		title: "Hits",
-            		sortable: true
+            		sortable: true,
+            		searchable: false
             	}, {
             		field: "updateCount",
             		title: "Up",
-            		sortable: true
+            		sortable: true,
+            		searchable: false
             	}, {
             		field: "createDate",
             		title: "Create",
             		class: "hidden-xs hidden-sm",
             		sortable: true,
+            		searchable: false,
             		formatter: function(value, row, index) {
             			var date = row.createDate;
             			return [
             				'<span class="createDate">',
-            				bootstrapTable.dateFormat(date),
+            				utils.dateFormat(date),
             				'</span>'
             			].join('');
             		}
@@ -206,11 +219,12 @@ bootstrapTable = {
             		title: "Last up",
             		class: "hidden-xs hidden-sm",
             		sortable: true,
+            		searchable: false,
             		formatter: function(value, row, index) {
             			var date = row.lastUpdateDate;
             			return [
             				'<span class="createDate">',
-            				bootstrapTable.dateFormat(date),
+            				utils.dateFormat(date),
             				'</span>'
             			].join('');
             		}
@@ -219,6 +233,7 @@ bootstrapTable = {
             		title: "Owner",
             		class: "hidden-sm",
             		sortable: true,
+            		searchable: false,
             		formatter: function(value, row, index) {
             			return [
             				'<span class="member">',
@@ -229,6 +244,7 @@ bootstrapTable = {
             	}, {
             		field: "Utils",
             		title: "utils",
+            		searchable: false,
             		formatter: function(value, row, index) {
             			var format = ['<span class="boardDownloadBtn glyphicon glyphicon-download-alt"></span>'];
             			
@@ -280,7 +296,7 @@ bootstrapTable = {
 			showExport : true,
 			
 			search : true,
-			searchOnEnterKey : true,
+//			searchOnEnterKey : true,
 			searchAlign : "left",
 			trimOnSearch : true,
 			searchTimeOut : 500,
@@ -364,10 +380,6 @@ bootstrapTable = {
 				}
 			}
 		}
-	},
-	
-	dateFormat : function(date) {
-		return date.year + "." + date.monthValue + "." + date.dayOfMonth + " " + date.hour + ":" + date.minute;
 	},
 	
 	removeByUniqueId : function(boardId) {

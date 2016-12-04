@@ -53,13 +53,13 @@ public class BoardAjaxController {
 			if(memberMap != null) {
 				jsonObject.put("memberList", memberMap.values());
 			} else {
-				System.out.println("server error occurred");
+				System.out.println("server error occurred, member list doesn't exist");
 				jsonObject.put("message", "server error occurred");
 			}
 			
 		} else {
-			System.out.println("board id is null");
-			jsonObject.put("message", "board id is null");
+			System.out.println("board id doesn't exist");
+			jsonObject.put("message", "board id doesn't exist");
 		}
 
 		return jsonObject;

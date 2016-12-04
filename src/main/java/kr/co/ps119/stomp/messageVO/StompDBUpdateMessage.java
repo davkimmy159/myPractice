@@ -11,7 +11,7 @@ public class StompDBUpdateMessage extends AbstractStompMessage {
 	}
 
 	@Override
-	public void makeChatAreaMessage() {
+	public void setChatAreaMessage() {
 		chatAreaMessage = "*** DB content updated by '" + username + "' ***";
 	}
 }

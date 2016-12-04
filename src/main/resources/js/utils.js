@@ -88,6 +88,11 @@ var utils = {
 				
 			}
 		});
+	},
+	
+	// sets date format
+	dateFormat : function(date) {
+		return date.year + "." + date.monthValue + "." + date.dayOfMonth + " " + date.hour + ":" + date.minute;
 	}
 };
 

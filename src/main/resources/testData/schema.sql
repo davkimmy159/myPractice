@@ -56,3 +56,13 @@ CREATE TABLE IF NOT EXISTS memo (
 	CONSTRAINT memo_member_id_fk FOREIGN KEY(member_id) REFERENCES member(member_id),
 	CONSTRAINT memo_board_id_fk FOREIGN KEY(board_id) REFERENCES board(board_id)
 );
+
+CREATE TABLE IF NOT EXISTS board_history (
+	history_id BIGINT AUTO_INCREMENT NOT NULL,
+	content VARCHAR(300) NOT NULL,
+	create_date TIMESTAMP NOT NULL,
+	member_id BIGINT NOT NULL,
+	board_id BIGINT NOT NULL,
+	CONSTRAINT member_history_board_id_fk FOREIGN KEY(member_id) REFERENCES member(member_id),
+	CONSTRAINT board_history_board_id_fk FOREIGN KEY(board_id) REFERENCES board(board_id)
+);

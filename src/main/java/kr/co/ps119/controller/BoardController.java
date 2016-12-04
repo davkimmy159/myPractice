@@ -22,6 +22,7 @@ import kr.co.ps119.entity.Board;
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.service.BoardService;
 import kr.co.ps119.service.MemberService;
+import kr.co.ps119.vo.MemberVO;
 
 @Controller
 @RequestMapping(
@@ -35,11 +36,9 @@ public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
-	
-	/*
+
 	@Autowired
-	private Map<Long, List<Member>> memberListMap;
-	*/
+	private Map<Long, Map<String, MemberVO>> boardStompConnMap;
 	
 	@PostMapping(value = "create_board")
 	public String createBoard(
@@ -105,6 +104,7 @@ public class BoardController {
 			model.addAttribute("boardContent", board.getContent());
 			model.addAttribute("boardOwner", board.getMember().getUsername());
 			model.addAttribute("boardMemoSize", board.getMemos().size());
+			model.addAttribute("boardHistorySize", board.getHistories().size());
 //			model.addAttribute("member", memberVO);
 			
 		// If board doesn't exist

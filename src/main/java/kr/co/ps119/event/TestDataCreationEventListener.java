@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.ps119.entity.Board;
+import kr.co.ps119.entity.BoardHistory;
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.entity.MemberAuthority;
 import kr.co.ps119.entity.Memo;
 import kr.co.ps119.repository.AuthorityRepository;
+import kr.co.ps119.repository.BoardHistoryRepository;
 import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.repository.MemberAuthorityRepository;
 import kr.co.ps119.repository.MemberRepository;
@@ -41,6 +43,9 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 	
 	@Autowired
 	private MemoRepository memoRepo;
+	
+	@Autowired
+	private BoardHistoryRepository boardHisRepo;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -105,10 +110,12 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 			boardRepo.save(board);
 		}
 		
-		Memo memo ;
+		Board board249 = boardRepo.findOne(249L);
+		
+		Memo memo;
 		for(int i = 1; i <= 101; i++) {
 			memo = new Memo();
-			memo.setBoard(boardRepo.findOne(249L));
+			memo.setBoard(board249);
 			memo.setTitle("memo title " + i);
 			memo.setContent("memo content " + i);
 			
@@ -129,6 +136,32 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 			memoRepo.save(memo);
 		}
 
+		BoardHistory history;
+		for(int i = 1; i <= 101; i++) {
+			history = new BoardHistory();
+			history.setBoard(board249);
+			
+			switch(i % 4) {
+				case 1:
+					history.setMember(member1);
+					history.setContent("editor update");
+					break;
+				case 2:
+					history.setMember(member2);
+					history.setContent("editor update save");
+					break;
+				case 3:
+					history.setMember(member3);
+					history.setContent("memo create");					
+					break;
+				case 0:
+					history.setMember(member4);
+					history.setContent("memo update");
+					break;
+			}
+			boardHisRepo.save(history);
+		}
+		
 		System.out.println("\n-------------------------- test data is ready --------------------------\n");
 		
 		/*

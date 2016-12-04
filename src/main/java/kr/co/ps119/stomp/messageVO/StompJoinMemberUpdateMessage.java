@@ -20,7 +20,7 @@ public class StompJoinMemberUpdateMessage extends AbstractStompMessage {
 	}
 	
 	@Override
-	public void makeChatAreaMessage() {
+	public void setChatAreaMessage() {
 	}
 
 	public boolean isJoin() {

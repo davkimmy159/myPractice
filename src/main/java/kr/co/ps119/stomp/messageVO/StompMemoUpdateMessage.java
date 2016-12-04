@@ -13,7 +13,7 @@ public class StompMemoUpdateMessage extends AbstractStompMessage {
 	}
 
 	@Override
-	public void makeChatAreaMessage() {
+	public void setChatAreaMessage() {
 		chatAreaMessage = "** Memo updated by '" + username + "' **";
 	}
 

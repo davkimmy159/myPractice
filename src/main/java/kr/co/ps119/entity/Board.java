@@ -1,15 +1,8 @@
 package kr.co.ps119.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.chrono.IsoChronology;
-import java.time.format.DateTimeFormatter;
-import java.time.zone.ZoneRules;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -24,8 +17,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -87,6 +78,13 @@ public class Board implements Serializable {
 			   orphanRemoval = true)
 	@JsonBackReference
 	private List<Memo> memos = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "board",
+			   fetch = FetchType.LAZY,
+			   cascade = CascadeType.ALL,
+			   orphanRemoval = true)
+	@JsonBackReference
+	private List<BoardHistory> histories = new ArrayList<>();
 	
 	public Board() {
 	}
@@ -213,6 +211,18 @@ public class Board implements Serializable {
 		}
 	}
 
+	public List<BoardHistory> getHistories() {
+		return histories;
+	}
+
+	public void addHistories(BoardHistory boardHistory) {
+		histories.add(boardHistory);
+		
+		if(boardHistory.getBoard() != this) {
+			boardHistory.setBoard(this);
+		}
+	}
+	
 	public boolean isEmptyBoard() {
 		return this.id <= 0L;
 	}
@@ -231,12 +241,12 @@ public class Board implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((content == null) ? 0 : content.hashCode());
-		result = prime * result + ((createDate == null) ? 0 : createDate.hashCode());
-		result = prime * result + ((lastUpdateDate == null) ? 0 : lastUpdateDate.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + ((updateCount == null) ? 0 : updateCount.hashCode());
-		result = prime * result + ((hitCount == null) ? 0 : hitCount.hashCode());
+		result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
+		result = prime * result + ((getCreateDate() == null) ? 0 : getCreateDate().hashCode());
+		result = prime * result + ((getLastUpdateDate() == null) ? 0 : getLastUpdateDate().hashCode());
+		result = prime * result + ((getTitle() == null) ? 0 : getTitle().hashCode());
+		result = prime * result + ((getUpdateCount() == null) ? 0 : getUpdateCount().hashCode());
+		result = prime * result + ((getHitCount() == null) ? 0 : getHitCount().hashCode());
 		return result;
 	}
 

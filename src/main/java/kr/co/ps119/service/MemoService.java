@@ -18,7 +18,7 @@ import kr.co.ps119.repository.MemberRepository;
 import kr.co.ps119.repository.MemoRepository;
 
 @Service
-public class MemoService {
+public class MemoService implements MemoServiceAopMethod  {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -45,7 +45,7 @@ public class MemoService {
 		return member.getId();
 	}
 	
-	public Long getTotalCountOfMemos(Long boardId) {
+	public Long getTotalMemoCountOfBoard(Long boardId) {
 		Long total = memoRepo.countByBoardId(boardId);
 
 		return total;
@@ -57,7 +57,13 @@ public class MemoService {
 		return boardList;
 	}
 	
+	@Override
 	public Memo saveOneMemo(Memo memo) {
 		return memoRepo.save(memo);
+	}
+	
+	@Override
+	public Memo updateOneMemo(Memo memo) {
+		return saveOneMemo(memo);
 	}
 }

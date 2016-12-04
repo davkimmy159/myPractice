@@ -3,7 +3,6 @@ package kr.co.ps119.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,11 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -23,62 +19,52 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import kr.co.ps119.utils.Utility;
+
 @Entity
-public class Memo implements Serializable {
+public class BoardHistory implements Serializable {
 	
-	private static final long serialVersionUID = 5199824822705432663L;
+	private transient static final long serialVersionUID = -940182745244633418L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "memo_id")
+	@Column(name = "history_id")
 	private Long id;
 	
 	@Column
-	@NotBlank(message = "title is empty")
-	@Length(max = 600,
-			message = "memo title must be between 0 ~ 600")
-	private String title;
-	
-	@Column
-	@NotBlank(message = "memo content is empty")
-	@Lob
+	@NotBlank(message = "content of board history is empty")
+	@Length(max = 300,
+			message = "board name must be between 0 ~ 300")
 	private String content;
 	
 	@Column
 	@NotNull(message = "date is empty")
 	private LocalDateTime createDate;
-	
-	@Column
-	@NotNull(message = "date is empty")
-	private LocalDateTime lastUpdateDate;
 
 	// for view
 	private String memberUsername;
 	
-	// foreign key 1
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id",
 				nullable = true)
 	@JsonManagedReference
 	private Member member;
-	
-	// foreign key 2
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "board_id",
 				nullable = true)
 	@JsonManagedReference
 	private Board board;
-	
-	public Memo() {
-	}
 
-	public Memo(String title, String content, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
-		this.title = title;
+	public BoardHistory() {
+	}
+	
+	public BoardHistory(Long id, String content, LocalDateTime createDate) {
+		this.id = id;
 		this.content = content;
 		this.createDate = createDate;
-		this.lastUpdateDate = lastUpdateDate;
 	}
-	
+
 	
 	// ------------------------------------------------------------------
 	
@@ -86,9 +72,11 @@ public class Memo implements Serializable {
 	// Sets default values
 	@PrePersist
 	void setDefaultValues() {
-//		setContent("This is memo");
 		setCreateDate(LocalDateTime.now());
-		setLastUpdateDate(LocalDateTime.now());
+	}
+	
+	public String getFormattedCreateDateString() {
+		return createDate.format(Utility.getDateTimeFormatter());
 	}
 	
 	
@@ -105,14 +93,6 @@ public class Memo implements Serializable {
 	}
 	*/
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
 	public String getContent() {
 		return content;
 	}
@@ -129,14 +109,6 @@ public class Memo implements Serializable {
 		this.createDate = createDate;
 	}
 
-	public LocalDateTime getLastUpdateDate() {
-		return lastUpdateDate;
-	}
-
-	public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
-		this.lastUpdateDate = lastUpdateDate;
-	}
-	
 	public String getMemberUsername() {
 		return memberUsername;
 	}
@@ -152,11 +124,11 @@ public class Memo implements Serializable {
 	public void setMember(Member member) {
 		this.member = member;
 		
-		if(!(member.getMemos().contains(this))) {
-			member.getMemos().add(this);
+		if(!(member.getHistories().contains(this))) {
+			member.getHistories().add(this);
 		}
 	}
-	
+
 	// for view
 	public void setMemberNull() {
 		this.member = null;
@@ -169,8 +141,8 @@ public class Memo implements Serializable {
 	public void setBoard(Board board) {
 		this.board = board;
 		
-		if(!(board.getMemos().contains(this))) {
-			board.getMemos().add(this);
+		if(!(board.getHistories().contains(this))) {
+			board.getHistories().add(this);
 		}
 	}
 
@@ -178,10 +150,8 @@ public class Memo implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getTitle() == null) ? 0 : getTitle().hashCode());
 		result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
 		result = prime * result + ((getCreateDate() == null) ? 0 : getCreateDate().hashCode());
-		result = prime * result + ((getLastUpdateDate() == null) ? 0 : getLastUpdateDate().hashCode());
 		return result;
 	}
 
@@ -193,17 +163,10 @@ public class Memo implements Serializable {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof Memo)) {
+		if (!(obj instanceof BoardHistory)) {
 			return false;
 		}
-		Memo other = (Memo) obj;
-		if (getTitle() == null) {
-			if (other.title != null) {
-				return false;
-			}
-		} else if (!getTitle().equals(other.title)) {
-			return false;
-		}
+		BoardHistory other = (BoardHistory) obj;
 		if (getContent() == null) {
 			if (other.content != null) {
 				return false;
@@ -216,13 +179,6 @@ public class Memo implements Serializable {
 				return false;
 			}
 		} else if (!getCreateDate().equals(other.createDate)) {
-			return false;
-		}
-		if (getLastUpdateDate() == null) {
-			if (other.lastUpdateDate != null) {
-				return false;
-			}
-		} else if (!getLastUpdateDate().equals(other.lastUpdateDate)) {
 			return false;
 		}
 		return true;

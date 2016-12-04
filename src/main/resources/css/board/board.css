@@ -138,6 +138,11 @@ ul.pagination.bootpag {
 	font-style: italic;
 }
 
+tbody#joinMemberTableListTbody td span {
+	cursor: pointer;
+}
+
+
 /* Responsive css */
 /* basic */
 @media screen and (min-width:768px) {

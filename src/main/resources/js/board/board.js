@@ -155,7 +155,7 @@ var session = {
 		this.stompClient.connect(headers,
 			function(frame) {
 				notify.notify("Stomp connection for board", frame);
-
+				
 				// chat subscribe
 				session.stompClient.subscribe(session.chatSubscribe, function(messageData) {
 					var chatMessage = JSON.parse(messageData.body);
@@ -213,7 +213,7 @@ var session = {
 						notify.notify(memoUpdateMessage.username, memoUpdateMessage.messageBody);
 					}
 				});
-				
+			
 				// member connection and disconnection subscribe
 				session.stompClient.subscribe(session.joinMemberUpdateSubscribe, function(messageData) {
 					
@@ -223,8 +223,49 @@ var session = {
 					boardUtils.chatAppend(message.messageBody);
 					boardUtils.chatAppend(" - " + message.username + " - ");
 					
-					notify.notify("member list", message.memberList);
+					var memberList = message.memberList;
+					
+					var joinMemberRows = "";
+					var role;
+					
+					for(var cnt in memberList) {
+						role = memberList[cnt].username == $("#boardOwner").val() ? "Owner" : "Guest";
+						
+						joinMemberRows +=
+							'<tr>' +
+							'	<td>' +
+							'		<span class="username">' + memberList[cnt].username + '</span>' +
+							'	</td>' +
+							'	<td>' +
+							'		<span class="userEmail">' + memberList[cnt].email + '</span>' +
+							'	</td>' +
+							'	<td>' +
+							'		<span class="userRole">' + role + '</span>' +
+							'	</td>' +
+							'</tr>';
+					}
+					
+					$("#joinMemberTableTbody").html(joinMemberRows);
+					
+					/*
+					$("#joinMemberTableTbody").find('span.username').editable({
+						type : 'text',
+//						url : '/post',
+						title : 'test'
+//						placement : 'left'
+					});
+					*/
 				});
+				
+				if($("input#boardMemoSize").val() != 0) {
+					ajax.getMemosOfBoard($("input#boardId").val(), 1);	
+				}
+				
+				if($("input#boardHistorySize").val() != 0) {
+					ajax.getHistoriesOfBoard($("input#boardId").val(), 1);	
+				}
+				
+				ajax.updateJoinMemberTable($("input#boardId").val());
 			},
 			function(error) {
 
@@ -760,9 +801,9 @@ var resizeFuncs = {
 };
 
 
-//=============================================================================================
+// List pagination ============================================================================
 
-// List pagination
+// memo list
 $('#memoPagination-bootpag').bootpag({
 	total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 0,
 	page: 1,
@@ -777,6 +818,20 @@ $('#memoPagination-bootpag').bootpag({
 	ajax.getMemosOfBoard($("input#boardId").val(), num);
 }); 
 
+// history list
+$('#historyPagination-bootpag').bootpag({
+	total: $("input#boardHistorySize").val() != 0 ? $("input#boardHistorySize").val() % 10 == 0 ?  $("input#boardHistorySize").val() / 10 : $("input#boardHistorySize").val() / 10 + 1 : 0,
+	page: 1,
+	maxVisible: 5,
+	leaps: true,
+	firstLastUse: true,
+	prev: "‹",
+	next: "›",
+	first: "«",
+	last: "»"
+}).on("page", function(event, num){
+	ajax.getHistoriesOfBoard($("input#boardId").val(), num);
+});
 
 //=============================================================================================
 
@@ -838,7 +893,7 @@ var ajax = {
 					
 					memoListDisplay +=		'			</a>';
 					
-					if(memoList[cnt].member.username == $("#loginUsername").text()) {
+					if(memoList[cnt].memberUsername == $("#loginUsername").text()) {
 						memoListDisplay +=  '			<button class="close" name="memoDeleteBtn" type="button" >' +
 											'				<span class="glyphicon glyphicon-remove-sign"></span>' +
 											'			</button>' +
@@ -852,7 +907,7 @@ var ajax = {
 					memoListDisplay +=  	'			<button class="close visible-xs-block" name="usernameDisplayBtn" type="button">' +
 											'				<span class="glyphicon glyphicon-exclamation-sign"></span>' +
 											'			</button>' +
-											'			<span class="hidden-xs memoOwnerDisplay">  [' + memoList[cnt].member.username + ']</span>';					
+											'			<span class="hidden-xs memoOwnerDisplay">  [' + memoList[cnt].memberUsername + ']</span>';					
 					memoListDisplay +=  	'		</h4>' +
 											'	</div>' +
 											'	<div id="memoContent' + memoList[cnt].id + '" class="panel-collapse collapse" role="tabpanel">' +
@@ -916,8 +971,6 @@ var ajax = {
 //				notify.notify('Ajax 통신 성공', status);
 				notify.notify('message', data.message);
 				
-//				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
-				
 				var memoUpdateMsg = JSON.stringify({
 					username : session.nickname,
 					messageBody : "Memo update",
@@ -951,8 +1004,6 @@ var ajax = {
 				
 				$("#mainModal_tabContent3_memoContent1").find('input[name="memoTitle"]').val("");
 				memoEditor.setData("");
-				
-//				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
 				
 				var memoUpdateMsg = JSON.stringify({
 					username : session.nickname,
@@ -989,8 +1040,6 @@ var ajax = {
 				
 				$("#memoUpdateDiv").find('input[name="memoTitle"]').val("");
 				memoUpdateEditor.setData("");
-				
-//				ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
 				
 				var memoUpdateMsg = JSON.stringify({
 					username : session.nickname,
@@ -1042,7 +1091,49 @@ var ajax = {
 						'</tr>';
 				}
 				
-				$("#joinMemberTableListTbody").html(joinMemberRows);
+				$("#joinMemberTableTbody").html(joinMemberRows);
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패 : ' + request.status, 'status : ' + status);
+			}
+		});
+	},
+	
+	getHistoriesOfBoard : function(boardId, offset) {
+		$.ajax({
+			url : '../ajax/board/history/getHistoriesOfBoard',
+			type : 'GET',
+			data : {
+				"boardId" : boardId,
+				"offset" : offset
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+//				notify.notify('Ajax 통신 성공 : ', status);
+				
+				var historyList = data.historyList;
+				
+				var boardHistoryRows = "";
+				
+				for(var cnt in historyList) {
+					boardHistoryRows +=
+						'<tr>' +
+						'	<td>' +
+						'		<span class="username">' + historyList[cnt].memberUsername + '</span>' +
+						'	</td>' +
+						'	<td>' +
+						'		<span class="content">' + historyList[cnt].content + '</span>' +
+						'	</td>' +
+						'	<td>' +
+						'		<span class="createDate">' + utils.dateFormat(historyList[cnt].createDate) + '</span>' +
+						'	</td>' +
+						'</tr>';
+				}
+				
+				$("#boardHistoryTableTbody").html(boardHistoryRows);
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 : ' + request.status, 'status : ' + status);
@@ -1052,13 +1143,9 @@ var ajax = {
 }
 
 $("#joinMemberRefreshBtn").click(function() {
-	notify.notify("test", "test");
 	
-	var msg = JSON.stringify({
-		message : "test message"
-	});
-	
-	session.stompClient.send(session.joinMemberUpdateHandler, {}, msg);
+//	ajax.updateJoinMemberTable(session.boardId);
+	ajax.getHistoriesOfBoard($("input#boardId").val(), $('#historyPagination-bootpag').find("li.active").find("a").text());
 });
 
 // =============================================================================================
@@ -1068,16 +1155,9 @@ $("#joinMemberRefreshBtn").click(function() {
 $(document).ready(function() {
 	
 	// Connects to STOMP server after 1 second because immediate connection didn't work
-	setTimeout(function() {
-		session.connect();
-	}, 1000);
+	session.connect();
 
 	utils.executeAllFunctionMembers(eventObj);
-
-	if($("input#boardMemoSize").val() != 0) {
-		ajax.getMemosOfBoard($("input#boardId").val(), 1);	
-	}
-	
 	
 	for(var ctr in BCModalSet) {
 		if((typeof BCModalSet[ctr]) == 'function') {

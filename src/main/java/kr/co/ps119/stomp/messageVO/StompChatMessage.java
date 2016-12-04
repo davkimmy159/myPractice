@@ -11,7 +11,7 @@ public class StompChatMessage extends AbstractStompMessage{
 	}
 
 	@Override
-	public void makeChatAreaMessage() {
+	public void setChatAreaMessage() {
 		chatAreaMessage = username + " : " + messageBody;
 	}
 }

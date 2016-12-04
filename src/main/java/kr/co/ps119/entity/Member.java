@@ -82,7 +82,14 @@ public class Member implements UserDetails, Serializable {
 			   orphanRemoval = true)
 	@JsonBackReference
 	private List<Memo> memos = new ArrayList<>();
-		
+
+	@OneToMany(mappedBy = "member",
+			   fetch = FetchType.LAZY,
+			   cascade = CascadeType.ALL,
+			   orphanRemoval = true)
+	@JsonBackReference
+	private List<BoardHistory> histories = new ArrayList<>();
+
 	public Member() {
 	}
 	
@@ -181,6 +188,18 @@ public class Member implements UserDetails, Serializable {
 		this.enabled = enabled;
 	}
 
+	public List<MemberAuthority> getMemberAuthorities() {
+		return memberAuthorities;
+	}
+	
+	public void addMemberAuthority(MemberAuthority memberAuthority) {
+		memberAuthorities.add(memberAuthority);
+		
+		if(memberAuthority.getMember() != this) {
+			memberAuthority.setMember(this);
+		}
+	}
+	
 	public List<Board> getBoards() {
 		return boards;
 	}
@@ -205,15 +224,15 @@ public class Member implements UserDetails, Serializable {
 		}
 	}
 	
-	public List<MemberAuthority> getMemberAuthorities() {
-		return memberAuthorities;
+	public List<BoardHistory> getHistories() {
+		return histories;
 	}
-	
-	public void addMemberAuthority(MemberAuthority memberAuthority) {
-		memberAuthorities.add(memberAuthority);
+
+	public void addHistory(BoardHistory boardHistory) {
+		histories.add(boardHistory);
 		
-		if(memberAuthority.getMember() != this) {
-			memberAuthority.setMember(this);
+		if(boardHistory.getMember() != this) {
+			boardHistory.setMember(this);
 		}
 	}
 	
@@ -226,10 +245,10 @@ public class Member implements UserDetails, Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + (enabled ? 1231 : 1237);
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
+		result = prime * result + (isEnabled() ? 1231 : 1237);
+		result = prime * result + ((getPassword() == null) ? 0 : getPassword().hashCode());
+		result = prime * result + ((getUsername() == null) ? 0 : getUsername().hashCode());
 		return result;
 	}
 

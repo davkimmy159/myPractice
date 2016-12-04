@@ -27,7 +27,7 @@ public class StompController {
 	@SendTo("/subscribe/board/chat/{boardId}")
 	public StompChatMessage handler1(StompChatMessage chatMessage) {
 		
-		chatMessage.makeChatAreaMessage();
+		chatMessage.setChatAreaMessage();
 		
 		return chatMessage;
 	}
@@ -36,16 +36,16 @@ public class StompController {
 	@SendTo("/subscribe/board/chat/db_update_alarm/{boardId}")
 	public StompDBUpdateMessage handler3(StompDBUpdateMessage DBUpdateMessage) {
 		
-		DBUpdateMessage.makeChatAreaMessage();
+		DBUpdateMessage.setChatAreaMessage();
 		
 		return DBUpdateMessage;
 	}
 	
 	@MessageMapping("/board/editor/{boardId}")
 	@SendTo("/subscribe/board/editor/{boardId}")
-	public StompEditorContent handler2(StompEditorContent editorContent) {
+	public StompEditorContent editorContentUpdate(StompEditorContent editorContent) {
 
-		editorContent.makeChatAreaMessage();
+		editorContent.setChatAreaMessage();
 		
 		return editorContent;
 	}
@@ -54,7 +54,7 @@ public class StompController {
 	@SendTo("/subscribe/board/memo_update_alarm/{boardId}")
 	public StompMemoUpdateMessage handler4(StompMemoUpdateMessage memoUpdateMessage) {
 		
-		memoUpdateMessage.makeChatAreaMessage();
+		memoUpdateMessage.setChatAreaMessage();
 		
 		System.out.println("page number : " + memoUpdateMessage.getPageNumber());
 		

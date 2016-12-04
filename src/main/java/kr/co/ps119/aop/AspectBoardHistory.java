@@ -13,10 +13,30 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
-public class AspectTest_1 {
+public class AspectBoardHistory {
+	 
+	@Pointcut("execution(* kr.co.ps119.stomp.messageVO.StompEditorContent.setChatAreaMessage(..)) || " +	//	Board editor content update
+			  "execution(* kr.co.ps119.service.BoardService.updateBoardDBContent(..)) || " +				//	Board DB content update
+			  "execution(* kr.co.ps119.service.MemoService.saveOneMemo(..)) || " +							//	Memo create
+			  "execution(* kr.co.ps119.service.MemoService.updateOneMemo(..)) || " +						//	Memo content update
+			  "execution(* kr.co.ps119.service.MemoService.deleteById(..))")								//	Memo delete
+	public void createBoardHistoryPointcut() {
+	}
+	
+	@Around("createBoardHistoryPointcut()")
+	public void createBoardHistoryAround(ProceedingJoinPoint jp) throws Throwable {
+		try {
+			jp.proceed();
+		} catch (Throwable e) {
+			e.printStackTrace();
+			System.out.println("Asepct : error on around");
+		}
+		System.out.println("------------- Aspect (around) -------------");
+		System.out.println(jp.getSignature().toLongString());
+		System.out.println(jp.getSignature().toShortString());
+	}
 	
 	/*
-	
 	@Pointcut("execution(* kr.co.ps119.controller.Controller_2.test())")
 	public void pointcut_1() {
 	}
