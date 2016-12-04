@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class AspectBoardHistory {
 	 
+	/*
 	@Pointcut("execution(* kr.co.ps119.stomp.messageVO.StompEditorContent.setChatAreaMessage(..)) || " +	//	Board editor content update
 			  "execution(* kr.co.ps119.service.BoardService.updateBoardDBContent(..)) || " +				//	Board DB content update
 			  "execution(* kr.co.ps119.service.MemoService.saveOneMemo(..)) || " +							//	Memo create
@@ -35,6 +36,7 @@ public class AspectBoardHistory {
 		System.out.println(jp.getSignature().toLongString());
 		System.out.println(jp.getSignature().toShortString());
 	}
+	*/
 	
 	/*
 	@Pointcut("execution(* kr.co.ps119.controller.Controller_2.test())")
