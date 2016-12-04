@@ -405,8 +405,6 @@ bootstrapTable = {
 };
 
 ajax = {
-		
-}
 	deleteOneBoard : function(boardId) {
 		$.ajax({
 			url : '../ajax/board/deleteOneBoard',
