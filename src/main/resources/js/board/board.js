@@ -121,25 +121,25 @@ var session = {
 
 	connect : function() {
 
-		// Sets path of destination and subscribe point for each board
-		this.chatHandler += $("input#boardId").val();
-		this.editorHandler += $("input#boardId").val();
-		this.dbUpdateAlarmHandler += $("input#boardId").val();
-		this.memoUpdateAlarmHandler += $("input#boardId").val();
-//		this.joinMemberUpdateHandler += $("input#boardId").val();
-
-		this.chatSubscribe += $("input#boardId").val();
-		this.editorSubscribe += $("input#boardId").val();
-		this.dbUpdateAlarmSubscribe += $("input#boardId").val();
-		this.memoUpdateAlarmSubscribe += $("input#boardId").val();
-		this.joinMemberUpdateSubscribe += $("input#boardId").val();
-		
 		// Sets nickname
 		this.nickname = $("#loginUsername").text();
 
 		// Sets board id
 		this.boardId = $("#boardId").val();
 
+		// Sets path of destination and subscribe point for each board
+		this.chatHandler += this.boardId;
+		this.editorHandler += this.boardId;
+		this.dbUpdateAlarmHandler += this.boardId;
+		this.memoUpdateAlarmHandler += this.boardId;
+//		this.joinMemberUpdateHandler += $("input#boardId").val();
+
+		this.chatSubscribe += this.boardId;
+		this.editorSubscribe += this.boardId;
+		this.dbUpdateAlarmSubscribe += this.boardId;
+		this.memoUpdateAlarmSubscribe += this.boardId;
+		this.joinMemberUpdateSubscribe += this.boardId;
+		
 		var websocketUrl = path.getFullContextPath() + '/websocket/board';
 		this.socket = new SockJS(websocketUrl);
 		this.stompClient = Stomp.over(this.socket);
@@ -180,6 +180,8 @@ var session = {
 
 				// editor subscribe
 				session.stompClient.subscribe(session.editorSubscribe, function(contentData) {
+					ajax.getHistoriesOfBoard(session.boardId, $('#historyPagination-bootpag').find("li.active").find("a").text());
+					
 					var contentDataBody = JSON.parse(contentData.body);
 
 					// desktop
@@ -203,7 +205,8 @@ var session = {
 				
 				// memoUpdateAlarm subscribe
 				session.stompClient.subscribe(session.memoUpdateAlarmSubscribe, function(messageData) {
-					ajax.getMemosOfBoard($("input#boardId").val(), $('#memoPagination-bootpag').find("li.active").find("a").text());
+					ajax.getMemosOfBoard(session.boardId, $('#memoPagination-bootpag').find("li.active").find("a").text());
+					ajax.getHistoriesOfBoard(session.boardId, $('#historyPagination-bootpag').find("li.active").find("a").text());
 					
 					var memoUpdateMessage = JSON.parse(messageData.body);
 
@@ -327,7 +330,7 @@ var session = {
 		msg = null;
 	},
 
-	editorContentSend : function() {
+	editorContentSend : function(dbUpdateFlag) {
 
 		var editorContent = {
 			username : "",
@@ -347,18 +350,18 @@ var session = {
 			mobileEditor.focus();
 		}
 
-		session.stompClient.send(session.editorHandler, {}, JSON.stringify(editorContent));
+		session.stompClient.send(session.editorHandler, {"DB_UPDATE" : dbUpdateFlag}, JSON.stringify(editorContent));
 	},
 
 	editorContentDBUpdate : function() {
 
 		// desktop
 		if (utils.isDesktopSize()) {
-			ajax.updateBoardDB(session.boardId, basicEditor.getData());
+			ajax.updateBoardDB(session.nickname, session.boardId, basicEditor.getData());
 
 		// mobile
 		} else {
-			ajax.updateBoardDB(session.boardId, mobileEditor.getData());
+			ajax.updateBoardDB(session.nickname, session.boardId, mobileEditor.getData());
 		}
 
 		var dbUpdateMsg = JSON.stringify({
@@ -498,7 +501,7 @@ var eventObj = {
 	editorInputSendEvent : function() {
 		$('#editorInputBtn').click(function() {
 			if (boardUtils.isSessionAlive()) {
-				session.editorContentSend();
+				session.editorContentSend(false);
 
 				boardUtils.focusToEditor();
 			} else {
@@ -512,7 +515,6 @@ var eventObj = {
 			if (boardUtils.isSessionAlive()) {
 
 				session.editorContentDBUpdate();
-				session.editorContentSend();
 
 			}
 		});
@@ -533,7 +535,7 @@ var eventObj = {
 					notify.notify("Content", "invalid", "error");
 					memoEditor.focus();
 				} else {
-					ajax.createMemo($("#boardId").val(), memoTitle, memoContent);
+					ajax.createMemo(session.boardId, memoTitle, memoContent);
 				}
 				
 			} else {
@@ -838,11 +840,12 @@ $('#historyPagination-bootpag').bootpag({
 // Ajax
 
 var ajax = {
-	updateBoardDB : function(boardId, editorContent) {
+	updateBoardDB : function(username, boardId, editorContent) {
 		$.ajax({
 			url : '../ajax/board/updateBoardDB',
 			type : 'GET',
 			data : {
+				'username' : username,
 				'boardId' : boardId,
 				'editorContent' : editorContent
 			},
@@ -851,7 +854,10 @@ var ajax = {
 			// cache: false,
 			// processData: false,
 			success : function(data, status) {
-				notify.notify('Ajax 통신 성공 : ' + status, '저장 프로세스 : ' + data.resultMessage);
+//				notify.notify('Ajax 통신 성공 : ' + status, '저장 프로세스 : ' + data.resultMessage);
+				notify.notify('DB 저장 ', '성공');
+				
+				session.editorContentSend(true);
 			},
 			error : function(request, status, error) {
 				notify.notify('Ajax 통신 실패 : ' + request.status, 'status : ' + status);
@@ -893,7 +899,7 @@ var ajax = {
 					
 					memoListDisplay +=		'			</a>';
 					
-					if(memoList[cnt].memberUsername == $("#loginUsername").text()) {
+					if(memoList[cnt].memberUsername == session.nickname) {
 						memoListDisplay +=  '			<button class="close" name="memoDeleteBtn" type="button" >' +
 											'				<span class="glyphicon glyphicon-remove-sign"></span>' +
 											'			</button>' +
@@ -956,35 +962,6 @@ var ajax = {
 		});
 	},
 	
-	deleteOneMemo : function(memoId) {
-		$.ajax({
-			url : '../ajax/memo/deleteOneMemo',
-			type : 'GET',
-			data : {
-				'memoId' : memoId
-			},
-			contentType : 'application/json; charset=utf-8',
-			dataType : 'json',
-			// cache: false,
-			// processData: false,
-			success : function(data, status) {
-//				notify.notify('Ajax 통신 성공', status);
-				notify.notify('message', data.message);
-				
-				var memoUpdateMsg = JSON.stringify({
-					username : session.nickname,
-					messageBody : "Memo update",
-					pageNumber : $('#memoPagination-bootpag').find("li.active").find("a").text()
-				});
-				
-				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
-			},
-			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
-			}
-		});
-	},
-	
 	createMemo : function(boardId, memoTitle, memoContent) {
 		$.ajax({
 			url : '../ajax/memo/createMemo',
@@ -1040,6 +1017,35 @@ var ajax = {
 				
 				$("#memoUpdateDiv").find('input[name="memoTitle"]').val("");
 				memoUpdateEditor.setData("");
+				
+				var memoUpdateMsg = JSON.stringify({
+					username : session.nickname,
+					messageBody : "Memo update",
+					pageNumber : $('#memoPagination-bootpag').find("li.active").find("a").text()
+				});
+				
+				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
+			},
+			error : function(request, status, error) {
+				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
+			}
+		});
+	},
+	
+	deleteOneMemo : function(memoId) {
+		$.ajax({
+			url : '../ajax/memo/deleteOneMemo',
+			type : 'GET',
+			data : {
+				'memoId' : memoId
+			},
+			contentType : 'application/json; charset=utf-8',
+			dataType : 'json',
+			// cache: false,
+			// processData: false,
+			success : function(data, status) {
+//				notify.notify('Ajax 통신 성공', status);
+				notify.notify('message', data.message);
 				
 				var memoUpdateMsg = JSON.stringify({
 					username : session.nickname,
@@ -1119,18 +1125,24 @@ var ajax = {
 				var boardHistoryRows = "";
 				
 				for(var cnt in historyList) {
+					if(historyList[cnt].memberUsername != session.nickname) {
+						boardHistoryRows +=
+							'<tr>';
+					} else {
+						boardHistoryRows +=
+							'<tr class="success">';
+					}
 					boardHistoryRows +=
-						'<tr>' +
-						'	<td>' +
-						'		<span class="username">' + historyList[cnt].memberUsername + '</span>' +
-						'	</td>' +
-						'	<td>' +
-						'		<span class="content">' + historyList[cnt].content + '</span>' +
-						'	</td>' +
-						'	<td>' +
-						'		<span class="createDate">' + utils.dateFormat(historyList[cnt].createDate) + '</span>' +
-						'	</td>' +
-						'</tr>';
+							'	<td>' +
+							'		<span class="username">' + historyList[cnt].memberUsername + '</span>' +
+							'	</td>' +
+							'	<td>' +
+							'		<span class="content">' + historyList[cnt].content + '</span>' +
+							'	</td>' +
+							'	<td>' +
+							'		<span class="createDate">' + utils.dateFormat(historyList[cnt].createDate) + '</span>' +
+							'	</td>' +
+							'</tr>';
 				}
 				
 				$("#boardHistoryTableTbody").html(boardHistoryRows);
@@ -1145,7 +1157,7 @@ var ajax = {
 $("#joinMemberRefreshBtn").click(function() {
 	
 //	ajax.updateJoinMemberTable(session.boardId);
-	ajax.getHistoriesOfBoard($("input#boardId").val(), $('#historyPagination-bootpag').find("li.active").find("a").text());
+//	ajax.getHistoriesOfBoard(session.boardId, $('#historyPagination-bootpag').find("li.active").find("a").text());
 });
 
 // =============================================================================================

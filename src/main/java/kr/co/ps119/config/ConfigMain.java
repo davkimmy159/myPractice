@@ -1,52 +1,25 @@
 package kr.co.ps119.config;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
-import org.springframework.context.annotation.ComponentScan;
-
-import java.util.Set;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
-
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.ViewResolver;
-
-import org.springframework.web.servlet.view.UrlBasedViewResolver;
-
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.thymeleaf.dialect.IDialect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
-import kr.co.ps119.controller.*;
-import kr.co.ps119.entity.Member;
+import kr.co.ps119.interceptor.BoardHistoryInterceptor;
 import kr.co.ps119.vo.MemberVO;
-
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.dialect.IDialect;
-import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
-
 import nz.net.ultraq.thymeleaf.LayoutDialect;
-import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 @Configuration
 //@PropertySource("classpath:properties/etc.properties")
@@ -74,7 +47,24 @@ public class ConfigMain extends WebMvcConfigurerAdapter {
 	}
 
 	/*
-	// Turned off as spring security configuration sets this instead
+	@Autowired
+	BoardHistoryInterceptor boardHistoryInterceptor;
+
+	// registers interceptors 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+    	String basePath1 = "/ajax/memo";
+    	String memoAjaxPath1 = basePath1 + "/createMemo";
+    	String memoAjaxPath2 = basePath1 + "/updateMemo";
+    	String memoAjaxPath3 = basePath1 + "/deleteOneMemo";
+    	
+        registry.addInterceptor(boardHistoryInterceptor)
+        		.addPathPatterns(memoAjaxPath1, memoAjaxPath2, memoAjaxPath3);
+    }
+	 */
+	
+	/*
+	// Is turned off as spring security configuration sets this instead
 	// Character encoding (UTF-8)
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	@Bean

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,12 +17,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.ps119.entity.Board;
+import kr.co.ps119.entity.BoardHistory;
 import kr.co.ps119.entity.Member;
 import kr.co.ps119.entity.Memo;
+import kr.co.ps119.service.BoardHistoryService;
 import kr.co.ps119.service.BoardService;
 import kr.co.ps119.service.MemberService;
 import kr.co.ps119.service.MemoService;
 
+//@Transactional
 @RestController
 @RequestMapping(
 		value = "/ajax/memo",
@@ -34,6 +38,9 @@ public class MemoAjaxController {
 	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private BoardHistoryService boardHisService;
 	
 	@Autowired
 	private MemoService memoService;
@@ -63,11 +70,13 @@ public class MemoAjaxController {
 			memo.setTitle(trimmedMemoTitle);
 			memo.setContent(trimmedMemoContent);
 		
-			memo = memoService.updateOneMemo(memo);
-			
+			memo = memoService.saveOneMemo(memo);
+
 			if(memo == null) {
 				jsonObject.put("result", "Server error occurred during saving");
 			} else {
+				createOneBoardHistory(memo.getMember(), memo.getBoard(), "Memo update");
+
 				jsonObject.put("result", "Memo is updated successfully");
 			}
 		}
@@ -106,6 +115,8 @@ public class MemoAjaxController {
 			if(memo == null) {
 				jsonObject.put("result", "Server error occurred during saving");
 			} else {
+				createOneBoardHistory(memo.getMember(), memo.getBoard(), "Memo create");
+				
 				jsonObject.put("result", "Memo is saved successfully");
 			}
 		}
@@ -159,17 +170,34 @@ public class MemoAjaxController {
 			member = memberService.findByUsername(principal.getName());
 			memo = memoService.findOne(memoId);
 
-			memberIdFromMemo = memo.getMember().getId();
-			memberIdFromMember = member.getId();
-			
-			if (memberIdFromMemo.equals(memberIdFromMember)) {
-				memoService.deleteById(memoId);
-				jsonObject.put("message", "Memo NO. " + memoId + " deleted");
+			if(memo == null) {
+				jsonObject.put("result", "Server error occurred during saving");
 			} else {
-				jsonObject.put("message", "That memo is not yours");
+				memberIdFromMember = member.getId();
+				memberIdFromMemo = memo.getMember().getId();
+				
+				if (memberIdFromMemo.equals(memberIdFromMember)) {
+					memoService.deleteById(memoId);
+					
+					createOneBoardHistory(memo.getMember(), memo.getBoard(), "Memo delete");
+					
+					jsonObject.put("message", "Memo NO. " + memoId + " deleted");
+				} else {
+					jsonObject.put("message", "That memo is not yours");
+				}
+				
+				jsonObject.put("result", "Memo is saved successfully");
 			}
 		}
 		
 		return jsonObject;
+	}
+	
+	private void createOneBoardHistory(Member member, Board board, String historyContent) {
+		BoardHistory boardHistory = new BoardHistory();
+		boardHistory.setMember(member);
+		boardHistory.setBoard(board);
+		boardHistory.setContent(historyContent);
+		boardHisService.saveOne(boardHistory);
 	}
 }

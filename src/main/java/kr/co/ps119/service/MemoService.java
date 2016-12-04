@@ -18,7 +18,7 @@ import kr.co.ps119.repository.MemberRepository;
 import kr.co.ps119.repository.MemoRepository;
 
 @Service
-public class MemoService implements MemoServiceAopMethod  {
+public class MemoService {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -57,13 +57,7 @@ public class MemoService implements MemoServiceAopMethod  {
 		return boardList;
 	}
 	
-	@Override
 	public Memo saveOneMemo(Memo memo) {
 		return memoRepo.save(memo);
-	}
-	
-	@Override
-	public Memo updateOneMemo(Memo memo) {
-		return saveOneMemo(memo);
 	}
 }

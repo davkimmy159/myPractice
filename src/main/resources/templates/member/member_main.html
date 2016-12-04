@@ -20,7 +20,7 @@
 		<!-- <input id="boardExists" th:value="${#httpServletRequest.getAttribute('boardExists')}" type="hidden" /> -->
 	
 		<div class="row">
-			<nav id="" class="navbar navbar-default navbar-fixed-top navbar-inverse">
+			<nav id="memberMainNavbar" class="navbar navbar-default navbar-fixed-top navbar-inverse">
 				<div id="" class="container-fluid">
 					<div class="navbar-header">
 						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#colla-collapse-index">
@@ -51,12 +51,18 @@
 							<!-- category button list -->
 							<!-- For xs, md, lg size (the same as right above) -->
 							
-							<li class="active">
+							<li class="active boardTab">
 								<a href="#boardListTableContainer_tabContent1" data-toggle="tab">My boards</a>
 							</li>
-							<li>
+							<li class="boardTab">
 								<a href="#boardListTableContainer_tabContent2" data-toggle="tab">All boards</a>
 							</li>
+							
+							<!--
+							<li>
+								<a href="#boardListTableContainer_tabContent3" data-toggle="tab">My history</a>
+							</li>
+							 -->
 							
 							<li class="dropdown">
 								<a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -186,7 +192,35 @@
 								
 							</div>
 							<!-- /.tab-pane-->
+							
+							<!--
+							<div id="boardListTableContainer_tabContent3" class="tab-pane fade in" role="tabpanel">
 									
+								<div class="panel panel-success">
+									
+									<div class="panel-heading">
+										<h3><strong><span>My History</span></strong></h3>
+									</div>
+								
+									<div class="panel-body">
+										
+										<div class="table-responsive">
+											<table id="myHistoryList" class="table-hover"></table>
+										</div>
+										
+									</div>
+									
+									<div class="panel-footer">
+										<button name="deleteSelectedBoardBtn" class="btn btn-danger" type="button">
+											<span>Delete checked</span>
+										</button>
+									</div>
+									
+								</div>
+							
+							</div>
+							-->
+								 	
 						</div>
 						<!-- /.tab-content -->
 						

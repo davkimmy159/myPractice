@@ -1,7 +1,6 @@
 package kr.co.ps119.ajax.controller;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.ps119.entity.Board;
+import kr.co.ps119.entity.BoardHistory;
 import kr.co.ps119.entity.Member;
+import kr.co.ps119.service.BoardHistoryService;
 import kr.co.ps119.service.BoardService;
 import kr.co.ps119.service.MemberService;
 import kr.co.ps119.vo.BoardVO;
@@ -33,6 +34,9 @@ public class BoardAjaxController {
 
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private BoardHistoryService boardHisService;
 	
 	@Autowired
 	private BoardService boardService;
@@ -67,17 +71,15 @@ public class BoardAjaxController {
 	
 	@GetMapping(value = "updateBoardDB")
 	public Map<String, Object> updateBoardDB(
+			@RequestParam("username") String username,
 			@RequestParam("boardId") Long boardId,
 			@RequestParam("editorContent") String editorContent) {
 
-		System.out.println("Ajax communication");
-		
-		Long boardIdAfterUpdate = boardService.updateBoardDBContent(boardId, editorContent);
+		Long boardIdAfterUpdate = boardService.updateBoardDBContent(username, boardId, editorContent);
 		String resultMessage;
 		
 		if(boardIdAfterUpdate > 0) {
 			resultMessage = "Save successful.";
-			
 		} else {
 			resultMessage = "Server error, Please try again.";
 		}

@@ -14,14 +14,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kr.co.ps119.entity.Board;
+import kr.co.ps119.entity.BoardHistory;
 import kr.co.ps119.entity.Member;
+import kr.co.ps119.repository.BoardHistoryRepository;
 import kr.co.ps119.repository.BoardRepository;
-import kr.co.ps119.repository.MemoRepository;
 import kr.co.ps119.repository.MemberRepository;
+import kr.co.ps119.repository.MemoRepository;
 
 @Service
 @Transactional
-public class BoardService implements BoardServiceAopMethod {
+public class BoardService {
 
 	@PersistenceContext
 	private EntityManager em;
@@ -31,7 +33,10 @@ public class BoardService implements BoardServiceAopMethod {
 	
 	@Autowired
 	private BoardRepository boardRepo;
-	
+
+	@Autowired
+	private BoardHistoryRepository boardHisRepo;
+
 	@Autowired
 	private MemoRepository memoRepo;
 	
@@ -76,8 +81,8 @@ public class BoardService implements BoardServiceAopMethod {
 		return createdBoardId;
 	}
 	
-	@Override
-	public Long updateBoardDBContent(Long boardId, String editorContent) {
+	public Long updateBoardDBContent(String username, Long boardId, String editorContent) {
+		Member member = memberRepo.findByUsername(username);
 		Board boardToBeUpdated = boardRepo.findOne(boardId);
 
 		Long updateCount = boardToBeUpdated.getUpdateCount() + 1L;
@@ -91,11 +96,20 @@ public class BoardService implements BoardServiceAopMethod {
 		
 		if(boardAfterUpdate != null) {
 			boardIdAfterUpdate = boardAfterUpdate.getId();
+			createOneBoardHistory(member, boardAfterUpdate, "Board DB content update");
 		} else {
 			boardIdAfterUpdate = -1L;
 		}
 		
 		return boardIdAfterUpdate;
+	}
+	
+	private void createOneBoardHistory(Member member, Board board, String historyContent) {
+		BoardHistory boardHistory = new BoardHistory();
+		boardHistory.setMember(member);
+		boardHistory.setBoard(board);
+		boardHistory.setContent(historyContent);
+		boardHisRepo.save(boardHistory);
 	}
 	
 	public Board findOneWithAddHitCount(Long boardId, Principal principal) {

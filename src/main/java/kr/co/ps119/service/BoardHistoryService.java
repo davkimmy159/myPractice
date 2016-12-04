@@ -47,4 +47,8 @@ public class BoardHistoryService {
 		
 		return historyList;
 	}
+	
+	public void saveOne(BoardHistory boardHistory) {
+		boardHisRepo.save(boardHistory);
+	}
 }
