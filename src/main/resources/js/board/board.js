@@ -807,7 +807,7 @@ var resizeFuncs = {
 
 // memo list
 $('#memoPagination-bootpag').bootpag({
-	total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 1,
+	total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ? $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 1,
 	page: 1,
 	maxVisible: 5,
 	leaps: true,
@@ -822,7 +822,7 @@ $('#memoPagination-bootpag').bootpag({
 
 // history list
 $('#historyPagination-bootpag').bootpag({
-	total: $("input#boardHistorySize").val() != 0 ? $("input#boardHistorySize").val() % 10 == 0 ?  $("input#boardHistorySize").val() / 10 : $("input#boardHistorySize").val() / 10 + 1 : 1,
+	total: $("input#boardHistorySize").val() != 0 ? $("input#boardHistorySize").val() % 10 == 0 ? $("input#boardHistorySize").val() / 10 : $("input#boardHistorySize").val() / 10 + 1 : 1,
 	page: 1,
 	maxVisible: 5,
 	leaps: true,
