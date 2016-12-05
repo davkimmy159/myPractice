@@ -807,7 +807,7 @@ var resizeFuncs = {
 
 // memo list
 $('#memoPagination-bootpag').bootpag({
-	total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 0,
+	total: $("input#boardMemoSize").val() != 0 ? $("input#boardMemoSize").val() % 10 == 0 ?  $("input#boardMemoSize").val() / 10 : $("input#boardMemoSize").val() / 10 + 1 : 1,
 	page: 1,
 	maxVisible: 5,
 	leaps: true,
@@ -822,7 +822,7 @@ $('#memoPagination-bootpag').bootpag({
 
 // history list
 $('#historyPagination-bootpag').bootpag({
-	total: $("input#boardHistorySize").val() != 0 ? $("input#boardHistorySize").val() % 10 == 0 ?  $("input#boardHistorySize").val() / 10 : $("input#boardHistorySize").val() / 10 + 1 : 0,
+	total: $("input#boardHistorySize").val() != 0 ? $("input#boardHistorySize").val() % 10 == 0 ?  $("input#boardHistorySize").val() / 10 : $("input#boardHistorySize").val() / 10 + 1 : 1,
 	page: 1,
 	maxVisible: 5,
 	leaps: true,
@@ -957,7 +957,8 @@ var ajax = {
 				});
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
+//				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
+				notify.notify("메모 가져오기 실패");
 			}
 		});
 	},
@@ -991,7 +992,8 @@ var ajax = {
 				session.stompClient.send(session.memoUpdateAlarmHandler, {}, memoUpdateMsg);
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
+//				notify.notify('Ajax 통신 실패  : ' + request.status, 'status : ' + status);
+				notify.notify("메모 생성 실패");
 			}
 		});
 	},
@@ -1146,9 +1148,14 @@ var ajax = {
 				}
 				
 				$("#boardHistoryTableTbody").html(boardHistoryRows);
+				
+				$('#historyPagination-bootpag').bootpag({
+					total: $("input#boardHistorySize").val() != 0 ? $("input#boardHistorySize").val() % 10 == 0 ?  $("input#boardHistorySize").val() / 10 : $("input#boardHistorySize").val() / 10 + 1 : 0
+				});
 			},
 			error : function(request, status, error) {
-				notify.notify('Ajax 통신 실패 : ' + request.status, 'status : ' + status);
+//				notify.notify('Ajax 통신 실패 : ' + request.status, 'status : ' + status);
+				notify.notify('히스토리 가져오기 실패');
 			}
 		});
 	}
