@@ -323,10 +323,6 @@ bootstrapTable = {
 			$("input[type='checkbox'][data-field='id']").parent().parent("li").addClass("hidden-xs");
 			$("input[type='checkbox'][data-field='createDate']").parent().parent("li").addClass("hidden-xs hidden-sm");
 			$("input[type='checkbox'][data-field='lastUpdateDate']").parent().parent("li").addClass("hidden-xs hidden-sm");
-			
-			$("#colla-collapse-index").find("ul.nav:first-of-type").find("li.boardTab").click(function() {
-				$('button.navbar-toggle').click();
-			});
 		},
 		
 		deleteSelectedBoardButtonEvent : function() {
@@ -470,12 +466,16 @@ $(document).ready(function() {
 		if (utils.isDesktopSize()) {
 			if($("div.pagination-detail").hasClass("text-center")) {
 				bootstrapTable.responsiveSetting.basicSize();
+				$("#colla-collapse-index").find("ul.nav:first-of-type").find("li.boardTab").unbind("click");
 			}
 			
 		// To mobile from basic
 		} else {
 			if(!($("div.pagination-detail").hasClass("text-center"))) {
 				bootstrapTable.responsiveSetting.mobileSize();
+				$("#colla-collapse-index").find("ul.nav:first-of-type").find("li.boardTab").click(function() {
+					$('button.navbar-toggle').click();
+				});
 			}
 		}
 	}).resize();

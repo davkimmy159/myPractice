@@ -1,6 +1,7 @@
 package kr.co.ps119.ajax.controller;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.ps119.entity.Board;
-import kr.co.ps119.entity.BoardHistory;
 import kr.co.ps119.entity.Member;
+import kr.co.ps119.repository.BoardRepository;
 import kr.co.ps119.service.BoardHistoryService;
 import kr.co.ps119.service.BoardService;
 import kr.co.ps119.service.MemberService;
@@ -32,6 +33,9 @@ import kr.co.ps119.vo.MemberVO;
 )
 public class BoardAjaxController {
 
+	@Autowired
+	private BoardRepository boardRepo;
+	
 	@Autowired
 	private MemberService memberService;
 	
@@ -96,24 +100,24 @@ public class BoardAjaxController {
 			Principal principal,
 			int limit,
 			int offset,
-//			String search,
+			String search,
 			String sort,
 			String order) {
 		
 		Member member = memberService.findByUsername(principal.getName());
 		
-		return getAllBoardsHelper(member.getId(), limit, offset, sort, order);
+		return getAllBoardsHelper(member.getId(), limit, offset, search, sort, order);
 	}
 	
 	@GetMapping(value = "getAllBoards")
 	public Map<String, Object> getAllBoards(
 			int limit,
 			int offset,
-//			String search,
+			String search,
 			String sort,
 			String order) {
 		
-		return getAllBoardsHelper(limit, offset, sort, order);
+		return getAllBoardsHelper(limit, offset, search, sort, order);
 	}
 	
 	@GetMapping(value = "deleteOneBoard") 
@@ -173,11 +177,21 @@ public class BoardAjaxController {
 			Long memberId,
 			int limit,
 			int offset,
-//			String search,
+			String search,
 			String sort,
 			String order) {
 		
-		System.out.println("sort : " + sort);
+		System.out.println("limit  : " + limit);
+		System.out.println("offset : " + offset);
+		System.out.println("search : " + search);
+		System.out.println("search null? : " + search == null);
+		System.out.println("sort   : " + sort);
+		System.out.println("order  : " + order);
+		
+		if(!(null == search || search.isEmpty())) {
+			System.out.println("total + search          : " + boardRepo.countByTitleLike(search));
+			System.out.println("total + search + member : " + boardRepo.countByMemberIdAndTitleLike(memberId, search));
+		}
 		
 		Sort sorter;
 		
@@ -190,20 +204,26 @@ public class BoardAjaxController {
 		// Initial offset becomes
 		PageRequest pageRequest = new PageRequest(offset / limit, limit, sorter);
 		
-		Long total;
+		Long total = 0L;
+		List<Board> boardListInDB = Collections.emptyList();
 		
 		if(memberId <= 0L) {
-			total = boardService.getTotalCountOfBoards();
+			if(null == search || search.isEmpty()) {
+				total = boardService.getTotalCountOfBoards();
+				boardListInDB = boardService.findAllBoardsWithPageRequest(pageRequest);
+			} else {
+				total = boardService.getTotalCountOfBoardsTitleLike(search);
+				boardListInDB = boardService.findAllBoardsTitleLikeWithPageRequest(search, pageRequest);
+			}
+			
 		} else {
-			total = boardService.getTotalCountOfBoards(memberId);	
-		}
-		
-		List<Board> boardListInDB;
-		
-		if(memberId <= 0L) {
-			boardListInDB = boardService.findAllBoardsWithPageRequest(pageRequest);
-		} else {
-			boardListInDB = boardService.findAllBoardsWithPageRequest(memberId, pageRequest);
+			if(null == search || search.isEmpty()) {
+				total = boardService.getTotalCountOfBoards(memberId);	
+				boardListInDB = boardService.findAllBoardsWithPageRequest(memberId, pageRequest);				
+			} else {
+				total = boardService.getTotalCountOfBoardsTitleLike(memberId, search);
+				boardListInDB = boardService.findAllBoardsTitleLikeWithPageRequest(memberId, search, pageRequest);
+			}
 		}
 		
 		List<BoardVO> viewList;
@@ -223,10 +243,10 @@ public class BoardAjaxController {
 	private Map<String, Object> getAllBoardsHelper(
 			int limit,
 			int offset,
-//			String search,
+			String search,
 			String sort,
 			String order) {
 
-		return getAllBoardsHelper(0L, limit, offset, sort, order);
+		return getAllBoardsHelper(0L, limit, offset, search, sort, order);
 	}
 }

@@ -152,4 +152,28 @@ public class BoardService {
 	public List<Board> deleteByIdInAndMemberId(List<Long> id, Long memberId) {
 		return boardRepo.deleteByIdInAndMemberId(id, memberId);
 	}
+	
+	public Long getTotalCountOfBoardsTitleLike(String title) {
+		Long total = boardRepo.countByTitleLike(title);
+		
+		return total;
+	}
+	
+	public Long getTotalCountOfBoardsTitleLike(Long memberId, String title) {
+		Long total = boardRepo.countByMemberIdAndTitleLike(memberId, title);
+
+		return total;
+	}
+	
+	public List<Board> findAllBoardsTitleLikeWithPageRequest(String title, Pageable pageable) {
+		List<Board> boardListPage = boardRepo.findByTitleLike(title, pageable);
+		
+		return boardListPage;
+	}
+	
+	public List<Board> findAllBoardsTitleLikeWithPageRequest(Long memberId, String title, Pageable pageable) {
+		List<Board> boardList = boardRepo.findByMemberIdAndTitleLike(memberId, title, pageable);
+		
+		return boardList;
+	}
 }
