@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -42,6 +43,7 @@ public class BoardHistory implements Serializable {
 	private LocalDateTime createDate;
 
 	// for view
+	@Transient
 	private String memberUsername;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

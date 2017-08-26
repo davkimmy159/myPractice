@@ -26,25 +26,29 @@ server:
 spring:
   profiles: dev
   datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # jdbc:h2:tcp://localhost/~/test
-    username: admin
-    password: adminadmin
-    initialize: true
-    schema: classpath:/testData/schema.sql
-    data: classpath:/testData/data.sql
+    driverClassName: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3307/my_practice
+    username: myPractice
+    password: password
+#    driverClassName: org.h2.Driver
+#    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE # jdbc:h2:tcp://localhost/~/test
+#    username: admin
+#    password: adminadmin
+    initialize: false
+#    schema: classpath:/testData/schema.sql
+#    data: classpath:/testData/data.sql
   jpa:
-    database: h2
+    database: mysql
     show-sql: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-  h2:
-    console:
-      enabled: true
-      path: /h2/
-      settings:
-        web-allow-others: true
+#    generate-ddl: true
+#    hibernate:
+#      ddl-auto: update
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2/
+#      settings:
+#        web-allow-others: true
   thymeleaf: 
     cache: false
   session:

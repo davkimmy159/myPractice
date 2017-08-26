@@ -10,11 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.ps119.entity.Board;
-import kr.co.ps119.entity.BoardHistory;
-import kr.co.ps119.entity.Member;
-import kr.co.ps119.entity.MemberAuthority;
-import kr.co.ps119.entity.Memo;
 import kr.co.ps119.repository.AuthorityRepository;
 import kr.co.ps119.repository.BoardHistoryRepository;
 import kr.co.ps119.repository.BoardRepository;
@@ -52,7 +47,8 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 	
 	@Override
 	public void onApplicationEvent(final ApplicationReadyEvent event) {
-
+		
+		/*
 		Member member1= new Member("mail1@mail.com", "testUser1", passwordEncoder.encode("password"));
 		MemberAuthority memAuth1A = new MemberAuthority();
 		memAuth1A.setAuthority(authRepo.findOne(1));
@@ -88,6 +84,7 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 		memberRepo.save(member5);
 		
 		Board board;
+		Board board249 = null;
 		
 		for(int i = 1; i <= 250; i++) {
 			board = new Board();
@@ -108,9 +105,10 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 					break;
 			}
 			boardRepo.save(board);
+			if(i == 249) {
+				board249 = board;
+			}
 		}
-		
-		Board board249 = boardRepo.findOne(249L);
 		
 		Memo memo;
 		for(int i = 1; i <= 101; i++) {
@@ -163,6 +161,7 @@ public class TestDataCreationEventListener implements ApplicationListener<Applic
 		}
 		
 		System.out.println("\n-------------------------- test data is ready --------------------------\n");
+		*/
 		
 		/*
 		INSERT INTO board(title, content, create_date, member_id) VALUES('title_1', 'content', PARSEDATETIME('2000-12-12 11:34:24','yyyy-MM-dd hh:mm:ss'), 1);
