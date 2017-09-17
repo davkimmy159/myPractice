@@ -1,4 +1,4 @@
-package kr.co.ps119.config;
+package kr.co.ps119.config.common;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -7,9 +7,10 @@ import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
 
-public class CustomPhysicalNamingStrategyImpl extends PhysicalNamingStrategyStandardImpl implements Serializable {
+public class CommonCustomPhysicalNamingStrategyImpl extends PhysicalNamingStrategyStandardImpl implements Serializable {
 
-	public static final CustomPhysicalNamingStrategyImpl INSTANCE = new CustomPhysicalNamingStrategyImpl();
+	private static final long serialVersionUID = -7111198740289039327L;
+	public static final CommonCustomPhysicalNamingStrategyImpl INSTANCE = new CommonCustomPhysicalNamingStrategyImpl();
 
 	@Override
 	public Identifier toPhysicalTableName(Identifier name, JdbcEnvironment context) {

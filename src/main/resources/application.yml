@@ -5,7 +5,7 @@ spring:
     hibernate:
       use-new-id-generator-mappings: true
       naming:
-        physical-strategy: kr.co.ps119.config.CustomPhysicalNamingStrategyImpl
+        physical-strategy: kr.co.ps119.config.common.CommonCustomPhysicalNamingStrategyImpl
   http:
     multipart:
       enabled: true
@@ -19,7 +19,6 @@ server:
 #    pool:
 #      enabled: false
 #    broker-url: tcp://localhost:61616
-      
 ---
 
 

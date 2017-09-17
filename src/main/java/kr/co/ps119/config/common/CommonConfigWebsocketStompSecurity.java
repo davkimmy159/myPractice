@@ -1,11 +1,11 @@
-package kr.co.ps119.config;
+package kr.co.ps119.config.common;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
-import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
+import org.springframework.core.annotation.Order;
 
+@Order(1)
 @Configuration
-public class ConfigWebsocketStompSecurity /* extends AbstractSecurityWebSocketMessageBrokerConfigurer */ {
+public class CommonConfigWebsocketStompSecurity {
 	
 	/*
 	protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {

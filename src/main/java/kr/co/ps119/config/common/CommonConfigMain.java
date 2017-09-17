@@ -1,15 +1,14 @@
-package kr.co.ps119.config;
+package kr.co.ps119.config.common;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.dialect.IDialect;
@@ -17,13 +16,13 @@ import org.thymeleaf.dialect.IDialect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 
-import kr.co.ps119.interceptor.BoardHistoryInterceptor;
 import kr.co.ps119.vo.MemberVO;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
+@Order(1)
 @Configuration
 //@PropertySource("classpath:properties/etc.properties")
-public class ConfigMain extends WebMvcConfigurerAdapter {
+public class CommonConfigMain extends WebMvcConfigurerAdapter {
 	
 	@Bean
 	public Map<Long, Map<String, MemberVO>> boardStompConnMap() {

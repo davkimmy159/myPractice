@@ -1,21 +1,10 @@
-package kr.co.ps119.config;
+package kr.co.ps119.config.common;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 
-import javax.sql.DataSource;
-//import javax.activation.DataSource;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-
+@Order(1)
 //@Configuration
-public class ConfigDB {
+public class CommonConfigDB {
 /*
 	@Autowired
 	DataSourceProperties dataSourceProperties;

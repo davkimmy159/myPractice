@@ -11,7 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +51,52 @@ public class BoardAjaxController {
 	
 	@Autowired
 	private Map<Long, Map<String, MemberVO>> boardStompConnMap;
+	
+	@GetMapping(value = "httpGetTest")
+	public Map<String, Object> httpGetTest(
+			Principal principal,
+			Long boardId) {
+		Map<String, Object> jsonObject = new HashMap<>();
+		
+		jsonObject.put("key1", "get test 1");
+		jsonObject.put("key2", "get test 2");
+		
+		return jsonObject;
+	}
+	
+	@PostMapping(value = "httpPostTest")
+	public Map<String, Object> httpPostTest(
+			Principal principal,
+			@RequestBody Test test,
+			@RequestHeader HttpHeaders headers,
+			@RequestParam("id") Long id) {
+		System.out.println(test);
+		System.out.println(headers);
+		System.out.println(id);
+		Map<String, Object> jsonObject = new HashMap<>();
+		
+		jsonObject.put("key1", "post test 1");
+		jsonObject.put("key2", "post test 2");
+		
+		return jsonObject;
+	}
+	
+	private static class Test {
+		private String name;
+		
+		@Override
+		public String toString() {
+			return name;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
 	
 	@GetMapping(value = "updateJoinMemberTable")
 	public Map<String, Object> updateJoinMemberTable(

@@ -1,10 +1,11 @@
-package kr.co.ps119.config;
+package kr.co.ps119.config.common;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,9 +18,10 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import kr.co.ps119.config.handler.CustomAuthenticationFailureHandler;
 import kr.co.ps119.config.handler.CustomAuthenticationSuccessHandler;
 
+@Order(1)
 @Configuration
 @EnableWebSecurity
-public class ConfigSecurity extends WebSecurityConfigurerAdapter {
+public class CommonConfigSecurity extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private DataSource dataSource;
@@ -54,13 +56,18 @@ public class ConfigSecurity extends WebSecurityConfigurerAdapter {
 		CharacterEncodingFilter filter = new CharacterEncodingFilter();
 		filter.setEncoding("UTF-8");
 		filter.setForceEncoding(true);
-		http.addFilterBefore(filter, CsrfFilter.class);
+		http.addFilterBefore(filter, CsrfFilter.class)
 		
-		// h2 db console setting
-		http.csrf().ignoringAntMatchers("/h2/**/");
-		http.headers().frameOptions().disable();
+			.csrf()
+			.ignoringAntMatchers("/h2/**/")
+			.disable()
+			
+			.headers()
+			.frameOptions()
+			.disable()
+			.and()
 		
-		http.authorizeRequests()
+			.authorizeRequests()
 			.antMatchers("/login/login").permitAll()	//anonymous()
 			.antMatchers("/new_account/registration_input_form").permitAll()	// anonymous()
 			.antMatchers("/index").permitAll()
